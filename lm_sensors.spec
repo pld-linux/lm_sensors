@@ -2,13 +2,14 @@
 # conditional build
 # _without_dist_kernel		without kernel for distributions
 %include        /usr/lib/rpm/macros.perl
+%define         _rel 2
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
 Summary(pt_BR):	Ferramentas para monitoração do hardware
 Name:		lm_sensors
 Version:	2.6.3
-Release:	2
+Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
