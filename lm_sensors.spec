@@ -54,8 +54,8 @@ rm -fr $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libsensors.so.0
 %attr(755,root,root) %{_libdir}/libsensors.so.0.0.2
 %attr(755,root,root) %{_bindir}/sensors
-/usr/include/sensors
-/usr/include/linux/*
+%{_includedir}/sensors
+%{_includedir}/linux/*
 
 %files modules
 /lib/modules/%{kernel}/misc/*
