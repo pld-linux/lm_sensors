@@ -43,7 +43,7 @@ case "$1" in
 		RET=$?
 		[ $RET -eq 0 ] && touch /var/lock/subsys/sensors
 	else
-		msg_Already_Running "sensors daemon"
+		msg_already_running "sensors daemon"
 		exit 1
 	fi
 	touch /var/lock/subsys/sensors
@@ -59,7 +59,7 @@ case "$1" in
 		
 		rm -f /var/lock/subsys/sensors
 	else
-		msg_Not_Running "sensors daemon"
+		msg_not_running "sensors daemon"
 		exit 1
 	fi
 	;;
@@ -71,7 +71,7 @@ case "$1" in
 	$0 start
 	;;
   *)
-	msg_Usage "$0 {start|stop|status|restart}"
+	msg_usage "$0 {start|stop|status|restart}"
 	exit 1
 esac
 
