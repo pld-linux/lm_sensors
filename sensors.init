@@ -16,30 +16,20 @@ if [ -f /etc/sysconfig/sensors ] ; then
         . /etc/sysconfig/sensors
 fi
 
-failed()
-{
-	msg_starting "sensors daemon"
-	fail
-	exit 1
-}
-
 # See how we were called.
 case "$1" in
   start)
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/sensors ]; then
-		msg_starting "sensors daemon"
-		busy; echo
-
-		# sensors not configured		
 		if [ -z "$BUS" ] || [ -z "$CHIP" ]; then 
-			failed
+			# sensors not configured		
+			exit 1
 		fi
 		
 		# insert modules
 		_modprobe single die "i2c-$BUS"
 		_modprobe single die "$CHIP"
-
+		
 		msg_starting "sensors daemon"
 		daemon sensord \
 			$([ -n "$INTERVAL" ] && echo "-i $INTERVAL") \
