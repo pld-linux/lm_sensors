@@ -53,7 +53,7 @@ rm -fr $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libsensors.so
 %attr(755,root,root) %{_libdir}/libsensors.so.0
 %attr(755,root,root) %{_libdir}/libsensors.so.0.0.2
-%attr(755,root,root) /usr/bin/sensors
+%attr(755,root,root) %{_bindir}/sensors
 /usr/include/sensors
 /usr/include/linux/*
 
