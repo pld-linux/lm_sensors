@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_without	dist_kernel	# without kernel for distributions
 %bcond_without	smp		# don't build SMP modules
-%bcond_with	kernel		# build kernel modules
+%bcond_without	kernel		# build kernel 2.4 modules
 %bcond_without	userspace	# don't build userspace utilities
 #
 %include	/usr/lib/rpm/macros.perl
@@ -40,6 +40,8 @@ BuildRequires:	kernel-headers < 2.5.0
 Requires:	dmidecode
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
+
+%define		_kernelsrcdir		/usr/src/linux-2.4
 
 %description
 Tools for monitoring the hardware health of Linux systems containing
@@ -132,40 +134,38 @@ Bibliotecas estáticas para desenvolvimento com lm_sensors
 ðÁËÅÔ lm_sensors-static Í¦ÓÔÉÔØ ÓÔÁÔÉÞÎ¦ Â¦ÂÌ¦ÏÔÅËÉ, ÎÅÏÂÈ¦ÄÎ¦ ÄÌÑ
 ÐÏÂÕÄÏ×É ÐÒÏÇÒÁÍ, ÑË¦ ×ÉËÏÒÉÓÔÏ×ÕÀÔØ ÄÁÎ¦ ÓÅÎÓÏÒ¦×.
 
-%package -n kernel-i2c-%{name}
+%package -n kernel24-i2c-%{name}
 Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Requires(post,postun):	/sbin/depmod
 %{?with_dist_kernel:%requires_releq_kernel_up}
-%{?with_dist_kernel:Requires:	kernel-i2c >= 2.8.2}
+%{?with_dist_kernel:Requires:	i2c >= 2.8.2}
 Provides:	%{name}-modules = %{version}-%{release}
-Obsoletes:	%{name}-modules
 Obsoletes:	kernel-misc-lm_sensors
 
-%description -n kernel-i2c-%{name}
+%description -n kernel24-i2c-%{name}
 Kernel modules for various buses and monitor chips.
 
-%description -n kernel-i2c-%{name} -l pl
+%description -n kernel24-i2c-%{name} -l pl
 Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 
-%package -n kernel-smp-i2c-%{name}
+%package -n kernel24-smp-i2c-%{name}
 Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Requires(post,postun):	/sbin/depmod
 %{?with_dist_kernel:%requires_releq_kernel_smp}
-%{?with_dist_kernel:Requires:	kernel-smp-i2c >= 2.8.2}
+%{?with_dist_kernel:Requires:	i2c >= 2.8.2}
 Provides:	%{name}-modules = %{version}-%{release}
-Obsoletes:	%{name}-modules
 Obsoletes:	kernel-smp-misc-lm_sensors
 
-%description -n kernel-smp-i2c-%{name}
+%description -n kernel24-smp-i2c-%{name}
 Kernel SMP modules for various buses and monitor chips.
 
-%description -n kernel-smp-i2c-%{name} -l pl
+%description -n kernel24-smp-i2c-%{name} -l pl
 Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 
 %prep
@@ -177,18 +177,25 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 
 %build
 %if %{with kernel} && %{with smp}
+# workaround to avoid unresolved dmi* symbols in i2c-piix4.o
+install -d fakelinux
+:> fakelinux/.config
+%ifarch %{ix86}
+echo 'CONFIG_X86=y' >> fakelinux/.config
+%endif
+
 # SMP
 %{__make} all-kernel-busses all-kernel-chips \
 	CC="%{kgcc}" \
 	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
-	LINUX=/dev/null \
+	LINUX=`pwd`/fakelinux \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
 	SMP=1
 
 %{__make} install-kernel-busses install-kernel-chips \
 	MODPREF=kernel-smp-modules \
-	LINUX=/dev/null \
+	LINUX=`pwd`/fakelinux \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
 	SMP=1
@@ -201,7 +208,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %{__make} all-kernel-busses all-kernel-chips \
 	CC="%{kgcc}" \
 	OPTS="%{rpmcflags}" \
-	LINUX=/dev/null \
+	LINUX=`pwd`/fakelinux \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
 	SMP=0
@@ -229,7 +236,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install-kernel-busses install-kernel-chips \
 	DESTDIR=$RPM_BUILD_ROOT \
 	MODPREF=/lib/modules/%{_kernel_ver} \
-	LINUX=/dev/null \
+	LINUX=`pwd`/fakelinux \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
 	SMP=0
@@ -291,16 +298,16 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del sensors
 fi
 
-%post	-n kernel-i2c-%{name}
+%post	-n kernel24-i2c-%{name}
 %depmod %{_kernel_ver}
 
-%postun -n kernel-i2c-%{name}
+%postun -n kernel24-i2c-%{name}
 %depmod %{_kernel_ver}
 
-%post	-n kernel-smp-i2c-%{name}
+%post	-n kernel24-smp-i2c-%{name}
 %depmod %{_kernel_ver}smp
 
-%postun -n kernel-smp-i2c-%{name}
+%postun -n kernel24-smp-i2c-%{name}
 %depmod %{_kernel_ver}smp
 
 %if %{with userspace}
@@ -317,7 +324,9 @@ fi
 %attr(755,root,root) %{_sbindir}/i2c*
 %ifarch %{ix86} amd64
 %attr(755,root,root) %{_sbindir}/isadump
+%attr(755,root,root) %{_sbindir}/isaset
 %{_mandir}/man8/isadump.8*
+%{_mandir}/man8/isaset.8*
 %endif
 %attr(755,root,root) %{_sbindir}/pwmconfig
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
@@ -348,7 +357,7 @@ fi
 %endif
 
 %if %{with kernel}
-%files -n kernel-i2c-%{name}
+%files -n kernel24-i2c-%{name}
 %defattr(644,root,root,755)
 %dir /lib/modules/%{_kernel_ver}/kernel/drivers/i2c/busses
 /lib/modules/%{_kernel_ver}/kernel/drivers/i2c/busses/*.o*
@@ -356,7 +365,7 @@ fi
 /lib/modules/%{_kernel_ver}/kernel/drivers/i2c/chips/*.o*
 
 %if %{with smp}
-%files -n kernel-smp-i2c-%{name}
+%files -n kernel24-smp-i2c-%{name}
 %defattr(644,root,root,755)
 %dir /lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/busses
 /lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/busses/*.o*
