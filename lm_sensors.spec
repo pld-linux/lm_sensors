@@ -22,6 +22,7 @@ URL:		http://www.netroedge.com/~lm78/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	perl-modules >= 5.6
+BuildRequires:	rpm-perlprov >= 3.0.3-16
 %{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.6.0}
 PreReq:		/sbin/chkconfig
 PreReq:		/sbin/ldconfig
