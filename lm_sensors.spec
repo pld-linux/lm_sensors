@@ -22,7 +22,6 @@ Patch0:		%{name}-make.patch
 URL:		http://www.netroedge.com/~lm78/
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	bison
-BuildRequires:	i2c-devel >= 2.6.0
 Prereq:		/sbin/chkconfig
 Prereq:		/sbin/ldconfig
 Requires:	%{name}-modules = %{version}
