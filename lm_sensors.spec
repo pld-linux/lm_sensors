@@ -4,14 +4,13 @@
 
 %define		_kernel_ver	%(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
 %define		_kernel_ver_str	%(echo %{_kernel_ver} | sed s/-/_/g)
-%define		smpstr		%{?_with_smp:-smp}
-%define		smp		%{?_with_smp:1}%{!?_with_smp:0}
+%define		_rel 6
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
 Name:		lm_sensors
 Version:	2.6.2
-Release:	5
+Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Group(de):	Applikationen/System
@@ -75,41 +74,80 @@ Static libraries for lm_sensors.
 %description static -l pl
 Biblioteki statyczne dla lm_sensors.
 
-%package -n kernel%{smpstr}-misc-lm_sensors
+%package -n kernel-misc-lm_sensors
 Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
-Release:	%{release}@%{_kernel_ver_str}
+Release:	%{_rel}@%{_kernel_ver_str}
 Prereq:		/sbin/depmod
 Requires:	i2c >= 2.6.0
 %{?!_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
-%{?!_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
+%{?!_without_dist_kernel:Conflicts:	kernel-smp}
 Obsoletes:	lm_sensors-modules
 Provides:	lm_sensors-modules = %{version}
 
-%description -n kernel%{smpstr}-misc-lm_sensors
+%description -n kernel-misc-lm_sensors
 Kernel modules for various buses and monitor chips.
 
-%description -n kernel%{smpstr}-misc-lm_sensors -l pl
+%description -n kernel-misc-lm_sensors -l pl
 Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
+
+
+%package -n kernel-smp-misc-lm_sensors
+Summary:        Kernel modules for various buses and monitor chips
+Summary(pl):    Modu³y j±dra dla ró¿nego rodzaju sensorów
+Group:          Applications/System
+Group(de):      Applikationen/System
+Group(pl):      Aplikacje/System
+Release:        %{_rel}@%{_kernel_ver_str}
+Prereq:         /sbin/depmod
+Requires:       i2c >= 2.6.0
+%{?!_without_dist_kernel:Conflicts:     kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
+%{?!_without_dist_kernel:Conflicts:     kernel-up}
+Obsoletes:      lm_sensors-modules
+Provides:       lm_sensors-modules = %{version}
+
+%description -n kernel-smp-misc-lm_sensors
+Kernel SMP modules for various buses and monitor chips.
+
+%description -n kernel-smp-misc-lm_sensors -l pl
+Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
+
+
 
 %prep
 %setup -q
 %patch0 -p1
 
 %build
-%if %{smp}
-SMP="-D__KERNEL_SMP=1"
-%endif
+
+#up
 %{__make} \
-	OPTS="%{rpmcflags} $SMP" \
+	OPTS="%{rpmcflags}" \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=%{smp}
+	SMP=0
 
+%{__make} install-kernel \
+        MODDIR=kernel-up-modules
+%{__make} install-kernel-busses \
+        MODDIR=kernel-up-modules
+%{__make} install-kernel-chips \
+        MODDIR=kernel-up-modules
+
+%{__make} clean
+
+#smp
+%{__make} \
+        OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
+        LINUX=/dev/null \
+        LINUX_HEADERS=%{_kernelsrcdir}/include \
+        I2C_HEADERS=%{_kernelsrcdir}/include \
+        SMP=1
+					
 %install
 rm -rf $RPM_BUILD_ROOT
 
@@ -118,7 +156,7 @@ rm -rf $RPM_BUILD_ROOT
 	PREFIX=%{_prefix} \
 	ETCDIR=%{_sysconfdir} \
 	MANDIR=%{_mandir} \
-	MODDIR=/lib/modules/%{_kernel_ver}/misc
+	MODDIR=/lib/modules/%{_kernel_ver}smp/misc
 
 install -d $RPM_BUILD_ROOT%{_sbindir}
 install -d $RPM_BUILD_ROOT%{_mandir}/man8
@@ -128,6 +166,9 @@ install prog/sensord/sensord.8 $RPM_BUILD_ROOT%{_mandir}/man8
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
+
+install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+install kernel-up-modules/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc 
 
 gzip -9nf BACKGROUND BUGS CHANGES README README.thinkpad TODO
 find doc -type f ! -name \*.\* -a ! -name \*ticket | xargs gzip -9nf
@@ -157,11 +198,18 @@ fi
 
 %postun	-p /sbin/ldconfig
 
-%post -n kernel%{smpstr}-misc-lm_sensors
+%post -n kernel-misc-lm_sensors
 /sbin/depmod -a
 
-%postun -n kernel%{smpstr}-misc-lm_sensors
+%post -n kernel-smp-misc-lm_sensors
 /sbin/depmod -a
+
+%postun -n kernel-misc-lm_sensors
+/sbin/depmod -a
+
+%postun -n kernel-smp-misc-lm_sensors
+/sbin/depmod -a
+
 
 %files 
 %defattr(644,root,root,755)
@@ -190,6 +238,10 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/libsensors.a
 
-%files -n kernel%{smpstr}-misc-lm_sensors
+%files -n kernel-misc-lm_sensors
 %defattr(644,root,root,755)
-/lib/modules/*/misc/*
+/lib/modules/%{_kernel_ver}/misc/*
+
+%files -n kernel-smp-misc-lm_sensors
+%defattr(644,root,root,755)
+/lib/modules/%{_kernel_ver}smp/misc/*
