@@ -26,6 +26,8 @@ BUS=
 
 CHIP=
 
+# You may use sensors-detect commant to check what bus and chips are available
+
 # example for VIAKT* mainboards (bus is not (!) via)
 # BUS=isa
 # CHIP=via686a
