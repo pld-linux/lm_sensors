@@ -1,49 +1,3 @@
-diff -Nur lm_sensors-2.8.0.orig/etc/Module.mk lm_sensors-2.8.0/etc/Module.mk
---- lm_sensors-2.8.0.orig/etc/Module.mk	2003-06-28 22:04:51.000000000 +0200
-+++ lm_sensors-2.8.0/etc/Module.mk	2003-07-25 23:13:42.000000000 +0200
-@@ -29,7 +29,7 @@
- install-etc:
- 	$(MKDIR) $(DESTDIR)$(ETCDIR)
- 	if [ ! -e $(DESTDIR)$(ETCINSTALL) ] ; then \
--	  $(INSTALL) -o  root -g root -m 644 $(ETCTARGET) $(DESTDIR)$(ETCINSTALL); \
-+	  $(INSTALL) -m 644 $(ETCTARGET) $(DESTDIR)$(ETCINSTALL); \
- 	fi
- user_install :: install-etc
- 
-diff -Nur lm_sensors-2.8.0.orig/kernel/busses/Module.mk lm_sensors-2.8.0/kernel/busses/Module.mk
---- lm_sensors-2.8.0.orig/kernel/busses/Module.mk	2003-06-14 21:25:19.000000000 +0200
-+++ lm_sensors-2.8.0/kernel/busses/Module.mk	2003-07-25 23:14:06.000000000 +0200
-@@ -105,7 +105,7 @@
- install-kernel-busses: all-kernel-busses
- 	if [ -n "$(KERNELBUSSESTARGETS)" ] ; then \
- 	  $(MKDIR) $(DESTDIR)$(MODPREF)/kernel/drivers/i2c/busses ; \
--	  $(INSTALL) -o root -g root -m 644 $(KERNELBUSSESTARGETS) $(DESTDIR)$(MODPREF)/kernel/drivers/i2c/busses ; \
-+	  $(INSTALL) -m 644 $(KERNELBUSSESTARGETS) $(DESTDIR)$(MODPREF)/kernel/drivers/i2c/busses ; \
- 	  for i in $(KERNELBUSSESTARGETS) ; do \
- 	    $(RM) $(DESTDIR)$(MODPREF)/misc/`basename $$i` $(DESTDIR)$(MODPREF)/kernel/drivers/i2c/`basename $$i` \
- 	          $(DESTDIR)$(MODPREF)/kernel/drivers/i2c/`basename $$i`.gz $(DESTDIR)$(MODPREF)/kernel/drivers/i2c/busses/`basename $$i`.gz ; \
---- lm_sensors-2.8.2/kernel/chips/Module.mk.orig	2003-10-29 06:37:52.000000000 +0100
-+++ lm_sensors-2.8.2/kernel/chips/Module.mk	2003-12-13 23:17:11.114104264 +0100
-@@ -159,7 +159,7 @@
- install-kernel-chips: all-kernel-chips
- 	if [ -n "$(KERNELCHIPSTARGETS)" ] ; then \
- 	  $(MKDIR) $(DESTDIR)$(MODPREF)/kernel/drivers/i2c/chips ; \
--	  $(INSTALL) -o root -g root -m 644 $(KERNELCHIPSTARGETS) $(DESTDIR)$(MODPREF)/kernel/drivers/i2c/chips ; \
-+	  $(INSTALL) -m 644 $(KERNELCHIPSTARGETS) $(DESTDIR)$(MODPREF)/kernel/drivers/i2c/chips ; \
- 	  for i in $(KERNELCHIPSTARGETS) ; do \
- 	    $(RM) $(DESTDIR)$(MODPREF)/misc/`basename $$i` $(DESTDIR)$(MODPREF)/kernel/drivers/sensors/`basename $$i` \
- 	          $(DESTDIR)$(MODPREF)/kernel/drivers/sensors/`basename $$i`.gz $(DESTDIR)$(MODPREF)/kernel/drivers/chips/`basename $$i`.gz ; \
---- lm_sensors-2.8.2/kernel/include/Module.mk.orig	2003-11-22 03:32:30.000000000 +0100
-+++ lm_sensors-2.8.2/kernel/include/Module.mk	2003-12-13 23:17:11.115104112 +0100
-@@ -39,7 +39,7 @@
- install-all-kernel-include:
- 	if [ -n "$(KERNELINCLUDEFILES)" ] ; then \
- 	  $(MKDIR) $(DESTDIR)$(SYSINCLUDEDIR) ; \
--	  $(INSTALL) -o root -g root -m 644 $(KERNELINCLUDEFILES) $(DESTDIR)$(SYSINCLUDEDIR) ; \
-+	  $(INSTALL) -m 644 $(KERNELINCLUDEFILES) $(DESTDIR)$(SYSINCLUDEDIR) ; \
- 	fi
- 
- user_install :: install-all-kernel-include
 --- lm_sensors-2.8.0.orig/kernel/Module.mk	2003-05-31 17:48:28.000000000 +0200
 +++ lm_sensors-2.8.0/kernel/Module.mk	2003-07-25 23:13:59.000000000 +0200
 @@ -39,7 +39,7 @@
@@ -55,31 +9,6 @@ diff -Nur lm_sensors-2.8.0.orig/kernel/busses/Module.mk lm_sensors-2.8.0/kernel/
  #	fi
  	$(RM) $(DESTDIR)$(MODPREF)/misc/sensors.o
  
-diff -Nur lm_sensors-2.8.0.orig/lib/Module.mk lm_sensors-2.8.0/lib/Module.mk
---- lm_sensors-2.8.0.orig/lib/Module.mk	2003-07-08 14:47:41.000000000 +0200
-+++ lm_sensors-2.8.0/lib/Module.mk	2003-07-25 23:16:02.000000000 +0200
-@@ -106,7 +106,7 @@
- 		 echo '         Run the following command: /sbin/ldconfig' ; \
- 	     echo '******************************************************************************' ; \
- 	fi
--	$(INSTALL) -o root -g root -m 644 $(LIBTARGETS) $(DESTDIR)$(LIBDIR)
-+	$(INSTALL) -m 644 $(LIBTARGETS) $(DESTDIR)$(LIBDIR)
- 	$(LN) $(LIBSHLIBNAME) $(DESTDIR)$(LIBDIR)/$(LIBSHSONAME)
- 	$(LN) $(LIBSHSONAME) $(DESTDIR)$(LIBDIR)/$(LIBSHBASENAME)
- 	@if [ "$(DESTDIR)$(LIBDIR)" != "/usr/lib" -a "$(DESTDIR)$(LIBDIR)" != "/lib" ] ; then \
-@@ -128,9 +128,9 @@
- 		  echo '         Add it and run /sbin/ldconfig for the userspace tools to work.' ; \
- 		  echo '******************************************************************************' ) ; \
- 	fi
--	$(INSTALL) -o root -g root -m 644 $(LIBHEADERFILES) $(DESTDIR)$(LIBINCLUDEDIR)
--	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(LIBMAN3FILES) $(DESTDIR)$(LIBMAN3DIR)
--	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(LIBMAN5FILES) $(DESTDIR)$(LIBMAN5DIR)
-+	$(INSTALL) -m 644 $(LIBHEADERFILES) $(DESTDIR)$(LIBINCLUDEDIR)
-+	$(INSTALL) -m 644 $(LIBMAN3FILES) $(DESTDIR)$(LIBMAN3DIR)
-+	$(INSTALL) -m 644 $(LIBMAN5FILES) $(DESTDIR)$(LIBMAN5DIR)
- 
- 
- user_install :: install-lib
 --- lm_sensors-2.8.2/Makefile.orig	2003-11-29 20:59:31.000000000 +0100
 +++ lm_sensors-2.8.2/Makefile	2003-12-13 23:24:48.024643304 +0100
 @@ -183,13 +183,11 @@
@@ -111,28 +40,6 @@ diff -Nur lm_sensors-2.8.0.orig/lib/Module.mk lm_sensors-2.8.0/lib/Module.mk
  	$(CC) -M -MG $(MODCPPFLAGS) $(MODCFLAGS) $< | \
         	$(SED) -e 's@^\(.*\)\.o:@$*.d $*.o: Makefile '`dirname $*.d`/Module.mk' @' > $@
  
---- lm_sensors-2.8.2/prog/detect/Module.mk.orig	2003-11-29 20:38:10.000000000 +0100
-+++ lm_sensors-2.8.2/prog/detect/Module.mk	2003-12-13 23:25:53.868633496 +0100
-@@ -40,7 +40,7 @@
- 
- install-prog-detect: all-prog-detect
- 	mkdir -p $(DESTDIR)$(SBINDIR)
--	$(INSTALL) -o root -g root -m 755 $(PROGDETECTSBININSTALL) $(DESTDIR)$(SBINDIR)
-+	$(INSTALL) -m 755 $(PROGDETECTSBININSTALL) $(DESTDIR)$(SBINDIR)
- user_install :: install-prog-detect
- 
- clean-prog-detect:
---- lm_sensors-2.8.2/prog/dump/Module.mk.orig	2003-11-21 05:05:48.000000000 +0100
-+++ lm_sensors-2.8.2/prog/dump/Module.mk	2003-12-13 23:17:11.126102440 +0100
-@@ -45,7 +45,7 @@
- 
- install-prog-dump: all-prog-dump
- 	mkdir -p $(DESTDIR)$(SBINDIR)
--	$(INSTALL) -o root -g root -m 755 $(PROGDUMPBININSTALL) $(DESTDIR)$(SBINDIR)
-+	$(INSTALL) -m 755 $(PROGDUMPBININSTALL) $(DESTDIR)$(SBINDIR)
- user_install :: install-prog-dump
- 
- clean-prog-dump:
 diff -Nur lm_sensors-2.8.0.orig/prog/hotplug/Makefile lm_sensors-2.8.0/prog/hotplug/Makefile
 --- lm_sensors-2.8.0.orig/prog/hotplug/Makefile	2003-05-31 19:30:47.000000000 +0200
 +++ lm_sensors-2.8.0/prog/hotplug/Makefile	2003-07-25 23:17:07.000000000 +0200
@@ -176,67 +83,3 @@ diff -Nur lm_sensors-2.8.0.orig/prog/rrd/Makefile lm_sensors-2.8.0/prog/rrd/Make
  #	grep sens_update_rrd $(CRONTAB) > /dev/null 2>&1 || echo '*/5 * * * *	/usr/local/bin/sens_update_rrd' $(RRDB) $(SENSDEV) >> $(CRONTAB)
  	@echo
  	@echo Note!!! You must manually install the following line in the crontab for user $(USER):
-diff -Nur lm_sensors-2.8.0.orig/prog/sensord/Module.mk lm_sensors-2.8.0/prog/sensord/Module.mk
---- lm_sensors-2.8.0.orig/prog/sensord/Module.mk	2003-06-28 22:04:50.000000000 +0200
-+++ lm_sensors-2.8.0/prog/sensord/Module.mk	2003-07-25 23:18:02.000000000 +0200
-@@ -45,8 +45,8 @@
- 
- install-prog-sensord: all-prog-sensord
- 	$(MKDIR) $(DESTDIR)$(SBINDIR) $(DESTDIR)$(PROGSENSORDMAN1DIR)
--	$(INSTALL) -o root -g root -m 755 $(PROGSENSORDTARGETS) $(DESTDIR)$(SBINDIR)
--	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(PROGSENSORDMAN1FILES) $(DESTDIR)$(PROGSENSORDMAN1DIR)
-+	$(INSTALL) -m 755 $(PROGSENSORDTARGETS) $(DESTDIR)$(SBINDIR)
-+	$(INSTALL) -m 644 $(PROGSENSORDMAN1FILES) $(DESTDIR)$(PROGSENSORDMAN1DIR)
- user_install :: install-prog-sensord
- 
- clean-prog-sensord:
-diff -Nur lm_sensors-2.8.0.orig/prog/sensors/Module.mk lm_sensors-2.8.0/prog/sensors/Module.mk
---- lm_sensors-2.8.0.orig/prog/sensors/Module.mk	2003-06-28 22:04:50.000000000 +0200
-+++ lm_sensors-2.8.0/prog/sensors/Module.mk	2003-07-25 23:18:14.000000000 +0200
-@@ -41,8 +41,8 @@
- 
- install-prog-sensors: all-prog-sensors
- 	mkdir -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(PROGSENSORSMAN1DIR)
--	$(INSTALL) -o root -g root -m 755 $(PROGSENSORSTARGETS) $(DESTDIR)$(BINDIR)
--	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(PROGSENSORSMAN1FILES) $(DESTDIR)$(PROGSENSORSMAN1DIR)
-+	$(INSTALL) -m 755 $(PROGSENSORSTARGETS) $(DESTDIR)$(BINDIR)
-+	$(INSTALL) -m 644 $(PROGSENSORSMAN1FILES) $(DESTDIR)$(PROGSENSORSMAN1DIR)
- user_install :: install-prog-sensors
- 
- clean-prog-sensors:
---- lm_sensors-2.8.2/prog/eeprom/Module.mk.orig	2003-11-29 14:29:59.000000000 +0100
-+++ lm_sensors-2.8.2/prog/eeprom/Module.mk	2003-12-13 23:47:55.054782672 +0100
-@@ -23,7 +23,8 @@
-                      $(MODULE_DIR)/decode-vaio.pl
- 
- install-prog-eeprom: $(PROGEEPROMTARGETS)
--	$(INSTALL) -o root -g root -m 755 $(PROGEEPROMTARGETS) $(BINDIR)
-+	$(INSTALL) -d $(DESTDIR)$(BINDIR)
-+	$(INSTALL) -m 755 $(PROGEEPROMTARGETS) $(DESTDIR)$(BINDIR)
- 
- user_install :: install-prog-eeprom
- 
---- lm_sensors-2.8.2/prog/pwm/Module.mk.orig	2003-10-28 02:41:47.000000000 +0100
-+++ lm_sensors-2.8.2/prog/pwm/Module.mk	2003-12-13 23:53:10.365848104 +0100
-@@ -22,7 +22,8 @@
-                   $(MODULE_DIR)/pwmconfig
- 
- install-prog-pwm: $(PROGPWMTARGETS)
--	$(INSTALL) -o root -g root -m 755 $(PROGPWMTARGETS) $(SBINDIR)
-+	$(INSTALL) -d $(DESTDIR)$(SBINDIR)
-+	$(INSTALL) -m 755 $(PROGPWMTARGETS) $(DESTDIR)$(SBINDIR)
- 
- user_install :: install-prog-pwm
- 
---- lm_sensors-2.8.2/prog/xeon/Module.mk.orig	2003-11-29 14:29:59.000000000 +0100
-+++ lm_sensors-2.8.2/prog/xeon/Module.mk	2003-12-13 23:55:56.765551504 +0100
-@@ -21,7 +21,8 @@
- PROGXEONTARGETS := $(MODULE_DIR)/decode-xeon.pl
- 
- install-prog-xeon: $(PROGXEONTARGETS)
--	$(INSTALL) -o root -g root -m 755 $(PROGXEONTARGETS) $(BINDIR)
-+	$(INSTALL) -d $(DESTDIR)$(BINDIR)
-+	$(INSTALL) -m 755 $(PROGXEONTARGETS) $(DESTDIR)$(BINDIR)
- 
- user_install :: install-prog-xeon
- 
