@@ -9,8 +9,8 @@ Summary(pt_BR):	Ferramentas para monitoraГЦo do hardware
 Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
-Version:	2.6.5
-%define _rel	4
+Version:	2.7.0
+%define _rel	1
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -25,7 +25,7 @@ BuildRequires:	flex >= 2.5.1
 BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rrdtool-devel
-%{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.6.0}
+%{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.7.0}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
 
@@ -128,7 +128,7 @@ Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Requires(post,postun):	/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-%{!?_without_dist_kernel:Requires:	i2c >= 2.6.0}
+%{!?_without_dist_kernel:Requires:	i2c >= 2.7.0}
 Provides:	%{name}-modules = %{version}
 Obsoletes:	%{name}-modules
 
@@ -145,7 +145,7 @@ Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Requires(post,postun):	/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-%{!?_without_dist_kernel:Requires:	i2c >= 2.6.0}
+%{!?_without_dist_kernel:Requires:	i2c >= 2.7.0}
 Provides:	%{name}-modules = %{version}
 Obsoletes:	%{name}-modules
 
