@@ -4,7 +4,7 @@
 
 %define		_kernel_ver	%(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
 %define		_kernel_ver_str	%(echo %{_kernel_ver} | sed s/-/_/g)
-%define		_rel 8
+%define		_rel 9
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
@@ -81,8 +81,7 @@ Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:Requires:	i2c >= 2.6.0}
-%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
-%{!?_without_dist_kernel:Conflicts:	kernel-smp}
+%{!?_without_dist_kernel:Requires:	kernel-up = %{_kernel_ver}}
 Obsoletes:	%{name}-modules
 Provides:	%{name}-modules = %{version}
 
@@ -99,8 +98,7 @@ Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:Requires:	i2c >= 2.6.0}
-%{!?_without_dist_kernel:Conflicts:     kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
-%{!?_without_dist_kernel:Conflicts:     kernel-up}
+%{!?_without_dist_kernel:Requires:     kernel-smp = %{_kernel_ver}}
 Obsoletes:	%{name}-modules
 Provides:	%{name}-modules = %{version}
 
