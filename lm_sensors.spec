@@ -1,3 +1,6 @@
+%define		_kernel_ver	%(grep UTS_RELEASE /usr/src/linux/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
+%define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
+
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
 Name:		lm_sensors
@@ -74,14 +77,16 @@ Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-REL=`grep UTS_RELEASE %{_prefix}/src/linux/include/linux/version.h 2>/dev/null | cut -d\" -f2`
-
-make	install \
+%{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PREFIX=%{_prefix} \
 	ETCDIR=%{_sysconfdir} \
 	MANDIR=%{_mandir} \
-	MODDIR=/lib/modules/$REL/misc
+%if %{_kernel24}
+	MODDIR=/lib/modules/%{_kernel_ver}/kernel/drivers/i2c
+%else
+	MODDIR=/lib/modules/%{_kernel_ver}/misc
+%endif
 
 gzip -9nf CHANGES README* BUGS CONTRIBUTORS TODO BACKGROUND
 gzip -9nf doc/* || :
@@ -124,4 +129,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files modules
 %defattr(644,root,root,755)
+%if %{_kernel24}
+/lib/modules/*/kernel/drivers/i2c/*
+%else
 /lib/modules/*/misc/*
+%endif
