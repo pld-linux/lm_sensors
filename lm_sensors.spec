@@ -163,7 +163,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 #up
 %{__make} \
 	OPTS="%{rpmcflags}" \
-	LINUX=/dev/null \
+	LINUX=/usr/src/linux \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
 	SMP=0
@@ -180,7 +180,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 #smp
 %{__make} \
 	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
-	LINUX=/dev/null \
+	LINUX=/usr/src/linux \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
 	PROG_EXTRA:="sensord dump" \
