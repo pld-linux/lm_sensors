@@ -1,7 +1,7 @@
 
 # conditional build
 # _without_dist_kernel		without kernel for distributions
-
+%include        /usr/lib/rpm/macros.perl
 %define		_kernel_ver	%(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
 %define		_kernel_ver_str	%(echo %{_kernel_ver} | sed s/-/_/g)
 %define		_rel 10
@@ -21,6 +21,7 @@ Patch0:		%{name}-make.patch
 URL:		http://www.netroedge.com/~lm78/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
+BuildRequires:	perl-modules >= 5.6
 %{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.6.0}
 PreReq:		/sbin/chkconfig
 PreReq:		/sbin/ldconfig
