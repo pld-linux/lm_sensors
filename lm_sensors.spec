@@ -17,7 +17,7 @@ Summary(ru):	õÔÉÌÉÔÙ ÄÌÑ ÍÏÎÉÔÏÒÉÎÇÁ ÁÐÐÁÒÁÔÕÒÙ
 Summary(uk):	õÔÉÌ¦ÔÉ ÄÌÑ ÍÏÎ¦ÔÏÒÉÎÇÕ ÁÐÁÒÁÔÕÒÉ
 Name:		lm_sensors
 Version:	2.9.0
-%define _rel	4
+%define _rel	3
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -31,6 +31,7 @@ Patch2:		%{name}-iconv-in-libc.patch
 Patch3:		%{name}-gcc34.patch
 Patch4:		%{name}-sensors-detect-PATH.patch
 URL:		http://www.lm-sensors.nu/
+BuildRequires:	am
 BuildRequires:	rpmbuild(macros) >= 1.118
 %if %{with userspace}
 BuildRequires:	bison
@@ -185,9 +186,6 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %patch4 -p1
 
 %build
-cp -f /usr/share/automake/config.guess admin
-cp -f /usr/share/automake/config.sub admin
-
 %if %{with kernel} && %{with smp}
 # workaround to avoid unresolved dmi* symbols in i2c-piix4.o
 install -d fakelinux
