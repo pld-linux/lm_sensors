@@ -17,6 +17,7 @@ Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://secure.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
+# Source0-md5:	5ccf267a4e5d2d7dfa176750886f6939
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
