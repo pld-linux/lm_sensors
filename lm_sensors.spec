@@ -12,7 +12,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.8.0
-%define _rel	1
+%define _rel	1.1
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -31,10 +31,9 @@ BuildRequires:	rpmbuild(macros) >= 1.118
 BuildRequires:	rrdtool-devel
 %{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.8.0}
 %{!?_without_dist_kernel:BuildRequires:	kernel-headers >= 2.4.0}
+Requires:	dmidecode
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
-
-%define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
 
 %description
 Tools for monitoring the hardware health of Linux systems containing
@@ -289,9 +288,6 @@ fi
 %doc prog/{config,daemon,eeprom,eepromer/README*,matorb,maxilife,xeon}
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
-%if %{_kernel24}
-%attr(755,root,root) %{_sbindir}/dmidecode
-%endif
 %attr(755,root,root) %{_sbindir}/eeprom*
 %attr(755,root,root) %{_sbindir}/i2c*
 %attr(755,root,root) %{_sbindir}/isadump
