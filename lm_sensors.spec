@@ -3,6 +3,9 @@
 #
 %include        /usr/lib/rpm/macros.perl
 
+%define		_kernel_ver	%(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
+%define		_kernel_ver_str	%(echo %{_kernel_ver} | sed s/-/_/g)
+
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzЙtu
 Summary(pt_BR):	Ferramentas para monitoraГЦo do hardware
@@ -10,7 +13,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.6.4
-%define _rel	4
+%define _rel	5
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -30,6 +33,8 @@ PreReq:		/sbin/chkconfig
 PreReq:		/sbin/ldconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
+
+%define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
 
 %description
 Tools for monitoring the hardware health of Linux systems containing
@@ -256,7 +261,9 @@ fi
 %doc prog/{config,daemon,eeprom,eepromer/README*,matorb,maxilife,xeon}
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
+%if %{_kernel24}
 %attr(755,root,root) %{_sbindir}/dmidecode
+%endif
 %attr(755,root,root) %{_sbindir}/eeprom*
 %attr(755,root,root) %{_sbindir}/i2c*
 %attr(755,root,root) %{_sbindir}/isadump
