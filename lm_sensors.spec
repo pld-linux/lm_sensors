@@ -13,7 +13,7 @@ Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
 Name:		lm_sensors
 Version:	2.6.1
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Group(de):	Applikationen/System
@@ -119,8 +119,8 @@ rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT%{_sbindir}
 install -d $RPM_BUILD_ROOT%{_mandir}/man8
-install progs/sensord/sensord $RPM_BUILD_ROOT%{_sbindir}
-install progs/sensord/sensord.8 $RPM_BUILD_ROOT%{_mandir}/man8
+install prog/sensord/sensord $RPM_BUILD_ROOT%{_sbindir}
+install prog/sensord/sensord.8 $RPM_BUILD_ROOT%{_mandir}/man8
 
 gzip -9nf BACKGROUND BUGS CHANGES README README.thinkpad TODO
 find doc -type f ! -name \*.\* -a ! -name \*ticket | xargs gzip -9nf
