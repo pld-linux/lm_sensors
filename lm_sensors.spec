@@ -1,6 +1,6 @@
 Summary:	Hardware health monitoring
 Name:		lm_sensors
-Version:	2.3.0
+Version:	2.3.3
 Release:	1
 Source0:	http://www.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
 Copyright:	GPL
