@@ -7,6 +7,8 @@
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzЙtu
 Summary(pt_BR):	Ferramentas para monitoraГЦo do hardware
+Summary(ru):	Утилиты для мониторинга аппаратуры
+Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.6.3
 Release:	%{_rel}
@@ -40,10 +42,22 @@ Ferramentas para monitoraГЦo do hardware. ContИm uma coleГЦo de
 mСdulos para acesso genИrico ao barramento SMBus e monitoraГЦo de
 hardware.
 
+%description -l ru
+Пакет lm_sensors содержит набор модулей для стандартного доступа к
+SMBus и мониторинга. ВНИМАНИЕ: для этого необходима специальная
+поддержка, отсутствующая в стандартных старых ядрах 2.2.XX !
+
+%description -l uk
+Пакет lm_sensors м╕стить наб╕р модул╕в для стандартного доступу до
+SMBus та мон╕торингу. УВАГА: для цього потр╕бна спец╕альна п╕дтримка,
+яка в╕дсутня у стандартних старих ядрах 2.2.XX !
+
 %package devel
 Summary:	Header files for lm_sensors
 Summary(pl):	Pliki nagЁСwkowe dla lm_sensors
 Summary(pt_BR):	Arquivos necessАrios ao desenvolvimento de programas que usem o lm_sensors
+Summary(ru):	Файлы разработчика для программ, использующих lm_sensors
+Summary(uk):	Файли програм╕ста для програм, як╕ використовують lm_sensors
 Group:		Development/Libraries
 Requires:	%{name} = %{version}
 Obsoletes:	liblm_sensors1-devel
@@ -58,10 +72,20 @@ Pliki nagЁСwkowe dla lm_sensors.
 Arquivos necessАrios ao desenvolvimento de programas que usem o
 lm_sensors.
 
+%description devel -l ru
+Пакет lm_sensors-devel включает хедеры и библиотеки, необходимые для
+построения программ, использующих данные сенсоров.
+
+%description devel -l uk
+Пакет lm_sensors-devel м╕стить хедери та б╕бл╕отеки, необх╕дн╕ для
+побудови програм, як╕ використовують дан╕ сенсор╕в.
+
 %package static
 Summary:	Static libraries for lm_sensors
 Summary(pl):	Biblioteki statyczne dla lm_sensors
 Summary(pt_BR):	Bibliotecas estАticas para desenvolvimento com lm_sensors
+Summary(ru):	Статическая библиотека для программ, использующих lm_sensors
+Summary(uk):	Статична б╕бл╕отека для програм, як╕ використовують lm_sensors
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}
 
@@ -73,6 +97,14 @@ Biblioteki statyczne dla lm_sensors.
 
 %description static -l pt_BR
 Bibliotecas estАticas para desenvolvimento com lm_sensors
+
+%description static -l ru
+Пакет lm_sensors-static включает статические библиотеки, необходимые
+для построения программ, использующих данные сенсоров.
+
+%description static -l uk
+Пакет lm_sensors-static м╕стить статичн╕ б╕бл╕отеки, необх╕дн╕ для
+побудови програм, як╕ використовують дан╕ сенсор╕в.
 
 %package -n kernel-misc-%{name}
 Summary:	Kernel modules for various buses and monitor chips
@@ -157,8 +189,6 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
 
 install kernel-up-modules/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
-
-find doc -type f ! -name \*.\* -a ! -name \*ticket | xargs gzip -9nf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
