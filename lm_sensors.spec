@@ -11,7 +11,7 @@ Summary(pt_BR):	Ferramentas para monitoração do hardware
 Summary(ru):	õÔÉÌÉÔÙ ÄÌÑ ÍÏÎÉÔÏÒÉÎÇÁ ÁÐÐÁÒÁÔÕÒÙ
 Summary(uk):	õÔÉÌ¦ÔÉ ÄÌÑ ÍÏÎ¦ÔÏÒÉÎÇÕ ÁÐÁÒÁÔÕÒÉ
 Name:		lm_sensors
-Version:	2.7.0
+Version:	2.8.0
 %define _rel	1
 Release:	%{_rel}
 License:	GPL
@@ -29,7 +29,7 @@ BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rpmbuild(macros) >= 1.118
 BuildRequires:	rrdtool-devel
-%{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.7.0}
+%{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.8.0}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
 
@@ -125,38 +125,40 @@ Bibliotecas estáticas para desenvolvimento com lm_sensors
 ðÁËÅÔ lm_sensors-static Í¦ÓÔÉÔØ ÓÔÁÔÉÞÎ¦ Â¦ÂÌ¦ÏÔÅËÉ, ÎÅÏÂÈ¦ÄÎ¦ ÄÌÑ
 ÐÏÂÕÄÏ×É ÐÒÏÇÒÁÍ, ÑË¦ ×ÉËÏÒÉÓÔÏ×ÕÀÔØ ÄÁÎ¦ ÓÅÎÓÏÒ¦×.
 
-%package -n kernel-misc-%{name}
+%package -n kernel-i2c-%{name}
 Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Requires(post,postun):	/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
-%{!?_without_dist_kernel:Requires:	i2c >= 2.7.0}
+%{!?_without_dist_kernel:Requires:	i2c >= 2.8.0}
 Provides:	%{name}-modules = %{version}
 Obsoletes:	%{name}-modules
+Obsoletes:	kernel-misc-lm_sensors
 
-%description -n kernel-misc-%{name}
+%description -n kernel-i2c-%{name}
 Kernel modules for various buses and monitor chips.
 
-%description -n kernel-misc-%{name} -l pl
+%description -n kernel-i2c-%{name} -l pl
 Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 
-%package -n kernel-smp-misc-%{name}
+%package -n kernel-smp-i2c-%{name}
 Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Requires(post,postun):	/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
-%{!?_without_dist_kernel:Requires:	i2c >= 2.7.0}
+%{!?_without_dist_kernel:Requires:	i2c >= 2.8.0}
 Provides:	%{name}-modules = %{version}
 Obsoletes:	%{name}-modules
+Obsoletes:	kernel-smp-misc-lm_sensors
 
-%description -n kernel-smp-misc-%{name}
+%description -n kernel-smp-i2c-%{name}
 Kernel SMP modules for various buses and monitor chips.
 
-%description -n kernel-smp-misc-%{name} -l pl
+%description -n kernel-smp-i2c-%{name} -l pl
 Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 
 %prep
@@ -165,10 +167,8 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %patch1 -p1
 
 %build
-
 %if %{?_without_smp:0}%{!?_without_smp:1}
-
-#smp
+# SMP
 %{__make} \
 	CC="%{kgcc}" \
 	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
@@ -177,15 +177,6 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 	I2C_HEADERS=%{_kernelsrcdir}/include \
 	SMP=1
 
-
-%{__make} install-kernel \
-	MODDIR=kernel-smp-modules \
-	CC="%{kgcc}" \
-	OPTS="%{rpmcflags}" \
-	LINUX=/dev/null \
-	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=1
 %{__make} install-kernel-busses \
 	MODPREF=kernel-smp-modules
 	CC="%{kgcc}" \
@@ -204,10 +195,9 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 	SMP=1
 
 %{__make} clean
-
 %endif
 
-#up
+# UP
 %{__make} \
 	CC="%{kgcc}" \
 	OPTS="%{rpmcflags}" \
@@ -218,13 +208,13 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 	SMP=0
 
 cd prog/eepromer
-%{__make}
-
+%{__make} \
+	CFLAGS="%{rpmcflags} -I../../kernel/include"
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
-	$RPM_BUILD_ROOT{/etc/{rc.d/init.d,sysconfig},/lib/modules/%{_kernel_ver}smp/misc}
+	$RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -232,7 +222,6 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	ETCDIR=%{_sysconfdir} \
 	MANDIR=%{_mandir} \
 	PROG_EXTRA:="sensord dump" \
-	MODDIR=/lib/modules/%{_kernel_ver}/misc \
 	MODPREF=/lib/modules/%{_kernel_ver}
 	CC="%{kgcc}" \
 	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
@@ -249,7 +238,11 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
 
 %if %{?_without_smp:0}%{!?_without_smp:1}
-install kernel-smp-modules/misc/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc
+install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/{busses,chips}
+install kernel-smp-modules/kernel/drivers/i2c/busses/*.o \
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/busses
+install kernel-smp-modules/kernel/drivers/i2c/chips/*.o \
+	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/chips
 %endif
 
 %clean
@@ -276,16 +269,16 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del sensors
 fi
 
-%post	-n kernel-misc-%{name}
+%post	-n kernel-i2c-%{name}
 %depmod %{_kernel_ver}
 
-%postun -n kernel-misc-%{name}
+%postun -n kernel-i2c-%{name}
 %depmod %{_kernel_ver}
 
-%post	-n kernel-smp-misc-%{name}
+%post	-n kernel-smp-i2c-%{name}
 %depmod %{_kernel_ver}smp
 
-%postun -n kernel-smp-misc-%{name}
+%postun -n kernel-smp-i2c-%{name}
 %depmod %{_kernel_ver}smp
 
 %files
@@ -325,12 +318,18 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/libsensors.a
 
-%files -n kernel-misc-%{name}
+%files -n kernel-i2c-%{name}
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/misc/*
+%dir /lib/modules/%{_kernel_ver}/kernel/drivers/i2c/busses
+/lib/modules/%{_kernel_ver}/kernel/drivers/i2c/busses/*.o*
+%dir /lib/modules/%{_kernel_ver}/kernel/drivers/i2c/chips
+/lib/modules/%{_kernel_ver}/kernel/drivers/i2c/chips/*.o*
 
 %if %{?_without_smp:0}%{!?_without_smp:1}
-%files -n kernel-smp-misc-%{name}
+%files -n kernel-smp-i2c-%{name}
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}smp/misc/*
+%dir /lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/busses
+/lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/busses/*.o*
+%dir /lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/chips
+/lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/chips/*.o*
 %endif
