@@ -1,7 +1,7 @@
 # conditional build
 # _without_dist_kernel		without kernel for distributions
 %include        /usr/lib/rpm/macros.perl
-%define         _rel 0.7
+%define         _rel 0.8
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
@@ -200,9 +200,7 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	MODDIR=/lib/modules/%{_kernel_ver}smp/misc \
 	MODPREF=/lib/modules/%{_kernel_ver}smp
 
-#install prog/sensord/sensord $RPM_BUILD_ROOT%{_sbindir}
 install prog/eepromer/{eeprom,eepromer} $RPM_BUILD_ROOT%{_sbindir}
-#install prog/sensord/sensord.8 $RPM_BUILD_ROOT%{_mandir}/man8
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
@@ -248,7 +246,8 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc BACKGROUND BUGS CHANGES README README.thinkpad TODO doc/[^k]*
+%doc BACKGROUND BUGS CHANGES README README.thinkpad TODO doc/{busses,chips}
+%doc doc/{FAQ,donations,fan-divisors,progs,temperature-sensors,*html,vid}
 %doc prog/{config,daemon,eeprom,eepromer/README*,matorb,maxilife,xeon}
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
@@ -267,7 +266,7 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
-%doc doc/developers doc/kernel
+%doc doc/{developers,kernel}
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_includedir}/sensors
 %{_includedir}/linux/*
