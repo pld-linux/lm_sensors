@@ -17,7 +17,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.9.0
-%define _rel	3
+%define _rel	4
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -342,7 +342,7 @@ fi
 %endif
 %attr(755,root,root) %{_sbindir}/pwmconfig
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sensors.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors.conf
 %{_mandir}/man1/sensors.1*
 %{_mandir}/man5/sensors.conf.5*
 %{_mandir}/man8/i2c*.8*
@@ -352,7 +352,7 @@ fi
 %defattr(644,root,root,755)
 %attr(754,root,root) %{_sbindir}/sensord
 %attr(754,root,root) /etc/rc.d/init.d/sensors
-%config(noreplace) %verify(not size mtime md5) /etc/sysconfig/sensors
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors
 %{_mandir}/man8/sensord.8*
 
 %files devel
