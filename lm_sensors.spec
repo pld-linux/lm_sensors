@@ -69,7 +69,7 @@ Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 %patch0 -p1
 
 %build
-%{__make} OPTS="$RPM_OPT_FLAGS" 
+%{__make} OPTS="%{rpmcflags}" 
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -83,11 +83,7 @@ make	install \
 	MANDIR=%{_mandir} \
 	MODDIR=/lib/modules/$REL/misc
 
-strip $RPM_BUILD_ROOT%{_bindir}/*
-strip --strip-unneeded $RPM_BUILD_ROOT%{_libdir}/lib*.so.*.*
-
-gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man[135]/* \
-	CHANGES README* BUGS CONTRIBUTORS TODO BACKGROUND
+gzip -9nf CHANGES README* BUGS CONTRIBUTORS TODO BACKGROUND
 gzip -9nf doc/* || :
 
 %post   -p /sbin/ldconfig
