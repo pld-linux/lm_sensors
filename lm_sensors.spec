@@ -8,13 +8,16 @@
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
+Summary(pt_BR):	Ferramentas para monitoração do hardware
 Name:		lm_sensors
 Version:	2.6.2
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Group(de):	Applikationen/System
+Group(es):	Aplicaciones/Sistema
 Group(pl):	Aplikacje/System
+Group(pt_BR):	Aplicações/Sistema
 Source0:	http://www.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
 Source1:	sensors.init
 Source2:	sensors.sysconfig
@@ -22,11 +25,11 @@ Patch0:		%{name}-make.patch
 URL:		http://www.netroedge.com/~lm78/
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	bison
-#BuildRequires:  i2c-devel >= 2.6.0
 PreReq:		/sbin/chkconfig
 PreReq:		/sbin/ldconfig
 Requires:	%{name}-modules = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+Obsoletes:	liblm_sensors1
 
 %description
 Tools for monitoring the hardware health of Linux systems containing
@@ -36,9 +39,15 @@ hardware health monitoring hardware such as the LM78 and LM75.
 Narzêdzie do monitorowania sprzêtu w systemach Linuksowych
 wyposa¿onych w sprzêt monitoruj±cy, taki jak LM78 lub LM75.
 
+%description -l pt_BR
+Ferramentas para monitoração do hardware. Contém uma coleção de
+módulos para acesso genérico ao barramento SMBus e monitoração de
+hardware.
+
 %package devel
 Summary:	Header files for lm_sensors
 Summary(pl):	Pliki nag³ówkowe dla lm_sensors
+Summary(pt_BR):	Arquivos necessários ao desenvolvimento de programas que usem o lm_sensors
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
 Group(es):	Desarrollo/Bibliotecas
@@ -48,6 +57,7 @@ Group(pt_BR):	Desenvolvimento/Bibliotecas
 Group(ru):	òÁÚÒÁÂÏÔËÁ/âÉÂÌÉÏÔÅËÉ
 Group(uk):	òÏÚÒÏÂËÁ/â¦ÂÌ¦ÏÔÅËÉ
 Requires:	%{name} = %{version}
+Obsoletes:	liblm_sensors1-devel
 
 %description devel
 Header files for lm_sensors.
@@ -55,9 +65,14 @@ Header files for lm_sensors.
 %description devel -l pl
 Pliki nag³ówkowe dla lm_sensors.
 
+%description devel -l pt_BR
+Arquivos necessários ao desenvolvimento de programas que usem o
+lm_sensors.
+
 %package static
 Summary:	Static libraries for lm_sensors
 Summary(pl):	Biblioteki statyczne dla lm_sensors
+Summary(pt_BR):	Bibliotecas estáticas para desenvolvimento com lm_sensors
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
 Group(es):	Desarrollo/Bibliotecas
@@ -74,12 +89,17 @@ Static libraries for lm_sensors.
 %description static -l pl
 Biblioteki statyczne dla lm_sensors.
 
+%description static -l pt_BR
+Bibliotecas estáticas para desenvolvimento com lm_sensors
+
 %package -n kernel-misc-%{name}
 Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Group(de):	Applikationen/System
+Group(es):	Aplicaciones/Sistema
 Group(pl):	Aplikacje/System
+Group(pt_BR):	Aplicações/Sistema
 Release:	%{_rel}@%{_kernel_ver_str}
 Prereq:		/sbin/depmod
 Requires:	i2c >= 2.6.0
@@ -95,21 +115,22 @@ Kernel modules for various buses and monitor chips.
 %description -n kernel-misc-%{name} -l pl
 Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 
-
 %package -n kernel-smp-misc-%{name}
-Summary:        Kernel modules for various buses and monitor chips
-Summary(pl):    Modu³y j±dra dla ró¿nego rodzaju sensorów
-Group:          Applications/System
-Group(de):      Applikationen/System
-Group(pl):      Aplikacje/System
-Release:        %{_rel}@%{_kernel_ver_str}
-Prereq:         /sbin/depmod
-Requires:       i2c >= 2.6.0
+Summary:	Kernel modules for various buses and monitor chips
+Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
+Group:		Applications/System
+Group(de):	Applikationen/System
+Group(es):	Aplicaciones/Sistema
+Group(pl):	Aplikacje/System
+Group(pt_BR):	Aplicações/Sistema
+Release:	%{_rel}@%{_kernel_ver_str}
+Prereq:		/sbin/depmod
+Requires:	i2c >= 2.6.0
 %{?!_without_dist_kernel:Conflicts:     kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
 %{?!_without_dist_kernel:Conflicts:     kernel-up}
-Obsoletes:      %{name}-modules
-Obsoletes:      kernel-misc-%{name}
-Provides:       %{name}-modules = %{version}
+Obsoletes:	%{name}-modules
+Obsoletes:	kernel-misc-%{name}
+Provides:	%{name}-modules = %{version}
 
 %description -n kernel-smp-misc-%{name}
 Kernel SMP modules for various buses and monitor chips.
@@ -117,14 +138,11 @@ Kernel SMP modules for various buses and monitor chips.
 %description -n kernel-smp-misc-%{name} -l pl
 Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 
-
-
 %prep
 %setup -q
 %patch0 -p1
 
 %build
-
 #up
 %{__make} \
 	OPTS="%{rpmcflags}" \
@@ -152,6 +170,8 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 					
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
+	$RPM_BUILD_ROOT{/etc/{rc.d/init.d,sysconfig},/lib/modules/%{_kernel_ver}/misc}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -160,16 +180,12 @@ rm -rf $RPM_BUILD_ROOT
 	MANDIR=%{_mandir} \
 	MODDIR=/lib/modules/%{_kernel_ver}smp/misc
 
-install -d $RPM_BUILD_ROOT%{_sbindir}
-install -d $RPM_BUILD_ROOT%{_mandir}/man8
 install prog/sensord/sensord $RPM_BUILD_ROOT%{_sbindir}
 install prog/sensord/sensord.8 $RPM_BUILD_ROOT%{_mandir}/man8
 
-install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
 
-install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 install kernel-up-modules/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc 
 
 gzip -9nf BACKGROUND BUGS CHANGES README README.thinkpad TODO
