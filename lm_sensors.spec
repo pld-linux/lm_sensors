@@ -26,7 +26,6 @@ BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rrdtool-devel
 %{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.6.0}
-PreReq:		/sbin/ldconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
 
@@ -59,7 +58,7 @@ SMBus та мон╕торингу. УВАГА: для цього потр╕бна спец╕альна п╕дтримка,
 Summary:	Sensord daemon
 Summary(pl):	Demon sensord
 Group:		Daemon
-PreReq:		/sbin/chkconfig
+Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}
 
 %description sensord
@@ -219,8 +218,7 @@ install kernel-up-modules/misc/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -p /sbin/ldconfig
-
+%post	-p /sbin/ldconfig
 %postun	-p /sbin/ldconfig
 
 %post sensord
