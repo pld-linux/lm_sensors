@@ -13,7 +13,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.6.4
-%define _rel	9
+%define _rel	10
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -62,7 +62,7 @@ SMBus та мон╕торингу. УВАГА: для цього потр╕бна спец╕альна п╕дтримка,
 %package sensord
 Summary:	Sensord daemon
 Summary(pl):	Demon sensord
-Group:		Daemon
+Group:		Daemons
 Requires:	%{name} = %{version}
 
 %description sensord
