@@ -14,19 +14,6 @@ Version:	2.6.2
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
-Group(cs):	Aplikace/Systém
-Group(da):	Programmer/System
-Group(de):	Applikationen/System
-Group(es):	Aplicaciones/Sistema
-Group(fr):	Applications/Système
-Group(it):	Applicazioni/Sistema
-Group(ja):	¥¢¥×¥ê¥±¡¼¥·¥ç¥ó/¥·¥¹¥Æ¥à
-Group(no):	Applikasjoner/System
-Group(pl):	Aplikacje/System
-Group(pt):	Aplicações/Sistema
-Group(pt_BR):	Aplicações/Sistema
-Group(ru):	ðÒÉÌÏÖÅÎÉÑ/óÉÓÔÅÍÁ
-Group(sv):	Tillämpningar/System
 Source0:	http://www.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
 Source1:	sensors.init
 Source2:	sensors.sysconfig
@@ -58,20 +45,6 @@ Summary:	Header files for lm_sensors
 Summary(pl):	Pliki nag³ówkowe dla lm_sensors
 Summary(pt_BR):	Arquivos necessários ao desenvolvimento de programas que usem o lm_sensors
 Group:		Development/Libraries
-Group(cs):	Vývojové prostøedky/Knihovny
-Group(da):	Udvikling/Biblioteker
-Group(de):	Entwicklung/Bibliotheken
-Group(es):	Desarrollo/Bibliotecas
-Group(fr):	Development/Librairies
-Group(it):	Sviluppo/Librerie
-Group(ja):	³«È¯/¥é¥¤¥Ö¥é¥ê
-Group(no):	Utvikling/Bibliotek
-Group(pl):	Programowanie/Biblioteki
-Group(pt_BR):	Desenvolvimento/Bibliotecas
-Group(pt):	Desenvolvimento/Bibliotecas
-Group(ru):	òÁÚÒÁÂÏÔËÁ/âÉÂÌÉÏÔÅËÉ
-Group(sv):	Utveckling/Bibliotek
-Group(uk):	òÏÚÒÏÂËÁ/â¦ÂÌ¦ÏÔÅËÉ
 Requires:	%{name} = %{version}
 Obsoletes:	liblm_sensors1-devel
 
@@ -90,20 +63,6 @@ Summary:	Static libraries for lm_sensors
 Summary(pl):	Biblioteki statyczne dla lm_sensors
 Summary(pt_BR):	Bibliotecas estáticas para desenvolvimento com lm_sensors
 Group:		Development/Libraries
-Group(cs):	Vývojové prostøedky/Knihovny
-Group(da):	Udvikling/Biblioteker
-Group(de):	Entwicklung/Bibliotheken
-Group(es):	Desarrollo/Bibliotecas
-Group(fr):	Development/Librairies
-Group(it):	Sviluppo/Librerie
-Group(ja):	³«È¯/¥é¥¤¥Ö¥é¥ê
-Group(no):	Utvikling/Bibliotek
-Group(pl):	Programowanie/Biblioteki
-Group(pt_BR):	Desenvolvimento/Bibliotecas
-Group(pt):	Desenvolvimento/Bibliotecas
-Group(ru):	òÁÚÒÁÂÏÔËÁ/âÉÂÌÉÏÔÅËÉ
-Group(sv):	Utveckling/Bibliotek
-Group(uk):	òÏÚÒÏÂËÁ/â¦ÂÌ¦ÏÔÅËÉ
 Requires:	%{name}-devel = %{version}
 
 %description static
@@ -119,19 +78,6 @@ Bibliotecas estáticas para desenvolvimento com lm_sensors
 Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
-Group(cs):	Aplikace/Systém
-Group(da):	Programmer/System
-Group(de):	Applikationen/System
-Group(es):	Aplicaciones/Sistema
-Group(fr):	Applications/Système
-Group(it):	Applicazioni/Sistema
-Group(ja):	¥¢¥×¥ê¥±¡¼¥·¥ç¥ó/¥·¥¹¥Æ¥à
-Group(no):	Applikasjoner/System
-Group(pl):	Aplikacje/System
-Group(pt):	Aplicações/Sistema
-Group(pt_BR):	Aplicações/Sistema
-Group(ru):	ðÒÉÌÏÖÅÎÉÑ/óÉÓÔÅÍÁ
-Group(sv):	Tillämpningar/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:Requires:	i2c >= 2.6.0}
@@ -150,19 +96,6 @@ Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
-Group(cs):	Aplikace/Systém
-Group(da):	Programmer/System
-Group(de):	Applikationen/System
-Group(es):	Aplicaciones/Sistema
-Group(fr):	Applications/Système
-Group(it):	Applicazioni/Sistema
-Group(ja):	¥¢¥×¥ê¥±¡¼¥·¥ç¥ó/¥·¥¹¥Æ¥à
-Group(no):	Applikasjoner/System
-Group(pl):	Aplikacje/System
-Group(pt):	Aplicações/Sistema
-Group(pt_BR):	Aplicações/Sistema
-Group(ru):	ðÒÉÌÏÖÅÎÉÑ/óÉÓÔÅÍÁ
-Group(sv):	Tillämpningar/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:Requires:	i2c >= 2.6.0}
