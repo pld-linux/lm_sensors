@@ -1,8 +1,10 @@
-#
+# TODO:
+#  - Fix build of eeprom on Ra systems.
 # Conditional build:
 # _without_dist_kernel		without kernel for distributions
 # _without_smp                  without build smp package
 #
+
 %include	/usr/lib/rpm/macros.perl
 
 Summary:	Hardware health monitoring
@@ -12,7 +14,7 @@ Summary(ru):	ı‘…Ã…‘Ÿ ƒÃ— ÕœŒ…‘œ“…Œ«¡ ¡––¡“¡‘’“Ÿ
 Summary(uk):	ı‘…Ã¶‘… ƒÃ— ÕœŒ¶‘œ“…Œ«’ ¡–¡“¡‘’“…
 Name:		lm_sensors
 Version:	2.7.0
-%define _rel	1
+%define _rel	2
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -217,8 +219,8 @@ Modu≥y j±dra SMP dla rÛønego rodzaju sensorÛw monitoruj±cych.
 	PROG_EXTRA:="sensord dump" \
 	SMP=0
 
-cd prog/eepromer
-%{__make}
+#cd prog/eepromer
+#%%{__make}
 
 
 %install
@@ -241,7 +243,7 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
 	SMP=0
 
-install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
+# install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
 install prog/dump/{i2c{dump,set},isadump} $RPM_BUILD_ROOT%{_sbindir}
 install prog/detect/i2cdetect $RPM_BUILD_ROOT%{_sbindir}
 
@@ -292,13 +294,13 @@ fi
 %defattr(644,root,root,755)
 %doc BACKGROUND BUGS CHANGES README README.thinkpad TODO doc/{busses,chips}
 %doc doc/{FAQ,donations,fan-divisors,progs,temperature-sensors,*html,vid}
-%doc prog/{config,daemon,eeprom,eepromer/README*,matorb,maxilife,xeon}
+#%%doc prog/{config,daemon,eeprom,eepromer/README*,matorb,maxilife,xeon}
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
 %if %{_kernel24}
 %attr(755,root,root) %{_sbindir}/dmidecode
 %endif
-%attr(755,root,root) %{_sbindir}/eeprom*
+#%%attr(755,root,root) %{_sbindir}/eeprom*
 %attr(755,root,root) %{_sbindir}/i2c*
 %attr(755,root,root) %{_sbindir}/isadump
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
