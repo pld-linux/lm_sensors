@@ -9,8 +9,8 @@ Summary(pt_BR):	Ferramentas para monitoraÁ„o do hardware
 Summary(ru):	ı‘…Ã…‘Ÿ ƒÃ— ÕœŒ…‘œ“…Œ«¡ ¡––¡“¡‘’“Ÿ
 Summary(uk):	ı‘…Ã¶‘… ƒÃ— ÕœŒ¶‘œ“…Œ«’ ¡–¡“¡‘’“…
 Name:		lm_sensors
-Version:	2.6.5
-%define _rel	1
+Version:	2.6.4
+%define _rel	4
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -163,7 +163,7 @@ Modu≥y j±dra SMP dla rÛønego rodzaju sensorÛw monitoruj±cych.
 #up
 %{__make} \
 	OPTS="%{rpmcflags}" \
-	LINUX=/usr/src/linux \
+	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
 	SMP=0
@@ -180,7 +180,7 @@ Modu≥y j±dra SMP dla rÛønego rodzaju sensorÛw monitoruj±cych.
 #smp
 %{__make} \
 	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
-	LINUX=/usr/src/linux \
+	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
 	PROG_EXTRA:="sensord dump" \
