@@ -245,8 +245,6 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	I2C_HEADERS=/usr/include
 
 install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
-#install prog/dump/{i2c{dump,set},isadump} $RPM_BUILD_ROOT%{_sbindir}
-#install prog/detect/i2cdetect $RPM_BUILD_ROOT%{_sbindir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
