@@ -4,24 +4,24 @@
 # _without_smp                  without build smp package
 #
 %include	/usr/lib/rpm/macros.perl
-
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
 Summary(pt_BR):	Ferramentas para monitoração do hardware
 Summary(ru):	õÔÉÌÉÔÙ ÄÌÑ ÍÏÎÉÔÏÒÉÎÇÁ ÁĞĞÁÒÁÔÕÒÙ
 Summary(uk):	õÔÉÌ¦ÔÉ ÄÌÑ ÍÏÎ¦ÔÏÒÉÎÇÕ ÁĞÁÒÁÔÕÒÉ
 Name:		lm_sensors
-Version:	2.8.0
-%define _rel	1.1
+Version:	2.8.1
+%define _rel	1
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://secure.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	228d3536e51f017e45aa5f21973ced0d
+# Source0-md5:	2ea0d608404aced13211174e03b1268a
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
 Patch1:		%{name}-ppc.patch
+Patch2:		%{name}-ddc-fix.patch
 URL:		http://www.lm-sensors.nu/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
@@ -29,8 +29,9 @@ BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rpmbuild(macros) >= 1.118
 BuildRequires:	rrdtool-devel
-%{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.8.0}
+%{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.8.1}
 %{!?_without_dist_kernel:BuildRequires:	kernel-headers >= 2.4.0}
+%{!?_without_dist_kernel:BuildRequires:	kernel-headers < 2.5.0}
 Requires:	dmidecode
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
@@ -165,6 +166,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %if %{?_without_smp:0}%{!?_without_smp:1}
@@ -178,7 +180,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 	SMP=1
 
 %{__make} install-kernel-busses \
-	MODPREF=kernel-smp-modules
+	MODPREF=kernel-smp-modules \
 	CC="%{kgcc}" \
 	OPTS="%{rpmcflags}" \
 	LINUX=/dev/null \
@@ -186,7 +188,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 	I2C_HEADERS=%{_kernelsrcdir}/include \
 	SMP=1
 %{__make} install-kernel-chips \
-	MODPREF=kernel-smp-modules
+	MODPREF=kernel-smp-modules \
 	CC="%{kgcc}" \
 	OPTS="%{rpmcflags}" \
 	LINUX=/dev/null \
@@ -222,7 +224,7 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	ETCDIR=%{_sysconfdir} \
 	MANDIR=%{_mandir} \
 	PROG_EXTRA:="sensord dump" \
-	MODPREF=/lib/modules/%{_kernel_ver}
+	MODPREF=/lib/modules/%{_kernel_ver} \
 	CC="%{kgcc}" \
 	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
 	LINUX=/dev/null \

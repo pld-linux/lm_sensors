@@ -83,13 +83,13 @@ diff -Nur lm_sensors-2.8.0.orig/lib/Module.mk lm_sensors-2.8.0/lib/Module.mk
  
  
  user_install :: install-lib
-diff -Nur lm_sensors-2.8.0.orig/Makefile lm_sensors-2.8.0/Makefile
---- lm_sensors-2.8.0.orig/Makefile	2003-07-08 11:06:50.000000000 +0200
-+++ lm_sensors-2.8.0/Makefile	2003-07-25 23:13:29.000000000 +0200
+diff -Nur lm_sensors-2.8.1.orig/Makefile lm_sensors-2.8.1/Makefile
+--- lm_sensors-2.8.1.orig/Makefile	2003-07-08 11:06:50.000000000 +0200
++++ lm_sensors-2.8.1/Makefile	2003-07-25 23:13:29.000000000 +0200
 @@ -186,7 +186,8 @@
  # ARCPPFLAGS/ARCFLAGS are used to create archive object files (static libraries).
  # LIBCPPFLAGS/LIBCFLAGS are for shared library objects.
- ALL_CPPFLAGS := -I. -Ikernel/include -I$(I2C_HEADERS) -I$(LINUX_HEADERS)
+ ALL_CPPFLAGS := -I. -Ikernel/include -I$(I2C_HEADERS)
 -ALL_CFLAGS := -Wall -O2 
 +OPTS = -O2
 +ALL_CFLAGS := -Wall $(OPTS)
