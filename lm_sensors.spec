@@ -13,7 +13,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.8.2
-%define _rel	1
+%define _rel	2
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -248,6 +248,9 @@ install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
+
+# i2c API for userspace - included in glibc-kernel-headers
+rm -f $RPM_BUILD_ROOT%{_includedir}/linux/i2c-dev.h
 %endif
 
 %if %{with kernel} && %{with smp}
@@ -326,8 +329,6 @@ fi
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_includedir}/sensors
 %{_includedir}/linux/sensors.h
-# i2c userspace header - should be in glibc-kernel-headers
-%{_includedir}/linux/i2c-dev.h
 %{_mandir}/man3/*
 
 %files static
