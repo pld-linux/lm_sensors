@@ -11,7 +11,7 @@ Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
 Name:		lm_sensors
 Version:	2.6.2
-Release:	4
+Release:	5
 License:	GPL
 Group:		Applications/System
 Group(de):	Applikationen/System
