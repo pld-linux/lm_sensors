@@ -1,5 +1,7 @@
-%define		_kernel_ver	%(grep UTS_RELEASE /usr/src/linux/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
+%define		_kernel_ver	%(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
 %define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
+%define		smpstr		%{?_with_smp:smp}%{!?_with_smp:up}
+%define		smp		%{?_with_smp:1}%{!?_with_smp:0}
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
@@ -12,7 +14,8 @@ Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
 Source0:	http://www.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
 Patch0:		%{name}-make.patch
-Prereq:		/sbin/depmod
+BuildRequires:	flex >= 2.5.1
+BuildRequires:	kernel-headers >= 2.3.0
 Requires:	%{name}-modules = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -60,6 +63,10 @@ Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
+Release:	%{release}@%{_kernel_ver}%{smpstr}
+Prereq:		/sbin/depmod
+Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
+Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
 
 %description modules
 Kernel modules for various buses and monitor chips.
@@ -72,7 +79,15 @@ Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 %patch0 -p1
 
 %build
-%{__make} OPTS="%{rpmcflags}" 
+%if %{smp}
+SMP="-D__KERNEL_SMP=1"
+%endif
+%{__make} \
+	OPTS="%{rpmcflags} $SMP" \
+	LINUX=/dev/null \
+	LINUX_HEADERS=%{_kernelsrcdir}/include \
+	I2C_HEADERS=%{_kernelsrcdir}/include \
+	SMP=%{smp}
 
 %install
 rm -rf $RPM_BUILD_ROOT
