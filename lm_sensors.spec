@@ -13,6 +13,7 @@ Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
 Source0:	http://www.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
 Patch0:		%{name}-make.patch
+URL:		http://www.netroedge.com/~lm78/
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	i2c-devel >= 2.6.0
 Requires:	%{name}-modules = %{version}
