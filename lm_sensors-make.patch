@@ -118,18 +118,6 @@ diff -urN lm_sensors-2.6.5.orig/prog/detect/Module.mk lm_sensors-2.6.5/prog/dete
  install :: install-prog-detect
  
  clean-prog-detect:
-diff -urN lm_sensors-2.6.5.orig/prog/dump/Module.mk lm_sensors-2.6.5/prog/dump/Module.mk
---- lm_sensors-2.6.5.orig/prog/dump/Module.mk	Sun Sep 22 13:29:54 2002
-+++ lm_sensors-2.6.5/prog/dump/Module.mk	Sun Sep 22 13:49:15 2002
-@@ -39,7 +39,7 @@
- 
- install-prog-dump: all-prog-dump
- 	mkdir -p $(DESTDIR)$(SBINDIR)
--	$(INSTALL) -o root -g root -m 755 $(PROGDUMPBININSTALL) $(DESTDIR)$(SBINDIR)
-+	$(INSTALL) -m 755 $(PROGDUMPBININSTALL) $(DESTDIR)$(SBINDIR)
- install :: install-prog-dump
- 
- clean-prog-dump:
 diff -urN lm_sensors-2.6.5.orig/prog/rrd/Makefile lm_sensors-2.6.5/prog/rrd/Makefile
 --- lm_sensors-2.6.5.orig/prog/rrd/Makefile	Sun Sep 22 13:29:54 2002
 +++ lm_sensors-2.6.5/prog/rrd/Makefile	Sun Sep 22 13:31:17 2002
