@@ -1,7 +1,7 @@
 # conditional build
 # _without_dist_kernel		without kernel for distributions
 %include        /usr/lib/rpm/macros.perl
-%define         _rel 0.8
+%define         _rel 0.9
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
@@ -201,6 +201,7 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	MODPREF=/lib/modules/%{_kernel_ver}smp
 
 install prog/eepromer/{eeprom,eepromer} $RPM_BUILD_ROOT%{_sbindir}
+install prog/dump/{i2c{dump,set},isadump} $RPM_BUILD_ROOT%{_sbindir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
@@ -252,6 +253,8 @@ fi
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
 %attr(755,root,root) %{_sbindir}/eeprom*
+%attr(755,root,root) %{_sbindir}/i2c*
+%attr(755,root,root) %{_sbindir}/isadump
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sensors.conf
 %{_mandir}/man1/*
