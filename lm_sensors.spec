@@ -39,9 +39,9 @@ BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rrdtool-devel
 %endif
 %if %{with kernel} && %{with dist_kernel}
-BuildRequires:	kernel-i2c-devel >= 2.9.0
-BuildRequires:	kernel-headers >= 2.4.0
-BuildRequires:	kernel-headers < 2.5.0
+BuildRequires:	kernel24-i2c-devel >= 2.9.0
+BuildRequires:	kernel24-headers >= 2.4.0
+BuildRequires:	kernel24-headers < 2.5.0
 %endif
 Requires:	dev >= 2.9.0-13
 Requires:	dmidecode
