@@ -158,7 +158,6 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
 
 install kernel-up-modules/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 
-gzip -9nf BACKGROUND BUGS CHANGES README README.thinkpad TODO
 find doc -type f ! -name \*.\* -a ! -name \*ticket | xargs gzip -9nf
 
 %clean
@@ -200,8 +199,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz
-%doc doc/*.gz doc/*.html doc/busses doc/chips
+%doc BACKGROUND BUGS CHANGES README README.thinkpad TODO doc/[^k]*
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
 %attr(754,root,root) %{_sbindir}/sensord
