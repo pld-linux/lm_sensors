@@ -22,7 +22,8 @@ case "$1" in
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/sensors ]; then
 		if [ -z "$BUS" ] || [ -z "$CHIP" ]; then 
-			# sensors not configured		
+			msg_starting "sensors daemon"; fail
+			nls "BUS or CHIP not configured in /etc/sysconfig/sensors"
 			exit 1
 		fi
 		
@@ -72,7 +73,7 @@ case "$1" in
 	fi
 	;;
   status)
-	status sensord
+	status sensors sensord
 	sensors
 	;;
   restart)
