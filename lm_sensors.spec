@@ -1,6 +1,7 @@
 #
 # Conditional build:
 # _without_dist_kernel		without kernel for distributions
+# _without_smp                  without build smp package
 #
 %include	/usr/lib/rpm/macros.perl
 
@@ -162,59 +163,66 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %patch1 -p1
 
 %build
-#up
-%{__make} \
-	CC=%{kgcc} \
-	OPTS="%{rpmcflags}" \
-	LINUX=/dev/null \
-	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=0
 
-%{__make} install-kernel \
-	MODDIR=kernel-up-modules \
-	CC=%{kgcc} \
-	OPTS="%{rpmcflags}" \
-	LINUX=/dev/null \
-	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=0
-%{__make} install-kernel-busses \
-	MODPREF=kernel-up-modules \
-	CC=%{kgcc} \
-	OPTS="%{rpmcflags}" \
-	LINUX=/dev/null \
-	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=0
-%{__make} install-kernel-chips \
-	MODPREF=kernel-up-modules \
-	CC=%{kgcc} \
-	OPTS="%{rpmcflags}" \
-	LINUX=/dev/null \
-	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=0
-
-%{__make} clean
+%if %{?_without_smp:0}%{!?_without_smp:1}
 
 #smp
 %{__make} \
-	CC=%{kgcc} \
+	CC="%{kgcc}" \
 	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
-	PROG_EXTRA:="sensord dump" \
 	SMP=1
+
+
+%{__make} install-kernel \
+	MODDIR=kernel-smp-modules \
+	CC="%{kgcc}" \
+	OPTS="%{rpmcflags}" \
+	LINUX=/dev/null \
+	LINUX_HEADERS=%{_kernelsrcdir}/include \
+	I2C_HEADERS=%{_kernelsrcdir}/include \
+	SMP=1
+%{__make} install-kernel-busses \
+	MODPREF=kernel-smp-modules
+	CC="%{kgcc}" \
+	OPTS="%{rpmcflags}" \
+	LINUX=/dev/null \
+	LINUX_HEADERS=%{_kernelsrcdir}/include \
+	I2C_HEADERS=%{_kernelsrcdir}/include \
+	SMP=1
+%{__make} install-kernel-chips \
+	MODPREF=kernel-smp-modules
+	CC="%{kgcc}" \
+	OPTS="%{rpmcflags}" \
+	LINUX=/dev/null \
+	LINUX_HEADERS=%{_kernelsrcdir}/include \
+	I2C_HEADERS=%{_kernelsrcdir}/include \
+	SMP=1
+
+%{__make} clean
+
+%endif
+
+#up
+%{__make} \
+	CC="%{kgcc}" \
+	OPTS="%{rpmcflags}" \
+	LINUX=/dev/null \
+	LINUX_HEADERS=%{_kernelsrcdir}/include \
+	I2C_HEADERS=%{_kernelsrcdir}/include \
+	PROG_EXTRA:="sensord dump" \
+	SMP=0
 
 cd prog/eepromer
 %{__make}
 
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
-	$RPM_BUILD_ROOT{/etc/{rc.d/init.d,sysconfig},/lib/modules/%{_kernel_ver}/misc}
+	$RPM_BUILD_ROOT{/etc/{rc.d/init.d,sysconfig},/lib/modules/%{_kernel_ver}smp/misc}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -222,14 +230,14 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	ETCDIR=%{_sysconfdir} \
 	MANDIR=%{_mandir} \
 	PROG_EXTRA:="sensord dump" \
-	MODDIR=/lib/modules/%{_kernel_ver}smp/misc \
-	MODPREF=/lib/modules/%{_kernel_ver}smp \
-	CC=%{kgcc} \
+	MODDIR=/lib/modules/%{_kernel_ver}/misc \
+	MODPREF=/lib/modules/%{_kernel_ver}
+	CC="%{kgcc}" \
 	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=1
+	SMP=0
 
 install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
 install prog/dump/{i2c{dump,set},isadump} $RPM_BUILD_ROOT%{_sbindir}
@@ -238,7 +246,9 @@ install prog/detect/i2cdetect $RPM_BUILD_ROOT%{_sbindir}
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
 
-install kernel-up-modules/misc/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+%if %{?_without_smp:0}%{!?_without_smp:1}
+install kernel-smp-modules/misc/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -317,6 +327,8 @@ fi
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/misc/*
 
+%if %{?_without_smp:0}%{!?_without_smp:1}
 %files -n kernel-smp-misc-%{name}
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/misc/*
+%endif
