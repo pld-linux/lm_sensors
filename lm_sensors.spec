@@ -13,7 +13,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.8.6
-%define _rel	1
+%define _rel	2
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -173,11 +173,6 @@ ModuЁy j╠dra SMP dla rС©nego rodzaju sensorСw monitoruj╠cych.
 %patch1 -p1
 %patch2 -p1
 
-%ifarch ppc sparc sparc64 sparcv9
-# no isadump
-%{__perl} -pi -e 's@ prog/dump @ @' Makefile
-%endif
-
 %build
 %if %{with kernel} && %{with smp}
 # SMP
@@ -318,7 +313,7 @@ fi
 %attr(755,root,root) %{_sbindir}/eeprom*
 %attr(755,root,root) %{_sbindir}/fancontrol
 %attr(755,root,root) %{_sbindir}/i2c*
-%ifnarch ppc sparc sparc64 sparcv9
+%ifarch %{ix86} amd64
 %attr(755,root,root) %{_sbindir}/isadump
 %{_mandir}/man8/isadump.8*
 %endif
