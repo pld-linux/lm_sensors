@@ -28,7 +28,6 @@ BuildRequires:	flex >= 2.5.1
 %{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.6.0}
 PreReq:		/sbin/chkconfig
 PreReq:		/sbin/ldconfig
-Requires:	kernel-misc-lm_sensors = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
 
