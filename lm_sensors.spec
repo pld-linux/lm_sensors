@@ -1,12 +1,11 @@
 %define		_kernel_ver	%(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
-%define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
 %define		smpstr		%{?_with_smp:smp}%{!?_with_smp:up}
 %define		smp		%{?_with_smp:1}%{!?_with_smp:0}
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzЙtu
 Name:		lm_sensors
-Version:	2.5.5
+Version:	2.6.1
 Release:	1
 License:	GPL
 Group:		Applications/System
@@ -15,7 +14,7 @@ Group(pl):	Aplikacje/System
 Source0:	http://www.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
 Patch0:		%{name}-make.patch
 BuildRequires:	flex >= 2.5.1
-BuildRequires:	kernel-headers >= 2.3.0
+BuildRequires:	i2c-devel >= 2.6.0
 Requires:	%{name}-modules = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -32,8 +31,12 @@ Summary:	Header files for lm_sensors
 Summary(pl):	Pliki nagЁСwkowe dla lm_sensors
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
+Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
+Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(ru):	Разработка/Библиотеки
+Group(uk):	Розробка/Б╕бл╕отеки
 Requires:	%{name} = %{version}
 
 %description devel
@@ -47,12 +50,16 @@ Summary:	Static libraries for lm_sensors
 Summary(pl):	Biblioteki statyczne dla lm_sensors
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
+Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
+Group(pt_BR):	Desenvolvimento/Bibliotecas
+Group(ru):	Разработка/Библиотеки
+Group(uk):	Розробка/Б╕бл╕отеки
 Requires:	%{name}-devel = %{version}
 
 %description static
-Statis libraries for lm_sensors.
+Static libraries for lm_sensors.
 
 %description static -l pl
 Biblioteki statyczne dla lm_sensors.
@@ -65,6 +72,7 @@ Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
 Release:	%{release}@%{_kernel_ver}%{smpstr}
 Prereq:		/sbin/depmod
+Requires:	i2c >= 2.6.0
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
 Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
 
@@ -97,14 +105,10 @@ rm -rf $RPM_BUILD_ROOT
 	PREFIX=%{_prefix} \
 	ETCDIR=%{_sysconfdir} \
 	MANDIR=%{_mandir} \
-%if %{_kernel24}
-	MODDIR=/lib/modules/%{_kernel_ver}/kernel/drivers/i2c
-%else
 	MODDIR=/lib/modules/%{_kernel_ver}/misc
-%endif
 
-gzip -9nf CHANGES README* BUGS CONTRIBUTORS TODO BACKGROUND
-gzip -9nf doc/* || :
+gzip -9nf BACKGROUND BUGS CHANGES README README.thinkpad TODO
+find doc -type f ! -name \*.\* -a ! -name \*ticket | xargs gzip -9nf
 
 %post   -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -120,12 +124,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files 
 %defattr(644,root,root,755)
-%doc {CHANGES,README*,BUGS,CONTRIBUTORS,TODO,BACKGROUND}.gz 
-%doc doc/*.gz doc/busses doc/chips
+%doc *.gz 
+%doc doc/*.gz doc/*.html doc/busses doc/chips
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
-%config %{_sysconfdir}/sensors.conf
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sensors.conf
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 
@@ -144,8 +148,4 @@ rm -rf $RPM_BUILD_ROOT
 
 %files modules
 %defattr(644,root,root,755)
-%if %{_kernel24}
-/lib/modules/*/kernel/drivers/i2c/*
-%else
 /lib/modules/*/misc/*
-%endif
