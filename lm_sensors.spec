@@ -139,7 +139,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
         LINUX_HEADERS=%{_kernelsrcdir}/include \
         I2C_HEADERS=%{_kernelsrcdir}/include \
         SMP=1
-					
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
@@ -158,7 +158,7 @@ install prog/sensord/sensord.8 $RPM_BUILD_ROOT%{_mandir}/man8
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
 
-install kernel-up-modules/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc 
+install kernel-up-modules/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 
 gzip -9nf BACKGROUND BUGS CHANGES README README.thinkpad TODO
 find doc -type f ! -name \*.\* -a ! -name \*ticket | xargs gzip -9nf
@@ -200,9 +200,9 @@ fi
 %postun -n kernel-smp-misc-%{name}
 /sbin/depmod -a
 
-%files 
+%files
 %defattr(644,root,root,755)
-%doc *.gz 
+%doc *.gz
 %doc doc/*.gz doc/*.html doc/busses doc/chips
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
