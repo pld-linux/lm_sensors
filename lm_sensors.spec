@@ -17,7 +17,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.9.0
-%define _rel	0.1
+%define _rel	1
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -43,9 +43,10 @@ BuildRequires:	kernel-i2c-devel >= 2.9.0
 BuildRequires:	kernel-headers >= 2.4.0
 BuildRequires:	kernel-headers < 2.5.0
 %endif
+Requires:	dev >= 2.9.0-13
 Requires:	dmidecode
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_kernelsrcdir		/usr/src/linux-2.4
 
