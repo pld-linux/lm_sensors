@@ -11,7 +11,7 @@ Patch0:		lm_sensors-DESTDIR.patch
 Patch1:		lm_sensors-opts.patch
 Prereq:		/sbin/depmod
 Requires:       %{name}-modules = %{version}
-BuildRoot:	/tmp/%{name}-%{version}-root
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define	_sysconfdir	/etc
 
