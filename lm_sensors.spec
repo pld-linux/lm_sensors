@@ -27,6 +27,7 @@ BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
+BuildRequires:	rpmbuild(macros) >= 1.118
 BuildRequires:	rrdtool-devel
 %{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.7.0}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -276,16 +277,16 @@ if [ "$1" = "0" ]; then
 fi
 
 %post	-n kernel-misc-%{name}
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %postun -n kernel-misc-%{name}
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %post	-n kernel-smp-misc-%{name}
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 
 %postun -n kernel-smp-misc-%{name}
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver}smp }%{_kernel_ver}smp
+%depmod %{_kernel_ver}smp
 
 %files
 %defattr(644,root,root,755)
