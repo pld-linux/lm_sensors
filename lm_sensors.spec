@@ -3,9 +3,6 @@
 #
 %include        /usr/lib/rpm/macros.perl
 
-%define		_kernel_ver	%(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
-%define		_kernel_ver_str	%(echo %{_kernel_ver} | sed s/-/_/g)
-
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzЙtu
 Summary(pt_BR):	Ferramentas para monitoraГЦo do hardware
@@ -13,7 +10,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.6.4
-%define	_rel	14
+%define	_rel	15
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
