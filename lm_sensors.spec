@@ -1,7 +1,7 @@
 # conditional build
 # _without_dist_kernel		without kernel for distributions
 %include        /usr/lib/rpm/macros.perl
-%define         _rel 0.9
+%define         _rel 0.10
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
@@ -200,8 +200,9 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	MODDIR=/lib/modules/%{_kernel_ver}smp/misc \
 	MODPREF=/lib/modules/%{_kernel_ver}smp
 
-install prog/eepromer/{eeprom,eepromer} $RPM_BUILD_ROOT%{_sbindir}
+install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
 install prog/dump/{i2c{dump,set},isadump} $RPM_BUILD_ROOT%{_sbindir}
+install prog/detect/i2cdetect $RPM_BUILD_ROOT%{_sbindir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
@@ -211,19 +212,19 @@ install kernel-up-modules/misc/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-/sbin/ldconfig
+%post -p /sbin/ldconfig
+
+%post sensord
 /sbin/chkconfig --add sensors
 if [ -f /var/lock/subsys/sensors ]; then
 	/etc/rc.d/init.d/sensors restart >&2
 else
-	echo "You have to configure sensors modules."
-	echo "Please edit /etc/sysconfig/sensors file according to your hardware."
+	echo "You have to configure sensors modules in /etc/sysconfig/sensors"
 	echo
 	echo "Run \"/etc/rc.d/init.d/sensors start\" to start sensors daemon." >&2
 fi
 
-%preun
+%preun sensord
 if [ "$1" = "0" ]; then
 	if [ -f /var/lock/subsys/sensors ]; then
 		/etc/rc.d/init.d/sensors stop >&2
