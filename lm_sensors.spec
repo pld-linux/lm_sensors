@@ -1,8 +1,7 @@
-
 # conditional build
 # _without_dist_kernel		without kernel for distributions
 %include        /usr/lib/rpm/macros.perl
-%define         _rel 0.1
+%define         _rel 0.2
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
@@ -23,6 +22,7 @@ BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
+BuildRequires:	rrdtool-devel
 %{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.6.0}
 PreReq:		/sbin/chkconfig
 PreReq:		/sbin/ldconfig
@@ -142,7 +142,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 
 %prep
 %setup -q
-#%patch0 -p1
+%patch0 -p1
 
 %build
 #up
@@ -151,24 +151,26 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
+	PROG_EXTRA:=sensord \
 	SMP=0
 
 %{__make} install-kernel \
-        MODDIR=kernel-up-modules
+	MODDIR=kernel-up-modules
 %{__make} install-kernel-busses \
-        MODDIR=kernel-up-modules
+        MODPREF=kernel-up-modules
 %{__make} install-kernel-chips \
-        MODDIR=kernel-up-modules
+        MODPREF=kernel-up-modules
 
 %{__make} clean
 
 #smp
 %{__make} \
-        OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
-        LINUX=/dev/null \
-        LINUX_HEADERS=%{_kernelsrcdir}/include \
-        I2C_HEADERS=%{_kernelsrcdir}/include \
-        SMP=1
+	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
+	LINUX=/dev/null \
+	LINUX_HEADERS=%{_kernelsrcdir}/include \
+	I2C_HEADERS=%{_kernelsrcdir}/include \
+	PROG_EXTRA:=sensord \
+	SMP=1
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -180,7 +182,8 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	PREFIX=%{_prefix} \
 	ETCDIR=%{_sysconfdir} \
 	MANDIR=%{_mandir} \
-	MODDIR=/lib/modules/%{_kernel_ver}smp/misc
+	MODDIR=/lib/modules/%{_kernel_ver}smp/misc \
+	MODPREF=/lib/modules/%{_kernel_ver}smp/misc
 
 install prog/sensord/sensord $RPM_BUILD_ROOT%{_sbindir}
 install prog/sensord/sensord.8 $RPM_BUILD_ROOT%{_mandir}/man8
@@ -188,7 +191,7 @@ install prog/sensord/sensord.8 $RPM_BUILD_ROOT%{_mandir}/man8
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
 
-install kernel-up-modules/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+install kernel-up-modules/misc/* $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
 
 %clean
 rm -rf $RPM_BUILD_ROOT
