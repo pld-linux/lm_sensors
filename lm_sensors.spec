@@ -12,11 +12,11 @@ Version:	2.6.3
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.lm-sensors.nu/archive/%{name}-%{version}.tar.gz
+Source0:	http://secure.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
-URL:		http://www.netroedge.com/~lm78/
+URL:		http://www.lm-sensors.nu/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	perl-modules >= 5.6
