@@ -16,13 +16,13 @@ Summary(pt_BR):	Ferramentas para monitoraГЦo do hardware
 Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
-Version:	2.8.7
-%define _rel	3
+Version:	2.8.8
+%define _rel	1
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://secure.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	64b4a4f547b2e1eab8a574d871867ca5
+# Source0-md5:	95cdb083b4d16e2419a2c78b35f608d0
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
