@@ -5,7 +5,7 @@ Release:	1
 Source0:	http://www.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
 Copyright:	GPL
 Group:		Base/Kernel
-Group(pl):	Bazowe/J±dro
+Group(pl):	Podstawowe/J±dro
 Prereq:		/sbin/depmod -a
 BuildRoot:	/tmp/%{name}-%{version}-root
 
