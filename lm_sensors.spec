@@ -13,7 +13,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.6.4
-%define _rel	8
+%define _rel	9
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
