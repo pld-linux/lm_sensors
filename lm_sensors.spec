@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_without	dist_kernel	# without kernel for distributions
 %bcond_without	smp		# don't build SMP modules
-%bcond_without	kernel		# don't build kernel modules
+%bcond_with	kernel		# build kernel modules
 %bcond_without	userspace	# don't build userspace utilities
 #
 %include	/usr/lib/rpm/macros.perl
@@ -12,13 +12,13 @@ Summary(pt_BR):	Ferramentas para monitoraГЦo do hardware
 Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
-Version:	2.8.6
-%define _rel	2
+Version:	2.8.7
+%define _rel	1
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://secure.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	baa836e7b31eeb991b105008ab7458a4
+# Source0-md5:	64b4a4f547b2e1eab8a574d871867ca5
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
