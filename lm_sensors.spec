@@ -28,7 +28,7 @@ BuildRequires:	flex >= 2.5.1
 %{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.6.0}
 PreReq:		/sbin/chkconfig
 PreReq:		/sbin/ldconfig
-Requires:	%{name}-modules = %{version}
+Requires:	kernel-misc-lm_sensors = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
 
@@ -107,7 +107,6 @@ Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
 %{!?_without_dist_kernel:Conflicts:	kernel-smp}
 Obsoletes:	%{name}-modules
-Obsoletes:	kernel-smp-misc-%{name}
 Provides:	%{name}-modules = %{version}
 
 %description -n kernel-misc-%{name}
@@ -130,7 +129,6 @@ Prereq:		/sbin/depmod
 %{!?_without_dist_kernel:Conflicts:     kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
 %{!?_without_dist_kernel:Conflicts:     kernel-up}
 Obsoletes:	%{name}-modules
-Obsoletes:	kernel-misc-%{name}
 Provides:	%{name}-modules = %{version}
 
 %description -n kernel-smp-misc-%{name}
