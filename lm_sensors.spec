@@ -67,7 +67,7 @@ Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 %patch1 -p0
 
 %build
-make OPTS="$RPM_OPT_FLAGS" 
+%{__make} OPTS="$RPM_OPT_FLAGS" 
 
 %install
 rm -fr $RPM_BUILD_ROOT
