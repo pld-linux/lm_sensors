@@ -23,8 +23,9 @@ Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
 URL:		http://www.netroedge.com/~lm78/
-BuildRequires:	flex >= 2.5.1
 BuildRequires:	bison
+BuildRequires:	flex >= 2.5.1
+%{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.6.0}
 PreReq:		/sbin/chkconfig
 PreReq:		/sbin/ldconfig
 Requires:	%{name}-modules = %{version}
@@ -103,8 +104,8 @@ Group(pt_BR):	Aplicações/Sistema
 Release:	%{_rel}@%{_kernel_ver_str}
 Prereq:		/sbin/depmod
 Requires:	i2c >= 2.6.0
-%{?!_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
-%{?!_without_dist_kernel:Conflicts:	kernel-smp}
+%{!?_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
+%{!?_without_dist_kernel:Conflicts:	kernel-smp}
 Obsoletes:	%{name}-modules
 Obsoletes:	kernel-smp-misc-%{name}
 Provides:	%{name}-modules = %{version}
@@ -126,8 +127,8 @@ Group(pt_BR):	Aplicações/Sistema
 Release:	%{_rel}@%{_kernel_ver_str}
 Prereq:		/sbin/depmod
 Requires:	i2c >= 2.6.0
-%{?!_without_dist_kernel:Conflicts:     kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
-%{?!_without_dist_kernel:Conflicts:     kernel-up}
+%{!?_without_dist_kernel:Conflicts:     kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
+%{!?_without_dist_kernel:Conflicts:     kernel-up}
 Obsoletes:	%{name}-modules
 Obsoletes:	kernel-misc-%{name}
 Provides:	%{name}-modules = %{version}
