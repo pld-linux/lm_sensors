@@ -4,7 +4,7 @@
 
 %define		_kernel_ver	%(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
 %define		_kernel_ver_str	%(echo %{_kernel_ver} | sed s/-/_/g)
-%define		_rel 9
+%define		_rel 10
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
@@ -80,10 +80,10 @@ Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Prereq:		/sbin/depmod
+%{!?_without_dist_kernel:%requires_releq_kernel_up}
 %{!?_without_dist_kernel:Requires:	i2c >= 2.6.0}
-%{!?_without_dist_kernel:Requires:	kernel-up = %{_kernel_ver}}
-Obsoletes:	%{name}-modules
 Provides:	%{name}-modules = %{version}
+Obsoletes:	%{name}-modules
 
 %description -n kernel-misc-%{name}
 Kernel modules for various buses and monitor chips.
@@ -97,10 +97,10 @@ Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Prereq:		/sbin/depmod
+%{!?_without_dist_kernel:%requires_releq_kernel_smp}
 %{!?_without_dist_kernel:Requires:	i2c >= 2.6.0}
-%{!?_without_dist_kernel:Requires:     kernel-smp = %{_kernel_ver}}
-Obsoletes:	%{name}-modules
 Provides:	%{name}-modules = %{version}
+Obsoletes:	%{name}-modules
 
 %description -n kernel-smp-misc-%{name}
 Kernel SMP modules for various buses and monitor chips.
