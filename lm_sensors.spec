@@ -1,7 +1,7 @@
 # conditional build
 # _without_dist_kernel		without kernel for distributions
 #
-%include        /usr/lib/rpm/macros.perl
+%include	/usr/lib/rpm/macros.perl
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzЙtu
@@ -10,7 +10,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.6.5
-%define _rel	3
+%define _rel	4
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -26,7 +26,6 @@ BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rrdtool-devel
 %{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.6.0}
-PreReq:		/sbin/chkconfig
 PreReq:		/sbin/ldconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
@@ -38,7 +37,7 @@ Tools for monitoring the hardware health of Linux systems containing
 hardware health monitoring hardware such as the LM78 and LM75.
 
 %description -l pl
-NarzЙdzie do monitorowania sprzЙtu w systemach Linuksowych
+NarzЙdzie do monitorowania sprzЙtu w systemach linuksowych
 wyposa©onych w sprzЙt monitoruj╠cy, taki jak LM78 lub LM75.
 
 %description -l pt_BR
@@ -49,17 +48,18 @@ hardware.
 %description -l ru
 Пакет lm_sensors содержит набор модулей для стандартного доступа к
 SMBus и мониторинга. ВНИМАНИЕ: для этого необходима специальная
-поддержка, отсутствующая в стандартных старых ядрах 2.2.XX !
+поддержка, отсутствующая в стандартных старых ядрах 2.2.XX!
 
 %description -l uk
 Пакет lm_sensors м╕стить наб╕р модул╕в для стандартного доступу до
 SMBus та мон╕торингу. УВАГА: для цього потр╕бна спец╕альна п╕дтримка,
-яка в╕дсутня у стандартних старих ядрах 2.2.XX !
+яка в╕дсутня у стандартних старих ядрах 2.2.XX!
 
 %package sensord
 Summary:	Sensord daemon
 Summary(pl):	Demon sensord
 Group:		Daemon
+PreReq:		/sbin/chkconfig
 Requires:	%{name} = %{version}
 
 %description sensord
@@ -174,9 +174,9 @@ ModuЁy j╠dra SMP dla rС©nego rodzaju sensorСw monitoruj╠cych.
 %{__make} install-kernel \
 	MODDIR=kernel-up-modules
 %{__make} install-kernel-busses \
-        MODPREF=kernel-up-modules
+	MODPREF=kernel-up-modules
 %{__make} install-kernel-chips \
-        MODPREF=kernel-up-modules
+	MODPREF=kernel-up-modules
 
 %{__make} clean
 
@@ -221,6 +221,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %post -p /sbin/ldconfig
 
+%postun	-p /sbin/ldconfig
+
 %post sensord
 /sbin/chkconfig --add sensors
 if [ -f /var/lock/subsys/sensors ]; then
@@ -239,15 +241,13 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del sensors
 fi
 
-%postun	-p /sbin/ldconfig
-
 %post -n kernel-misc-%{name}
 /sbin/depmod -a
 
-%post -n kernel-smp-misc-%{name}
+%postun -n kernel-misc-%{name}
 /sbin/depmod -a
 
-%postun -n kernel-misc-%{name}
+%post -n kernel-smp-misc-%{name}
 /sbin/depmod -a
 
 %postun -n kernel-smp-misc-%{name}
@@ -271,7 +271,7 @@ fi
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 
-%files sensord 
+%files sensord
 %defattr(644,root,root,755)
 %attr(754,root,root) %{_sbindir}/sensord
 %attr(754,root,root) /etc/rc.d/init.d/sensors
