@@ -63,6 +63,7 @@ SMBus та мон╕торингу. УВАГА: для цього потр╕бна спец╕альна п╕дтримка,
 Summary:	Sensord daemon
 Summary(pl):	Demon sensord
 Group:		Daemons
+PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}
 
