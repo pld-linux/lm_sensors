@@ -27,8 +27,8 @@ case "$1" in
 		fi
 		
 		# insert modules
-		_modprobe single die "$BUS"
-		_modprobe single die "i2c-$CHIP"
+		_modprobe single die "i2c-$BUS"
+		_modprobe single die "$CHIP"
 
 		if [ "$SENSORS_SET" = "1" ]; then
 			sensors -s
@@ -54,8 +54,8 @@ case "$1" in
 		killproc sensord
 		
 		# remove kernel modules
-		/sbin/rmmod i2c-$CHIP >/dev/null 2>&1 
-		/sbin/rmmod $BUS >/dev/null 2>&1 
+		/sbin/rmmod $CHIP >/dev/null 2>&1 
+		/sbin/rmmod i2c-$BUS >/dev/null 2>&1 
 		
 		rm -f /var/lock/subsys/sensors
 	else
