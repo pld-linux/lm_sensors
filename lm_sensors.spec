@@ -1,7 +1,9 @@
 #
 # Conditional build:
-# _without_dist_kernel		without kernel for distributions
-# _without_smp                  without build smp package
+%bcond_without	dist_kernel	# without kernel for distributions
+%bcond_without	smp		# don't build SMP modules
+%bcond_without	kernel		# don't build kernel modules
+%bcond_without	userspace	# don't build userspace utilities
 #
 %include	/usr/lib/rpm/macros.perl
 Summary:	Hardware health monitoring
@@ -10,7 +12,7 @@ Summary(pt_BR):	Ferramentas para monitoração do hardware
 Summary(ru):	õÔÉÌÉÔÙ ÄÌÑ ÍÏÎÉÔÏÒÉÎÇÁ ÁÐÐÁÒÁÔÕÒÙ
 Summary(uk):	õÔÉÌ¦ÔÉ ÄÌÑ ÍÏÎ¦ÔÏÒÉÎÇÕ ÁÐÁÒÁÔÕÒÉ
 Name:		lm_sensors
-Version:	2.8.1
+Version:	2.8.2
 %define _rel	1
 Release:	%{_rel}
 License:	GPL
@@ -21,7 +23,6 @@ Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
 Patch1:		%{name}-ppc.patch
-Patch2:		%{name}-ddc-fix.patch
 URL:		http://www.lm-sensors.nu/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
@@ -29,9 +30,11 @@ BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rpmbuild(macros) >= 1.118
 BuildRequires:	rrdtool-devel
-%{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.8.1}
-%{!?_without_dist_kernel:BuildRequires:	kernel-headers >= 2.4.0}
-%{!?_without_dist_kernel:BuildRequires:	kernel-headers < 2.5.0}
+%if %{with kernel} && %{with dist_kernel}
+BuildRequires:	kernel-i2c-devel >= 2.8.2
+BuildRequires:	kernel-headers >= 2.4.0
+BuildRequires:	kernel-headers < 2.5.0
+%endif
 Requires:	dmidecode
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
@@ -133,8 +136,8 @@ Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Requires(post,postun):	/sbin/depmod
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
-%{!?_without_dist_kernel:Requires:	i2c >= 2.8.0}
+%{?with_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:Requires:	kernel-i2c >= 2.8.2}
 Provides:	%{name}-modules = %{version}
 Obsoletes:	%{name}-modules
 Obsoletes:	kernel-misc-lm_sensors
@@ -151,8 +154,8 @@ Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
 Requires(post,postun):	/sbin/depmod
-%{!?_without_dist_kernel:%requires_releq_kernel_smp}
-%{!?_without_dist_kernel:Requires:	i2c >= 2.8.0}
+%{?with_dist_kernel:%requires_releq_kernel_smp}
+%{?with_dist_kernel:Requires:	kernel-smp-i2c >= 2.8.2}
 Provides:	%{name}-modules = %{version}
 Obsoletes:	%{name}-modules
 Obsoletes:	kernel-smp-misc-lm_sensors
@@ -167,12 +170,11 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %build
-%if %{?_without_smp:0}%{!?_without_smp:1}
+%if %{with kernel} && %{with smp}
 # SMP
-%{__make} \
+%{__make} all-kernel-busses all-kernel-chips \
 	CC="%{kgcc}" \
 	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
 	LINUX=/dev/null \
@@ -180,18 +182,8 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 	I2C_HEADERS=%{_kernelsrcdir}/include \
 	SMP=1
 
-%{__make} install-kernel-busses \
+%{__make} install-kernel-busses install-kernel-chips \
 	MODPREF=kernel-smp-modules \
-	CC="%{kgcc}" \
-	OPTS="%{rpmcflags}" \
-	LINUX=/dev/null \
-	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=1
-%{__make} install-kernel-chips \
-	MODPREF=kernel-smp-modules \
-	CC="%{kgcc}" \
-	OPTS="%{rpmcflags}" \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
@@ -200,47 +192,67 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %{__make} clean
 %endif
 
+%if %{with kernel}
 # UP
-%{__make} \
+%{__make} all-kernel-busses all-kernel-chips \
 	CC="%{kgcc}" \
 	OPTS="%{rpmcflags}" \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
-	PROG_EXTRA:="sensord dump" \
 	SMP=0
+%endif
 
-cd prog/eepromer
-%{__make} \
+%if %{with userspace}
+%{__make} user \
+	CC="%{__cc}" \
+	OPTS="%{rpmcflags}" \
+	LINUX=/dev/null \
+	LINUX_HEADERS=%{_kernelsrcdir}/include \
+	I2C_HEADERS=/usr/include \
+	PROG_EXTRA:="sensord dump"
+
+%{__make} -C prog/eepromer \
+	CC="%{__cc}" \
 	CFLAGS="%{rpmcflags} -I../../kernel/include"
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
+%if %{with kernel}
+%{__make} install-kernel-busses install-kernel-chips \
+	DESTDIR=$RPM_BUILD_ROOT \
+	MODPREF=/lib/modules/%{_kernel_ver} \
+	LINUX=/dev/null \
+	LINUX_HEADERS=%{_kernelsrcdir}/include \
+	I2C_HEADERS=%{_kernelsrcdir}/include \
+	SMP=0
+%endif
+
+%if %{with userspace}
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 
-%{__make} install \
+%{__make} user_install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PREFIX=%{_prefix} \
 	ETCDIR=%{_sysconfdir} \
 	MANDIR=%{_mandir} \
 	PROG_EXTRA:="sensord dump" \
-	MODPREF=/lib/modules/%{_kernel_ver} \
-	CC="%{kgcc}" \
-	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=0
+	I2C_HEADERS=/usr/include
 
 install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
-install prog/dump/{i2c{dump,set},isadump} $RPM_BUILD_ROOT%{_sbindir}
-install prog/detect/i2cdetect $RPM_BUILD_ROOT%{_sbindir}
+#install prog/dump/{i2c{dump,set},isadump} $RPM_BUILD_ROOT%{_sbindir}
+#install prog/detect/i2cdetect $RPM_BUILD_ROOT%{_sbindir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
+%endif
 
-%if %{?_without_smp:0}%{!?_without_smp:1}
+%if %{with kernel} && %{with smp}
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/{busses,chips}
 install kernel-smp-modules/kernel/drivers/i2c/busses/*.o \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/busses
@@ -284,16 +296,20 @@ fi
 %postun -n kernel-smp-i2c-%{name}
 %depmod %{_kernel_ver}smp
 
+%if %{with userspace}
 %files
 %defattr(644,root,root,755)
 %doc BACKGROUND BUGS CHANGES README README.thinkpad TODO doc/{busses,chips}
 %doc doc/{FAQ,donations,fan-divisors,progs,temperature-sensors,*html,vid}
-%doc prog/{config,daemon,eeprom,eepromer/README*,matorb,maxilife,xeon}
+%doc prog/{config,daemon,eepromer/README*,matorb,maxilife}
+%attr(755,root,root) %{_bindir}/decode-*.pl
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
 %attr(755,root,root) %{_sbindir}/eeprom*
+%attr(755,root,root) %{_sbindir}/fancontrol
 %attr(755,root,root) %{_sbindir}/i2c*
 %attr(755,root,root) %{_sbindir}/isadump
+%attr(755,root,root) %{_sbindir}/pwmconfig
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sensors.conf
 %{_mandir}/man1/*
@@ -311,13 +327,17 @@ fi
 %doc doc/{developers,kernel}
 %attr(755,root,root) %{_libdir}/lib*.so
 %{_includedir}/sensors
-%{_includedir}/linux/*
+%{_includedir}/linux/sensors.h
+# i2c userspace header - should be in glibc-kernel-headers
+%{_includedir}/linux/i2c-dev.h
 %{_mandir}/man3/*
 
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libsensors.a
+%endif
 
+%if %{with kernel}
 %files -n kernel-i2c-%{name}
 %defattr(644,root,root,755)
 %dir /lib/modules/%{_kernel_ver}/kernel/drivers/i2c/busses
@@ -325,11 +345,12 @@ fi
 %dir /lib/modules/%{_kernel_ver}/kernel/drivers/i2c/chips
 /lib/modules/%{_kernel_ver}/kernel/drivers/i2c/chips/*.o*
 
-%if %{?_without_smp:0}%{!?_without_smp:1}
+%if %{with smp}
 %files -n kernel-smp-i2c-%{name}
 %defattr(644,root,root,755)
 %dir /lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/busses
 /lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/busses/*.o*
 %dir /lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/chips
 /lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/chips/*.o*
+%endif
 %endif
