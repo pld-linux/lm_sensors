@@ -24,7 +24,8 @@ URL:		http://www.netroedge.com/~lm78/
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	bison
 BuildRequires:	i2c-devel >= 2.6.0
-PreReq:		/sbin/chkconfig
+Prereq:		/sbin/chkconfig
+Prereq:		/sbin/ldconfig
 Requires:	%{name}-modules = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -154,8 +155,7 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del sensors
 fi
 
-%postun
-/sbin/ldconfig
+%postun	-p /sbin/ldconfig
 
 %post -n kernel%{smpstr}-misc-lm_sensors
 /sbin/depmod -a
