@@ -24,6 +24,7 @@ Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
 Patch1:		%{name}-ppc.patch
 Patch2:		%{name}-iconv-in-libc.patch
+Patch3:		%{name}-gcc34.patch
 URL:		http://www.lm-sensors.nu/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
