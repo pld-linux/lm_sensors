@@ -5,7 +5,7 @@
  	$(MKDIR) $(DESTDIR)$(ETCDIR)
  	if [ ! -e $(DESTDIR)$(ETCINSTALL) ] ; then \
 -	  $(INSTALL) -o  root -g root -m 644 $(ETCTARGET) $(DESTDIR)$(ETCINSTALL); \
-+	  $(INSTALL) -o  root -g root -m 644 $(ETCTARGET) $(DESTDIR)$(ETCINSTALL) || true; \
++	  $(INSTALL) -m 644 $(ETCTARGET) $(DESTDIR)$(ETCINSTALL); \
  	fi
  install :: install-etc
  
@@ -16,14 +16,14 @@
  	  if [ -d "$(DESTDIR)$(MODPREF)/kernel" ] ; then \
  	    $(MKDIR) $(DESTDIR)$(MODPREF)/kernel/drivers/i2c ; \
 -	    $(INSTALL) -o root -g root -m 644 $(KERNELBUSSESTARGETS) $(DESTDIR)$(MODPREF)/kernel/drivers/i2c ; \
-+	    $(INSTALL) -o root -g root -m 644 $(KERNELBUSSESTARGETS) $(DESTDIR)$(MODPREF)/kernel/drivers/i2c || true; \
++	    $(INSTALL) -m 644 $(KERNELBUSSESTARGETS) $(DESTDIR)$(MODPREF)/kernel/drivers/i2c ; \
  	    for i in $(KERNELBUSSESTARGETS) ; do \
  	      $(RM) $(DESTDIR)$(MODPREF)/misc/`basename $$i` ; \
  	    done \
  	  else \
  	    $(MKDIR) $(DESTDIR)$(MODPREF)/misc ; \
 -	    $(INSTALL) -o root -g root -m 644 $(KERNELBUSSESTARGETS) $(DESTDIR)$(MODPREF)/misc ; \
-+	    $(INSTALL) -o root -g root -m 644 $(KERNELBUSSESTARGETS) $(DESTDIR)$(MODPREF)/misc || true; \
++	    $(INSTALL) -m 644 $(KERNELBUSSESTARGETS) $(DESTDIR)$(MODPREF)/misc ; \
  	  fi \
  	fi
  
@@ -34,14 +34,14 @@
  	  if [ -d "$(DESTDIR)$(MODPREF)/kernel" ] ; then \
  	    $(MKDIR) $(DESTDIR)$(MODPREF)/kernel/drivers/sensors ; \
 -	    $(INSTALL) -o root -g root -m 644 $(KERNELCHIPSTARGETS) $(DESTDIR)$(MODPREF)/kernel/drivers/sensors ; \
-+	    $(INSTALL) -o root -g root -m 644 $(KERNELCHIPSTARGETS) $(DESTDIR)$(MODPREF)/kernel/drivers/sensors || true; \
++	    $(INSTALL) -m 644 $(KERNELCHIPSTARGETS) $(DESTDIR)$(MODPREF)/kernel/drivers/sensors ; \
  	    for i in $(KERNELCHIPSTARGETS) ; do \
  	      $(RM) $(DESTDIR)$(MODPREF)/misc/`basename $$i` ; \
  	    done \
  	  else \
  	    $(MKDIR) $(DESTDIR)$(MODPREF)/misc ; \
 -	    $(INSTALL) -o root -g root -m 644 $(KERNELCHIPSTARGETS) $(DESTDIR)$(MODPREF)/misc ; \
-+	    $(INSTALL) -o root -g root -m 644 $(KERNELCHIPSTARGETS) $(DESTDIR)$(MODPREF)/misc || true; \
++	    $(INSTALL) -m 644 $(KERNELCHIPSTARGETS) $(DESTDIR)$(MODPREF)/misc ; \
  	  fi \
  	fi
  
@@ -52,7 +52,7 @@
  	if [ -n "$(KERNELINCLUDEFILES)" ] ; then \
  	  $(MKDIR) $(DESTDIR)$(SYSINCLUDEDIR) ; \
 -	  $(INSTALL) -o root -g root -m 644 $(KERNELINCLUDEFILES) $(DESTDIR)$(SYSINCLUDEDIR) ; \
-+	  $(INSTALL) -o root -g root -m 644 $(KERNELINCLUDEFILES) $(DESTDIR)$(SYSINCLUDEDIR) || true; \
++	  $(INSTALL) -m 644 $(KERNELINCLUDEFILES) $(DESTDIR)$(SYSINCLUDEDIR) ; \
  	fi
  
  install :: install-all-kernel-include
@@ -63,7 +63,7 @@
  	if [ -n "$(KERNELTARGETS)" ] ; then \
  	  $(MKDIR) $(DESTDIR)$(MODDIR) ; \
 -	  $(INSTALL) -o root -g root -m 644 $(KERNELTARGETS) $(DESTDIR)$(MODDIR) ;\
-+	  $(INSTALL) -o root -g root -m 644 $(KERNELTARGETS) $(DESTDIR)$(MODDIR) || true ;\
++	  $(INSTALL) -m 644 $(KERNELTARGETS) $(DESTDIR)$(MODDIR) ;\
  	fi
  	$(RM) $(DESTDIR)$(MODDIR)/sensors.o
  
@@ -74,15 +74,15 @@
  install-lib: all-lib
  	$(MKDIR) $(DESTDIR)$(LIBDIR) $(DESTDIR)$(LIBINCLUDEDIR) $(DESTDIR)$(LIBMAN3DIR) $(DESTDIR)$(LIBMAN5DIR)
 -	$(INSTALL) -o root -g root -m 644 $(LIBTARGETS) $(DESTDIR)$(LIBDIR)
-+	$(INSTALL) -o root -g root -m 644 $(LIBTARGETS) $(DESTDIR)$(LIBDIR) || true
++	$(INSTALL) -m 644 $(LIBTARGETS) $(DESTDIR)$(LIBDIR)
  	$(LN) $(LIBSHLIBNAME) $(DESTDIR)$(LIBDIR)/$(LIBSHSONAME)
  	$(LN) $(LIBSHSONAME) $(DESTDIR)$(LIBDIR)/$(LIBSHBASENAME)
 -	$(INSTALL) -o root -g root -m 644 $(LIBHEADERFILES) $(DESTDIR)$(LIBINCLUDEDIR)
 -	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(LIBMAN3FILES) $(DESTDIR)$(LIBMAN3DIR)
 -	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(LIBMAN5FILES) $(DESTDIR)$(LIBMAN5DIR)
-+	$(INSTALL) -o root -g root -m 644 $(LIBHEADERFILES) $(DESTDIR)$(LIBINCLUDEDIR) ||true
-+	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(LIBMAN3FILES) $(DESTDIR)$(LIBMAN3DIR) || true
-+	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(LIBMAN5FILES) $(DESTDIR)$(LIBMAN5DIR) || true
++	$(INSTALL) -m 644 $(LIBHEADERFILES) $(DESTDIR)$(LIBINCLUDEDIR)
++	$(INSTALL) -m 644 $(LIBMAN3FILES) $(DESTDIR)$(LIBMAN3DIR)
++	$(INSTALL) -m 644 $(LIBMAN5FILES) $(DESTDIR)$(LIBMAN5DIR)
  
  install :: install-lib
  
@@ -93,7 +93,7 @@
  install-prog-detect: all-prog-detect
  	mkdir -p $(DESTDIR)$(SBINDIR)
 -	$(INSTALL) -o root -g root -m 755 $(PROGDETECTSBININSTALL) $(DESTDIR)$(SBINDIR)
-+	$(INSTALL) -o root -g root -m 755 $(PROGDETECTSBININSTALL) $(DESTDIR)$(SBINDIR) || true
++	$(INSTALL) -m 755 $(PROGDETECTSBININSTALL) $(DESTDIR)$(SBINDIR)
  install :: install-prog-detect
  
  clean-prog-detect:
@@ -105,8 +105,8 @@
  	$(MKDIR) $(DESTDIR)$(SBINDIR) $(DESTDIR)$(PROGSENSORDMAN1DIR)
 -	$(INSTALL) -o root -g root -m 755 $(PROGSENSORDTARGETS) $(DESTDIR)$(SBINDIR)
 -	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(PROGSENSORDMAN1FILES) $(DESTDIR)$(PROGSENSORDMAN1DIR)
-+	$(INSTALL) -o root -g root -m 755 $(PROGSENSORDTARGETS) $(DESTDIR)$(SBINDIR) || true
-+	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(PROGSENSORDMAN1FILES) $(DESTDIR)$(PROGSENSORDMAN1DIR) || true
++	$(INSTALL) -m 755 $(PROGSENSORDTARGETS) $(DESTDIR)$(SBINDIR)
++	$(INSTALL) -m 644 $(PROGSENSORDMAN1FILES) $(DESTDIR)$(PROGSENSORDMAN1DIR)
  install :: install-prog-sensord
  
  clean-prog-sensord:
@@ -118,8 +118,8 @@
  	mkdir -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(PROGSENSORSMAN1DIR)
 -	$(INSTALL) -o root -g root -m 755 $(PROGSENSORSTARGETS) $(DESTDIR)$(BINDIR)
 -	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(PROGSENSORSMAN1FILES) $(DESTDIR)$(PROGSENSORSMAN1DIR)
-+	$(INSTALL) -o root -g root -m 755 $(PROGSENSORSTARGETS) $(DESTDIR)$(BINDIR) || true
-+	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(PROGSENSORSMAN1FILES) $(DESTDIR)$(PROGSENSORSMAN1DIR) || true
++	$(INSTALL) -m 755 $(PROGSENSORSTARGETS) $(DESTDIR)$(BINDIR)
++	$(INSTALL) -m 644 $(PROGSENSORSMAN1FILES) $(DESTDIR)$(PROGSENSORSMAN1DIR)
  install :: install-prog-sensors
  
  clean-prog-sensors:
