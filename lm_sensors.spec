@@ -10,7 +10,7 @@ Summary(ru):	õÔÉÌÉÔÙ ÄÌÑ ÍÏÎÉÔÏÒÉÎÇÁ ÁÐÐÁÒÁÔÕÒÙ
 Summary(uk):	õÔÉÌ¦ÔÉ ÄÌÑ ÍÏÎ¦ÔÏÒÉÎÇÕ ÁÐÁÒÁÔÕÒÉ
 Name:		lm_sensors
 Version:	2.6.4
-%define _rel	1
+%define _rel	2
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -18,6 +18,7 @@ Source0:	http://secure.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
+Patch1:		%{name}-ppc.patch
 URL:		http://www.lm-sensors.nu/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
@@ -156,6 +157,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 #up
