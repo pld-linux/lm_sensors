@@ -22,9 +22,8 @@ case "$1" in
   start)
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/sensors ]; then
-		msg_starting "sensors daemon"
 		if [ -z "$BUS" ] || [ -z "$CHIP" ]; then 
-			fail
+			msg_starting "sensors daemon"; fail
 			nls "BUS or CHIP not configured in /etc/sysconfig/sensors" >&2
 			exit 6
 		fi
@@ -41,6 +40,7 @@ case "$1" in
 			sensors -s
 		fi
 
+		msg_starting "sensors daemon"
 		daemon sensord \
 			$([ -n "$INTERVAL" ] && echo "-i $INTERVAL") \
 			$([ -n "$LOG_INTERVAL" ] && echo "-l $LOG_INTERVAL") \
