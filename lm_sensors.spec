@@ -78,6 +78,7 @@ Requires:	i2c >= 2.6.0
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
 Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
 Obsoletes:	lm_sensors-modules
+Provides:	lm_sensors-modules = %{version}
 
 %description -n kernel%{smpstr}-misc-lm_sensors
 Kernel modules for various buses and monitor chips.
@@ -113,6 +114,9 @@ rm -rf $RPM_BUILD_ROOT
 gzip -9nf BACKGROUND BUGS CHANGES README README.thinkpad TODO
 find doc -type f ! -name \*.\* -a ! -name \*ticket | xargs gzip -9nf
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %post   -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
@@ -121,9 +125,6 @@ find doc -type f ! -name \*.\* -a ! -name \*ticket | xargs gzip -9nf
 
 %postun -n kernel%{smpstr}-misc-lm_sensors
 /sbin/depmod -a
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files 
 %defattr(644,root,root,755)
