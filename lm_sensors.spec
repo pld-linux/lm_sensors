@@ -49,10 +49,10 @@ rm -fr $RPM_BUILD_ROOT
 %files 
 %config /etc/sensors.conf
 %doc CHANGES INSTALL README README.directories doc
-%attr(644,root,root) /usr/lib/libsensors.a
-%attr(755,root,root) /usr/lib/libsensors.so
-%attr(755,root,root) /usr/lib/libsensors.so.0
-%attr(755,root,root) /usr/lib/libsensors.so.0.0.2
+%attr(644,root,root) %{_libdir}/libsensors.a
+%attr(755,root,root) %{_libdir}/libsensors.so
+%attr(755,root,root) %{_libdir}/libsensors.so.0
+%attr(755,root,root) %{_libdir}/libsensors.so.0.0.2
 %attr(755,root,root) /usr/bin/sensors
 /usr/include/sensors
 /usr/include/linux/*
