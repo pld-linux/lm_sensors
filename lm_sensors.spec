@@ -126,7 +126,7 @@ Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
-Prereq:		/sbin/depmod
+Requires(post,postun):	/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_up}
 %{!?_without_dist_kernel:Requires:	i2c >= 2.6.0}
 Provides:	%{name}-modules = %{version}
@@ -143,7 +143,7 @@ Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
-Prereq:		/sbin/depmod
+Requires(post,postun):	/sbin/depmod
 %{!?_without_dist_kernel:%requires_releq_kernel_smp}
 %{!?_without_dist_kernel:Requires:	i2c >= 2.6.0}
 Provides:	%{name}-modules = %{version}
