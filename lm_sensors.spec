@@ -12,13 +12,13 @@ Summary(pt_BR):	Ferramentas para monitoraГЦo do hardware
 Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
-Version:	2.8.4
+Version:	2.8.5
 %define _rel	1
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://secure.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	e1c317d116234f3767d0bcd6817bf7a4
+# Source0-md5:	1f952f0e30a10f20c8393424cf960a21
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
@@ -68,7 +68,7 @@ Summary(pl):	Demon sensord
 Group:		Daemons
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{version}-%{release}
 
 %description sensord
 Sensord daemon.
@@ -83,7 +83,7 @@ Summary(pt_BR):	Arquivos necessАrios ao desenvolvimento de programas que usem o 
 Summary(ru):	Файлы разработчика для программ, использующих lm_sensors
 Summary(uk):	Файли програм╕ста для програм, як╕ використовують lm_sensors
 Group:		Development/Libraries
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{version}-%{release}
 Obsoletes:	liblm_sensors1-devel
 
 %description devel
@@ -111,7 +111,7 @@ Summary(pt_BR):	Bibliotecas estАticas para desenvolvimento com lm_sensors
 Summary(ru):	Статическая библиотека для программ, использующих lm_sensors
 Summary(uk):	Статична б╕бл╕отека для програм, як╕ використовують lm_sensors
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}
+Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 Static libraries for lm_sensors.
@@ -138,7 +138,7 @@ Release:	%{_rel}@%{_kernel_ver_str}
 Requires(post,postun):	/sbin/depmod
 %{?with_dist_kernel:%requires_releq_kernel_up}
 %{?with_dist_kernel:Requires:	kernel-i2c >= 2.8.2}
-Provides:	%{name}-modules = %{version}
+Provides:	%{name}-modules = %{version}-%{release}
 Obsoletes:	%{name}-modules
 Obsoletes:	kernel-misc-lm_sensors
 
@@ -156,7 +156,7 @@ Release:	%{_rel}@%{_kernel_ver_str}
 Requires(post,postun):	/sbin/depmod
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 %{?with_dist_kernel:Requires:	kernel-smp-i2c >= 2.8.2}
-Provides:	%{name}-modules = %{version}
+Provides:	%{name}-modules = %{version}-%{release}
 Obsoletes:	%{name}-modules
 Obsoletes:	kernel-smp-misc-lm_sensors
 
