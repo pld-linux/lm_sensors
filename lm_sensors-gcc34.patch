@@ -1,0 +1,10 @@
+--- lm_sensors-2.8.6/prog/eepromer/eepromer.c.orig	2003-05-31 06:18:24.000000000 +0200
++++ lm_sensors-2.8.6/prog/eepromer/eepromer.c	2004-05-12 08:54:38.652715672 +0200
+@@ -590,7 +590,6 @@
+ 						fflush(stderr); 
+ 						rewind(stderr);
+ 						break;
+-			default:
+ 		}
+ 	stav++;
+ 
