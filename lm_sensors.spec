@@ -59,22 +59,3 @@ rm -fr $RPM_BUILD_ROOT
 
 %files modules
 /lib/modules/%{kernel}/misc/*
-
-%changelog
-* Sun Apr 25 1999  Ian Macdonald <ianmacd@xs4all.nl>
-- compiled for kernel 2.2.6
-- hyphen changed to underscore in version number to satisfy RPM 3.0
-
-* Mon Apr  5 1999  Ian Macdonald <ianmacd@xs4all.nl>
-- compiled for kernel 2.2.5
-
-* Wed Mar 24 1999  Ian Macdonald <ianmacd@xs4all.nl>
-- compiled for kernel 2.2.4
-
-* Tue Mar  8 1999  Ian Macdonald <ianmacd@xs4all.nl>
-- compiled for kernel 2.2.3
-
-* Fri Feb 26 1999  Ian Macdonald <ianmacd@xs4all.nl>
-- updated to lm_sensors 2.2.2 and compiled for kernel 2.2.2
-- added /etc/sensors.conf
-- added %post and %postun scripts
