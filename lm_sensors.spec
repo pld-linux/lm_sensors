@@ -31,7 +31,6 @@ Patch2:		%{name}-iconv-in-libc.patch
 Patch3:		%{name}-gcc34.patch
 Patch4:		%{name}-sensors-detect-PATH.patch
 URL:		http://www.lm-sensors.nu/
-BuildRequires:	am
 BuildRequires:	rpmbuild(macros) >= 1.118
 %if %{with userspace}
 BuildRequires:	bison
