@@ -1,7 +1,7 @@
 # conditional build
 # _without_dist_kernel		without kernel for distributions
 %include        /usr/lib/rpm/macros.perl
-%define         _rel 0.2
+%define         _rel 0.7
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzЙtu
@@ -51,6 +51,18 @@ SMBus и мониторинга. ВНИМАНИЕ: для этого необходима специальная
 Пакет lm_sensors м╕стить наб╕р модул╕в для стандартного доступу до
 SMBus та мон╕торингу. УВАГА: для цього потр╕бна спец╕альна п╕дтримка,
 яка в╕дсутня у стандартних старих ядрах 2.2.XX !
+
+%package sensord
+Summary:	Sensord daemon
+Summary(pl):	Demon sensord
+Group:		Daemon
+Requires:	%{name} = %{version}
+
+%description sensord
+Sensord daemon.
+
+%description sensord -l pl
+Demon sensord.
 
 %package devel
 Summary:	Header files for lm_sensors
@@ -151,7 +163,6 @@ ModuЁy j╠dra SMP dla rС©nego rodzaju sensorСw monitoruj╠cych.
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
-	PROG_EXTRA:=sensord \
 	SMP=0
 
 %{__make} install-kernel \
@@ -169,8 +180,11 @@ ModuЁy j╠dra SMP dla rС©nego rodzaju sensorСw monitoruj╠cych.
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=%{_kernelsrcdir}/include \
-	PROG_EXTRA:=sensord \
+	PROG_EXTRA:="sensord dump" \
 	SMP=1
+
+cd prog/eepromer
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -182,11 +196,13 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	PREFIX=%{_prefix} \
 	ETCDIR=%{_sysconfdir} \
 	MANDIR=%{_mandir} \
+	PROG_EXTRA:="sensord dump" \
 	MODDIR=/lib/modules/%{_kernel_ver}smp/misc \
-	MODPREF=/lib/modules/%{_kernel_ver}smp/misc
+	MODPREF=/lib/modules/%{_kernel_ver}smp
 
-install prog/sensord/sensord $RPM_BUILD_ROOT%{_sbindir}
-install prog/sensord/sensord.8 $RPM_BUILD_ROOT%{_mandir}/man8
+#install prog/sensord/sensord $RPM_BUILD_ROOT%{_sbindir}
+install prog/eepromer/{eeprom,eepromer} $RPM_BUILD_ROOT%{_sbindir}
+#install prog/sensord/sensord.8 $RPM_BUILD_ROOT%{_mandir}/man8
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
@@ -233,15 +249,20 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc BACKGROUND BUGS CHANGES README README.thinkpad TODO doc/[^k]*
+%doc prog/{config,daemon,eeprom,eepromer/README*,matorb,maxilife,xeon}
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
-%attr(754,root,root) %{_sbindir}/sensord
-%attr(754,root,root) /etc/rc.d/init.d/sensors
+%attr(755,root,root) %{_sbindir}/eeprom*
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sensors.conf
-%config(noreplace) %verify(not size mtime md5) /etc/sysconfig/sensors
 %{_mandir}/man1/*
 %{_mandir}/man5/*
+
+%files sensord 
+%defattr(644,root,root,755)
+%attr(754,root,root) %{_sbindir}/sensord
+%attr(754,root,root) /etc/rc.d/init.d/sensors
+%config(noreplace) %verify(not size mtime md5) /etc/sysconfig/sensors
 %{_mandir}/man8/*
 
 %files devel
