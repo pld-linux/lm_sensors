@@ -1,0 +1,136 @@
+diff -urN lm_sensors-2.5.2.orig/Makefile lm_sensors-2.5.2/Makefile
+--- lm_sensors-2.5.2.orig/Makefile	Sun Jul  9 22:37:13 2000
++++ lm_sensors-2.5.2/Makefile	Fri Sep 15 23:16:35 2000
+@@ -157,7 +157,8 @@
+ # create non-kernel object files (which are linked into executables).
+ # ARCFLAGS are used to create archive object files (static libraries), and
+ # LIBCFLAGS are for shared library objects.
+-CFLAGS := -I. -Ikernel/include -I$(I2C_HEADERS) -I$(LINUX_HEADERS) -O2 
++OPTS=-O2
++CFLAGS := -I. -Ikernel/include -I$(I2C_HEADERS) -I$(LINUX_HEADERS) $(OPTS)
+ 
+ ifeq ($(DEBUG),1)
+ CFLAGS += -DDEBUG
+diff -urN lm_sensors-2.5.2.orig/etc/Module.mk lm_sensors-2.5.2/etc/Module.mk
+--- lm_sensors-2.5.2.orig/etc/Module.mk	Fri Dec 24 20:52:27 1999
++++ lm_sensors-2.5.2/etc/Module.mk	Fri Sep 15 23:12:05 2000
+@@ -28,9 +28,8 @@
+ 
+ install-etc:
+ 	$(MKDIR) $(DESTDIR)$(ETCDIR)
+-	if [ ! -e $(DESTDIR)$(ETCINSTALL) ] ; then \
+-	  $(INSTALL) -o  root -g root -m 644 $(ETCTARGET) $(DESTDIR)$(ETCINSTALL); \
+-	fi
++	$(INSTALL) -m 644 $(ETCTARGET) $(DESTDIR)$(ETCINSTALL)
++
+ install :: install-etc
+ 
+ # No clean rule
+diff -urN lm_sensors-2.5.2.orig/kernel/Module.mk lm_sensors-2.5.2/kernel/Module.mk
+--- lm_sensors-2.5.2.orig/kernel/Module.mk	Mon Jan  3 01:32:38 2000
++++ lm_sensors-2.5.2/kernel/Module.mk	Fri Sep 15 23:12:28 2000
+@@ -37,7 +37,7 @@
+ install-kernel: all-kernel
+ 	if [ -n "$(KERNELTARGETS)" ] ; then \
+ 	  $(MKDIR) $(DESTDIR)$(MODDIR) ; \
+-	  $(INSTALL) -o root -g root -m 644 $(KERNELTARGETS) $(DESTDIR)$(MODDIR) ;\
++	  $(INSTALL) -m 644 $(KERNELTARGETS) $(DESTDIR)$(MODDIR) ;\
+ 	fi
+ install :: install-kernel 
+ 
+diff -urN lm_sensors-2.5.2.orig/kernel/busses/Module.mk lm_sensors-2.5.2/kernel/busses/Module.mk
+--- lm_sensors-2.5.2.orig/kernel/busses/Module.mk	Tue May 23 03:33:13 2000
++++ lm_sensors-2.5.2/kernel/busses/Module.mk	Fri Sep 15 23:12:56 2000
+@@ -54,7 +54,7 @@
+ install-kernel-busses: all-kernel-busses
+ 	if [ -n "$(KERNELBUSSESTARGETS)" ] ; then \
+ 	  $(MKDIR) $(DESTDIR)$(MODDIR) ; \
+-	  $(INSTALL) -o root -g root -m 644 $(KERNELBUSSESTARGETS) $(DESTDIR)$(MODDIR) ; \
++	  $(INSTALL) -m 644 $(KERNELBUSSESTARGETS) $(DESTDIR)$(MODDIR) ; \
+ 	fi
+ 
+ install :: install-kernel-busses
+diff -urN lm_sensors-2.5.2.orig/kernel/chips/Module.mk lm_sensors-2.5.2/kernel/chips/Module.mk
+--- lm_sensors-2.5.2.orig/kernel/chips/Module.mk	Thu May 11 03:35:22 2000
++++ lm_sensors-2.5.2/kernel/chips/Module.mk	Fri Sep 15 23:12:47 2000
+@@ -69,7 +69,7 @@
+ install-kernel-chips: all-kernel-chips
+ 	if [ -n "$(KERNELCHIPSTARGETS)" ] ; then \
+ 	  $(MKDIR) $(DESTDIR)$(MODDIR) ; \
+-	  $(INSTALL) -o root -g root -m 644 $(KERNELCHIPSTARGETS) $(DESTDIR)$(MODDIR) ;\
++	  $(INSTALL) -m 644 $(KERNELCHIPSTARGETS) $(DESTDIR)$(MODDIR) ;\
+ 	fi
+ 
+ install :: install-kernel-chips
+diff -urN lm_sensors-2.5.2.orig/kernel/include/Module.mk lm_sensors-2.5.2/kernel/include/Module.mk
+--- lm_sensors-2.5.2.orig/kernel/include/Module.mk	Mon Jan  3 01:32:38 2000
++++ lm_sensors-2.5.2/kernel/include/Module.mk	Fri Sep 15 23:12:37 2000
+@@ -32,7 +32,7 @@
+ install-all-kernel-include:
+ 	if [ -n "$(KERNELINCLUDEFILES)" ] ; then \
+ 	  $(MKDIR) $(DESTDIR)$(SYSINCLUDEDIR) ; \
+-	  $(INSTALL) -o root -g root -m 644 $(KERNELINCLUDEFILES) $(DESTDIR)$(SYSINCLUDEDIR) ; \
++	  $(INSTALL) -m 644 $(KERNELINCLUDEFILES) $(DESTDIR)$(SYSINCLUDEDIR) ; \
+ 	fi
+ 
+ install :: install-all-kernel-include
+diff -urN lm_sensors-2.5.2.orig/lib/Module.mk lm_sensors-2.5.2/lib/Module.mk
+--- lm_sensors-2.5.2.orig/lib/Module.mk	Mon Jul 10 01:46:23 2000
++++ lm_sensors-2.5.2/lib/Module.mk	Fri Sep 15 23:13:25 2000
+@@ -87,12 +87,12 @@
+ 
+ install-lib: all-lib
+ 	$(MKDIR) $(DESTDIR)$(LIBDIR) $(DESTDIR)$(LIBINCLUDEDIR) $(DESTDIR)$(LIBMAN3DIR) $(DESTDIR)$(LIBMAN5DIR)
+-	$(INSTALL) -o root -g root -m 644 $(LIBTARGETS) $(DESTDIR)$(LIBDIR)
++	$(INSTALL) -m 644 $(LIBTARGETS) $(DESTDIR)$(LIBDIR)
+ 	$(LN) $(LIBSHLIBNAME) $(DESTDIR)$(LIBDIR)/$(LIBSHSONAME)
+ 	$(LN) $(LIBSHSONAME) $(DESTDIR)$(LIBDIR)/$(LIBSHBASENAME)
+-	$(INSTALL) -o root -g root -m 644 $(LIBHEADERFILES) $(DESTDIR)$(LIBINCLUDEDIR)
+-	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(LIBMAN3FILES) $(DESTDIR)$(LIBMAN3DIR)
+-	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(LIBMAN5FILES) $(DESTDIR)$(LIBMAN5DIR)
++	$(INSTALL) -m 644 $(LIBHEADERFILES) $(DESTDIR)$(LIBINCLUDEDIR)
++	$(INSTALL) -m 644 $(LIBMAN3FILES) $(DESTDIR)$(LIBMAN3DIR)
++	$(INSTALL) -m 644 $(LIBMAN5FILES) $(DESTDIR)$(LIBMAN5DIR)
+ 
+ install :: install-lib
+ 
+diff -urN lm_sensors-2.5.2.orig/prog/detect/Module.mk lm_sensors-2.5.2/prog/detect/Module.mk
+--- lm_sensors-2.5.2.orig/prog/detect/Module.mk	Fri Dec 24 20:52:27 1999
++++ lm_sensors-2.5.2/prog/detect/Module.mk	Fri Sep 15 23:13:42 2000
+@@ -36,7 +36,7 @@
+ 
+ install-prog-detect: all-prog-detect
+ 	mkdir -p $(DESTDIR)$(SBINDIR)
+-	$(INSTALL) -o root -g root -m 755 $(PROGDETECTSBININSTALL) $(DESTDIR)$(SBINDIR)
++	$(INSTALL) -m 755 $(PROGDETECTSBININSTALL) $(DESTDIR)$(SBINDIR)
+ install :: install-prog-detect
+ 
+ clean-prog-detect:
+diff -urN lm_sensors-2.5.2.orig/prog/sensord/Module.mk lm_sensors-2.5.2/prog/sensord/Module.mk
+--- lm_sensors-2.5.2.orig/prog/sensord/Module.mk	Mon Jul  3 00:49:34 2000
++++ lm_sensors-2.5.2/prog/sensord/Module.mk	Fri Sep 15 23:14:07 2000
+@@ -41,8 +41,8 @@
+ 
+ install-prog-sensord: all-prog-sensord
+ 	$(MKDIR) $(DESTDIR)$(SBINDIR) $(DESTDIR)$(PROGSENSORDMAN1DIR)
+-	$(INSTALL) -o root -g root -m 755 $(PROGSENSORDTARGETS) $(DESTDIR)$(SBINDIR)
+-	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(PROGSENSORDMAN1FILES) $(DESTDIR)$(PROGSENSORDMAN1DIR)
++	$(INSTALL) -m 755 $(PROGSENSORDTARGETS) $(DESTDIR)$(SBINDIR)
++	$(INSTALL) -m 644 $(PROGSENSORDMAN1FILES) $(DESTDIR)$(PROGSENSORDMAN1DIR)
+ # install :: install-prog-sensord
+ 
+ clean-prog-sensord:
+diff -urN lm_sensors-2.5.2.orig/prog/sensors/Module.mk lm_sensors-2.5.2/prog/sensors/Module.mk
+--- lm_sensors-2.5.2.orig/prog/sensors/Module.mk	Fri Dec 24 20:52:28 1999
++++ lm_sensors-2.5.2/prog/sensors/Module.mk	Fri Sep 15 23:14:17 2000
+@@ -41,8 +41,8 @@
+ 
+ install-prog-sensors: all-prog-sensors
+ 	mkdir -p $(DESTDIR)$(BINDIR) $(DESTDIR)$(PROGSENSORSMAN1DIR)
+-	$(INSTALL) -o root -g root -m 755 $(PROGSENSORSTARGETS) $(DESTDIR)$(BINDIR)
+-	$(INSTALL) -o $(MANOWN) -g $(MANGRP) -m 644 $(PROGSENSORSMAN1FILES) $(DESTDIR)$(PROGSENSORSMAN1DIR)
++	$(INSTALL) -m 755 $(PROGSENSORSTARGETS) $(DESTDIR)$(BINDIR)
++	$(INSTALL) -m 644 $(PROGSENSORSMAN1FILES) $(DESTDIR)$(PROGSENSORSMAN1DIR)
+ install :: install-prog-sensors
+ 
+ clean-prog-sensors:
