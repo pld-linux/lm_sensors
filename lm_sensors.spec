@@ -1,7 +1,7 @@
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
 Name:		lm_sensors
-Version:	2.5.2
+Version:	2.5.5
 Release:	1
 License:	GPL
 Group:		Applications/System
@@ -9,7 +9,6 @@ Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
 Source0:	http://www.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
 Patch0:		%{name}-make.patch
-Patch1:		%{name}-user_ret.patch
 Prereq:		/sbin/depmod
 Requires:	%{name}-modules = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -68,7 +67,6 @@ Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 
 %build
 %{__make} OPTS="$RPM_OPT_FLAGS" 
