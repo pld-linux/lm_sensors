@@ -17,7 +17,7 @@ Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://secure.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	5ccf267a4e5d2d7dfa176750886f6939
+# Source0-md5:	228d3536e51f017e45aa5f21973ced0d
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
@@ -30,6 +30,7 @@ BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rpmbuild(macros) >= 1.118
 BuildRequires:	rrdtool-devel
 %{!?_without_dist_kernel:BuildRequires:	i2c-devel >= 2.8.0}
+%{!?_without_dist_kernel:BuildRequires:	kernel-headers >= 2.4.0}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	liblm_sensors1
 
