@@ -25,7 +25,7 @@ hardware health monitoring hardware such as the LM78 and LM75.
 
 %description -l pl
 Narzêdzie do monitorowania sprzêtu w systemach Linuxowych wyposa¿onych
-w sprzêt monitoruj±cy, taki jak LM78 and LM75.
+w sprzêt monitoruj±cy, taki jak LM78 lub LM75.
 
 %package devel
 Summary:	Header files for lm_sensors
@@ -80,7 +80,7 @@ Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
 %description modules
 Kernel modules for various buses and monitor chips.
 
-%description -l pl
+%description modules -l pl
 Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 
 %prep
