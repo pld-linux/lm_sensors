@@ -23,6 +23,7 @@ Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
 Patch1:		%{name}-ppc.patch
+Patch2:		%{name}-iconv-in-libc.patch
 URL:		http://www.lm-sensors.nu/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
@@ -170,6 +171,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %ifarch ppc sparc sparc64 sparcv9
 # no isadump
