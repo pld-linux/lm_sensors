@@ -167,6 +167,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %build
 #up
 %{__make} \
+	CC=%{kgcc} \
 	OPTS="%{rpmcflags}" \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
@@ -184,6 +185,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 
 #smp
 %{__make} \
+	CC=%{kgcc} \
 	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
