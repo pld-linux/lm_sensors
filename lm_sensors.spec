@@ -26,7 +26,7 @@ w sprzêt monitoruj±cy, taki jak LM78 and LM75.
 %package devel
 Summary:        Header files for lm_sensors
 Summary(pl):	Pliki nag³ówkowe dla lm_sensors
-Group:          Develompent/Libraries
+Group:          Development/Libraries
 Group(pl):      Programowanie/Biblioteki
 Requires:       %{name} = %{version}
 
@@ -39,7 +39,7 @@ Pliki nag³ówkowe dla lm_sensors.
 %package static
 Summary:	Static libraries for lm_sensors
 Summary(pl):	Biblioteki statyczne dla lm_sensors
-Group:          Develompent/Libraries
+Group:          Development/Libraries
 Group(pl):      Programowanie/Biblioteki
 Requires:       %{name}-devel = %{version}
 
