@@ -13,7 +13,7 @@ Summary(ru):	ı‘…Ã…‘Ÿ ƒÃ— ÕœŒ…‘œ“…Œ«¡ ¡––¡“¡‘’“Ÿ
 Summary(uk):	ı‘…Ã¶‘… ƒÃ— ÕœŒ¶‘œ“…Œ«’ ¡–¡“¡‘’“…
 Name:		lm_sensors
 Version:	2.8.3
-%define _rel	1
+%define _rel	2
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -171,6 +171,11 @@ Modu≥y j±dra SMP dla rÛønego rodzaju sensorÛw monitoruj±cych.
 %patch0 -p1
 %patch1 -p1
 
+%ifarch ppc sparc sparc64 sparcv9
+# no isadump
+%{__perl} -pi -e 's@ prog/dump @ @' Makefile
+%endif
+
 %build
 %if %{with kernel} && %{with smp}
 # SMP
@@ -207,10 +212,11 @@ Modu≥y j±dra SMP dla rÛønego rodzaju sensorÛw monitoruj±cych.
 %{__make} user \
 	CC="%{__cc}" \
 	OPTS="%{rpmcflags}" \
+	LIBDIR=%{_libdir} \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=/usr/include \
-	PROG_EXTRA:="sensord dump"
+	PROG_EXTRA:="sensord"
 
 %{__make} -C prog/eepromer \
 	CC="%{__cc}" \
@@ -238,8 +244,9 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PREFIX=%{_prefix} \
 	ETCDIR=%{_sysconfdir} \
+	LIBDIR=%{_libdir} \
 	MANDIR=%{_mandir} \
-	PROG_EXTRA:="sensord dump" \
+	PROG_EXTRA:="sensord" \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=/usr/include
@@ -309,7 +316,9 @@ fi
 %attr(755,root,root) %{_sbindir}/eeprom*
 %attr(755,root,root) %{_sbindir}/fancontrol
 %attr(755,root,root) %{_sbindir}/i2c*
+%ifnarch ppc sparc sparc64 sparcv9
 %attr(755,root,root) %{_sbindir}/isadump
+%endif
 %attr(755,root,root) %{_sbindir}/pwmconfig
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sensors.conf
