@@ -185,6 +185,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %patch4 -p1
 
 %build
+cp -f /usr/share/automake/config.* admin
 %if %{with kernel} && %{with smp}
 # workaround to avoid unresolved dmi* symbols in i2c-piix4.o
 install -d fakelinux
