@@ -40,21 +40,8 @@
  	$(CC) -M -MG $(MODCPPFLAGS) $(MODCFLAGS) $< | \
         	$(SED) -e 's@^\(.*\)\.o:@$*.d $*.o: Makefile '`dirname $*.d`/Module.mk' @' > $@
  
-diff -Nur lm_sensors-2.8.0.orig/prog/hotplug/Makefile lm_sensors-2.8.0/prog/hotplug/Makefile
---- lm_sensors-2.8.0.orig/prog/hotplug/Makefile	2003-05-31 19:30:47.000000000 +0200
-+++ lm_sensors-2.8.0/prog/hotplug/Makefile	2003-07-25 23:17:07.000000000 +0200
-@@ -18,7 +18,7 @@
- 	$(CC) $(CFLAGS) -c $< -o $@
- 
- install: all
--	install -o root -g root -m 644 $(OBJS) /lib/modules/$(VER)/kernel/drivers/i2c/busses
-+	install -m 644 $(OBJS) /lib/modules/$(VER)/kernel/drivers/i2c/busses
- 
- clean:
- 	rm -f $(OBJS)
-diff -Nur lm_sensors-2.8.0.orig/prog/rrd/Makefile lm_sensors-2.8.0/prog/rrd/Makefile
---- lm_sensors-2.8.0.orig/prog/rrd/Makefile	2002-01-05 16:39:17.000000000 +0100
-+++ lm_sensors-2.8.0/prog/rrd/Makefile	2003-07-25 23:17:50.000000000 +0200
+--- lm_sensors-2.8.5.orig/prog/rrd/Makefile	2002-01-05 16:39:17.000000000 +0100
++++ lm_sensors-2.8.5/prog/rrd/Makefile	2003-07-25 23:17:50.000000000 +0200
 @@ -22,7 +22,7 @@
  	sed -e "s#%%RRDPATH%%#$(RRDPATH)#g;s#%%APACHDIR%%#$(APACHDIR)#g;s#%%RRDDIR%%#$(RRDDIR)#g;s#%%MACH%%#$(MACH)#g" $< > $@
  
@@ -64,7 +51,7 @@ diff -Nur lm_sensors-2.8.0.orig/prog/rrd/Makefile lm_sensors-2.8.0/prog/rrd/Make
  
  $(RRDB) : $(RRDDIR)
  	./sens_create_rrd $(RRDB)
-@@ -38,13 +38,13 @@
+@@ -38,7 +38,7 @@
  	$(error error - Web server directory $(APACHE) not present - check APACHE definition in Makefile)
  
  $(APACHDIR)/pix : $(APACHE)
@@ -72,14 +59,4 @@ diff -Nur lm_sensors-2.8.0.orig/prog/rrd/Makefile lm_sensors-2.8.0/prog/rrd/Make
 +	install -d -m 777 $(APACHDIR)/pix
  
  install: all $(RRDB) $(SENSDIR) $(CRONTAB) $(APACHDIR)/pix
--	install -o root -g root -m 755 sens_update_rrd $(BINPATH)
--	install -o root -g root -m 755 sens_week.cgi $(APACHDIR)
--	install -o root -g root -m 755 sens_day.cgi $(APACHDIR)
--	install -o root -g root -m 755 summ_week.cgi $(APACHDIR)
-+	install -m 755 sens_update_rrd $(BINPATH)
-+	install -m 755 sens_week.cgi $(APACHDIR)
-+	install -m 755 sens_day.cgi $(APACHDIR)
-+	install -m 755 summ_week.cgi $(APACHDIR)
- #	grep sens_update_rrd $(CRONTAB) > /dev/null 2>&1 || echo '*/5 * * * *	/usr/local/bin/sens_update_rrd' $(RRDB) $(SENSDEV) >> $(CRONTAB)
- 	@echo
- 	@echo Note!!! You must manually install the following line in the crontab for user $(USER):
+ 	install -m 755 sens_update_rrd $(BINPATH)
