@@ -4,7 +4,7 @@
 #
 # Version:      $Revision$
 #
-# chkconfig:	2345 30 70
+# chkconfig:	2345 32 68
 # description:	Starts and stops hardware sensors monitoring daemon.
 # author:	Filip Kalinski <filon@pld.org.pl>
 
