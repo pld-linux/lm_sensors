@@ -1,5 +1,20 @@
---- ./etc/Module.mk.org	Fri Dec 24 20:52:27 1999
-+++ ./etc/Module.mk	Tue Jul 23 16:55:28 2002
+diff -urN lm_sensors-2.6.5.orig/Makefile lm_sensors-2.6.5/Makefile
+--- lm_sensors-2.6.5.orig/Makefile	Sun Sep 22 13:29:54 2002
++++ lm_sensors-2.6.5/Makefile	Sun Sep 22 13:30:32 2002
+@@ -170,8 +170,9 @@
+ # PROGCPPFLAGS/PROGCFLAGS is to create non-kernel object files (which are linked into executables).
+ # ARCPPFLAGS/ARCFLAGS are used to create archive object files (static libraries).
+ # LIBCPPFLAGS/LIBCFLAGS are for shared library objects.
++OPTS=-O2
+ ALL_CPPFLAGS := -I. -Ikernel/include -I$(I2C_HEADERS) -I$(LINUX_HEADERS)
+-ALL_CFLAGS := -O2 
++ALL_CFLAGS := $(OPTS)
+ 
+ ifeq ($(DEBUG),1)
+ ALL_CPPFLAGS += -DDEBUG
+diff -urN lm_sensors-2.6.5.orig/etc/Module.mk lm_sensors-2.6.5/etc/Module.mk
+--- lm_sensors-2.6.5.orig/etc/Module.mk	Sun Sep 22 13:29:54 2002
++++ lm_sensors-2.6.5/etc/Module.mk	Sun Sep 22 13:30:32 2002
 @@ -29,7 +29,7 @@
  install-etc:
  	$(MKDIR) $(DESTDIR)$(ETCDIR)
@@ -9,9 +24,22 @@
  	fi
  install :: install-etc
  
---- ./kernel/busses/Module.mk.org	Sat Jul  6 02:49:13 2002
-+++ ./kernel/busses/Module.mk	Tue Jul 23 16:22:15 2002
-@@ -89,13 +89,13 @@
+diff -urN lm_sensors-2.6.5.orig/kernel/Module.mk lm_sensors-2.6.5/kernel/Module.mk
+--- lm_sensors-2.6.5.orig/kernel/Module.mk	Sun Sep 22 13:29:54 2002
++++ lm_sensors-2.6.5/kernel/Module.mk	Sun Sep 22 13:30:32 2002
+@@ -39,7 +39,7 @@
+ install-kernel: all-kernel
+ 	if [ -n "$(KERNELTARGETS)" ] ; then \
+ 	  $(MKDIR) $(DESTDIR)$(MODDIR) ; \
+-	  $(INSTALL) -o root -g root -m 644 $(KERNELTARGETS) $(DESTDIR)$(MODDIR) ;\
++	  $(INSTALL) -m 644 $(KERNELTARGETS) $(DESTDIR)$(MODDIR) ;\
+ 	fi
+ 	$(RM) $(DESTDIR)$(MODDIR)/sensors.o
+ 
+diff -urN lm_sensors-2.6.5.orig/kernel/busses/Module.mk lm_sensors-2.6.5/kernel/busses/Module.mk
+--- lm_sensors-2.6.5.orig/kernel/busses/Module.mk	Sun Sep 22 13:29:54 2002
++++ lm_sensors-2.6.5/kernel/busses/Module.mk	Sun Sep 22 13:30:32 2002
+@@ -90,13 +90,13 @@
  	if [ -n "$(KERNELBUSSESTARGETS)" ] ; then \
  	  if [ -d "$(DESTDIR)$(MODPREF)/kernel" ] ; then \
  	    $(MKDIR) $(DESTDIR)$(MODPREF)/kernel/drivers/i2c ; \
@@ -27,9 +55,10 @@
  	  fi \
  	fi
  
---- ./kernel/chips/Module.mk.org	Sat Jul  6 02:49:13 2002
-+++ ./kernel/chips/Module.mk	Tue Jul 23 16:22:58 2002
-@@ -136,13 +136,13 @@
+diff -urN lm_sensors-2.6.5.orig/kernel/chips/Module.mk lm_sensors-2.6.5/kernel/chips/Module.mk
+--- lm_sensors-2.6.5.orig/kernel/chips/Module.mk	Sun Sep 22 13:29:54 2002
++++ lm_sensors-2.6.5/kernel/chips/Module.mk	Sun Sep 22 13:30:32 2002
+@@ -137,13 +137,13 @@
  	if [ -n "$(KERNELCHIPSTARGETS)" ] ; then \
  	  if [ -d "$(DESTDIR)$(MODPREF)/kernel" ] ; then \
  	    $(MKDIR) $(DESTDIR)$(MODPREF)/kernel/drivers/sensors ; \
@@ -45,8 +74,9 @@
  	  fi \
  	fi
  
---- ./kernel/include/Module.mk.org	Tue Feb  6 03:53:46 2001
-+++ ./kernel/include/Module.mk	Tue Jul 23 16:24:16 2002
+diff -urN lm_sensors-2.6.5.orig/kernel/include/Module.mk lm_sensors-2.6.5/kernel/include/Module.mk
+--- lm_sensors-2.6.5.orig/kernel/include/Module.mk	Sun Sep 22 13:29:54 2002
++++ lm_sensors-2.6.5/kernel/include/Module.mk	Sun Sep 22 13:30:32 2002
 @@ -33,7 +33,7 @@
  install-all-kernel-include:
  	if [ -n "$(KERNELINCLUDEFILES)" ] ; then \
@@ -56,19 +86,9 @@
  	fi
  
  install :: install-all-kernel-include
---- ./kernel/Module.mk.org	Tue Feb  6 03:53:46 2001
-+++ ./kernel/Module.mk	Tue Jul 23 16:21:08 2002
-@@ -39,7 +39,7 @@
- install-kernel: all-kernel
- 	if [ -n "$(KERNELTARGETS)" ] ; then \
- 	  $(MKDIR) $(DESTDIR)$(MODDIR) ; \
--	  $(INSTALL) -o root -g root -m 644 $(KERNELTARGETS) $(DESTDIR)$(MODDIR) ;\
-+	  $(INSTALL) -m 644 $(KERNELTARGETS) $(DESTDIR)$(MODDIR) ;\
- 	fi
- 	$(RM) $(DESTDIR)$(MODDIR)/sensors.o
- 
---- ./lib/Module.mk.org	Sat Mar 23 01:53:08 2002
-+++ ./lib/Module.mk	Tue Jul 23 16:46:24 2002
+diff -urN lm_sensors-2.6.5.orig/lib/Module.mk lm_sensors-2.6.5/lib/Module.mk
+--- lm_sensors-2.6.5.orig/lib/Module.mk	Sun Sep 22 13:29:54 2002
++++ lm_sensors-2.6.5/lib/Module.mk	Sun Sep 22 13:30:32 2002
 @@ -87,12 +87,12 @@
  
  install-lib: all-lib
@@ -86,9 +106,10 @@
  
  install :: install-lib
  
---- ./prog/detect/Module.mk.org	Fri Dec 24 20:52:27 1999
-+++ ./prog/detect/Module.mk	Tue Jul 23 16:49:07 2002
-@@ -36,7 +36,7 @@
+diff -urN lm_sensors-2.6.5.orig/prog/detect/Module.mk lm_sensors-2.6.5/prog/detect/Module.mk
+--- lm_sensors-2.6.5.orig/prog/detect/Module.mk	Sun Sep 22 13:29:54 2002
++++ lm_sensors-2.6.5/prog/detect/Module.mk	Sun Sep 22 13:30:32 2002
+@@ -37,7 +37,7 @@
  
  install-prog-detect: all-prog-detect
  	mkdir -p $(DESTDIR)$(SBINDIR)
@@ -97,8 +118,39 @@
  install :: install-prog-detect
  
  clean-prog-detect:
---- ./prog/sensord/Module.mk.org	Sun Apr 28 16:26:07 2002
-+++ ./prog/sensord/Module.mk	Tue Jul 23 16:49:49 2002
+diff -urN lm_sensors-2.6.5.orig/prog/dump/Module.mk lm_sensors-2.6.5/prog/dump/Module.mk
+--- lm_sensors-2.6.5.orig/prog/dump/Module.mk	Sun Sep 22 13:29:54 2002
++++ lm_sensors-2.6.5/prog/dump/Module.mk	Sun Sep 22 13:49:15 2002
+@@ -39,7 +39,7 @@
+ 
+ install-prog-dump: all-prog-dump
+ 	mkdir -p $(DESTDIR)$(SBINDIR)
+-	$(INSTALL) -o root -g root -m 755 $(PROGDUMPBININSTALL) $(DESTDIR)$(SBINDIR)
++	$(INSTALL) -m 755 $(PROGDUMPBININSTALL) $(DESTDIR)$(SBINDIR)
+ install :: install-prog-dump
+ 
+ clean-prog-dump:
+diff -urN lm_sensors-2.6.5.orig/prog/rrd/Makefile lm_sensors-2.6.5/prog/rrd/Makefile
+--- lm_sensors-2.6.5.orig/prog/rrd/Makefile	Sun Sep 22 13:29:54 2002
++++ lm_sensors-2.6.5/prog/rrd/Makefile	Sun Sep 22 13:31:17 2002
+@@ -41,10 +41,10 @@
+ 	install -d -o $(USER) -m 777 $(APACHDIR)/pix
+ 
+ install: all $(RRDB) $(SENSDIR) $(CRONTAB) $(APACHDIR)/pix
+-	install -o root -g root -m 755 sens_update_rrd $(BINPATH)
+-	install -o root -g root -m 755 sens_week.cgi $(APACHDIR)
+-	install -o root -g root -m 755 sens_day.cgi $(APACHDIR)
+-	install -o root -g root -m 755 summ_week.cgi $(APACHDIR)
++	install -m 755 sens_update_rrd $(BINPATH)
++	install -m 755 sens_week.cgi $(APACHDIR)
++	install -m 755 sens_day.cgi $(APACHDIR)
++	install -m 755 summ_week.cgi $(APACHDIR)
+ #	grep sens_update_rrd $(CRONTAB) > /dev/null 2>&1 || echo '*/5 * * * *	/usr/local/bin/sens_update_rrd' $(RRDB) $(SENSDEV) >> $(CRONTAB)
+ 	@echo
+ 	@echo Note!!! You must manually install the following line in the crontab for user $(USER):
+diff -urN lm_sensors-2.6.5.orig/prog/sensord/Module.mk lm_sensors-2.6.5/prog/sensord/Module.mk
+--- lm_sensors-2.6.5.orig/prog/sensord/Module.mk	Sun Sep 22 13:29:54 2002
++++ lm_sensors-2.6.5/prog/sensord/Module.mk	Sun Sep 22 13:30:32 2002
 @@ -45,8 +45,8 @@
  
  install-prog-sensord: all-prog-sensord
@@ -110,8 +162,9 @@
  install :: install-prog-sensord
  
  clean-prog-sensord:
---- ./prog/sensors/Module.mk.org	Fri Dec 24 20:52:28 1999
-+++ ./prog/sensors/Module.mk	Tue Jul 23 16:50:43 2002
+diff -urN lm_sensors-2.6.5.orig/prog/sensors/Module.mk lm_sensors-2.6.5/prog/sensors/Module.mk
+--- lm_sensors-2.6.5.orig/prog/sensors/Module.mk	Sun Sep 22 13:29:54 2002
++++ lm_sensors-2.6.5/prog/sensors/Module.mk	Sun Sep 22 13:30:32 2002
 @@ -41,8 +41,8 @@
  
  install-prog-sensors: all-prog-sensors
@@ -123,16 +176,3 @@
  install :: install-prog-sensors
  
  clean-prog-sensors:
---- ./Makefile.org	Mon Apr 29 03:37:07 2002
-+++ ./Makefile	Tue Jul 23 16:19:17 2002
-@@ -170,8 +170,9 @@
- # PROGCPPFLAGS/PROGCFLAGS is to create non-kernel object files (which are linked into executables).
- # ARCPPFLAGS/ARCFLAGS are used to create archive object files (static libraries).
- # LIBCPPFLAGS/LIBCFLAGS are for shared library objects.
-+OPTS=-O2
- ALL_CPPFLAGS := -I. -Ikernel/include -I$(I2C_HEADERS) -I$(LINUX_HEADERS)
--ALL_CFLAGS := -O2 
-+ALL_CFLAGS := $(OPTS)
- 
- ifeq ($(DEBUG),1)
- ALL_CPPFLAGS += -DDEBUG
