@@ -320,19 +320,22 @@ fi
 %attr(755,root,root) %{_sbindir}/i2c*
 %ifnarch ppc sparc sparc64 sparcv9
 %attr(755,root,root) %{_sbindir}/isadump
+%{_mandir}/man8/isadump.8*
 %endif
 %attr(755,root,root) %{_sbindir}/pwmconfig
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sensors.conf
-%{_mandir}/man1/*
-%{_mandir}/man5/*
+%{_mandir}/man1/sensors.1*
+%{_mandir}/man5/sensors.conf.5*
+%{_mandir}/man8/i2c*.8*
+%{_mandir}/man8/sensors-detect.8*
 
 %files sensord
 %defattr(644,root,root,755)
 %attr(754,root,root) %{_sbindir}/sensord
 %attr(754,root,root) /etc/rc.d/init.d/sensors
 %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/sensors
-%{_mandir}/man8/*
+%{_mandir}/man8/sensord.8*
 
 %files devel
 %defattr(644,root,root,755)
