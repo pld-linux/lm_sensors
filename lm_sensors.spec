@@ -16,13 +16,13 @@ Summary(pt_BR):	Ferramentas para monitoração do hardware
 Summary(ru):	õÔÉÌÉÔÙ ÄÌÑ ÍÏÎÉÔÏÒÉÎÇÁ ÁĞĞÁÒÁÔÕÒÙ
 Summary(uk):	õÔÉÌ¦ÔÉ ÄÌÑ ÍÏÎ¦ÔÏÒÉÎÇÕ ÁĞÁÒÁÔÕÒÉ
 Name:		lm_sensors
-Version:	2.8.8
-%define _rel	1
+Version:	2.9.0
+%define _rel	0.1
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://secure.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	95cdb083b4d16e2419a2c78b35f608d0
+# Source0-md5:	add1f403c619e84bec2fbdfa12eda56f
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
@@ -39,7 +39,7 @@ BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rrdtool-devel
 %endif
 %if %{with kernel} && %{with dist_kernel}
-BuildRequires:	kernel-i2c-devel >= 2.8.3
+BuildRequires:	kernel-i2c-devel >= 2.9.0
 BuildRequires:	kernel-headers >= 2.4.0
 BuildRequires:	kernel-headers < 2.5.0
 %endif
