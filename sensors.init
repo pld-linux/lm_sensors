@@ -43,6 +43,8 @@ case "$1" in
 		daemon sensord \
 			$([ -n "$INTERVAL" ] && echo "-i $INTERVAL") \
 			$([ -n "$LOG_INTERVAL" ] && echo "-l $LOG_INTERVAL") \
+			$([ -n "$RRD_LOGFILE" ] && echo "-r $RRD_LOGFILE") \
+			$([ -n "$RRD_INTERVAL" ] && echo "-t $RRD_INTERVAL") \
 			-f daemon
 		
 		RET=$?
