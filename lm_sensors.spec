@@ -1,14 +1,19 @@
 Summary:	Hardware health monitoring
-Summary(pl):	Monitor zdrowia sprzêtu
+Summary(pl):	Monitor stanu sprzêtu
 Name:		lm_sensors
 Version:	2.3.3
 Release:	2
+Copyright:      GPL
 Group:          Utilities/System
 Group(pl):      Narzêdzia/System
 Source0:	http://www.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
-Copyright:	GPL
-Prereq:		/sbin/depmod -a
+Patch0:		lm_sensors-DESTDIR.patch
+Patch1:		lm_sensors-opts.patch
+Prereq:		/sbin/depmod
+Requires:       %{name}-modules = %{version}
 BuildRoot:	/tmp/%{name}-%{version}-root
+
+%define	_sysconfdir	/etc
 
 %description
 Tools for monitoring the hardware health of Linux systems containing
@@ -23,6 +28,7 @@ Summary:        Header files for lm_sensors
 Summary(pl):	Pliki nag³ówkowe dla lm_sensors
 Group:          Develompent/Libraries
 Group(pl):      Programowanie/Biblioteki
+Requires:       %{name} = %{version}
 
 %description devel
 Header files for lm_sensors.
@@ -35,6 +41,7 @@ Summary:	Static libraries for lm_sensors
 Summary(pl):	Biblioteki statyczne dla lm_sensors
 Group:          Develompent/Libraries
 Group(pl):      Programowanie/Biblioteki
+Requires:       %{name}-devel = %{version}
 
 %description static
 Statis libraries for lm_sensors.
@@ -43,7 +50,8 @@ Statis libraries for lm_sensors.
 Biblioteki statyczne dla lm_sensors.
 
 %package modules
-Summary: 	Kernel modules for various buses and monitor chips.
+Summary: 	Kernel modules for various buses and monitor chips
+Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group: 		Utilities/System
 Group(pl):      Narzêdzia/System
 
@@ -51,14 +59,15 @@ Group(pl):      Narzêdzia/System
 Kernel modules for various buses and monitor chips.
 
 %description -l pl
-Modu³y j±dra dla ró¿nych chipów monitoruj±cych.
+Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 
 %prep
 %setup -q
-
+%patch0 -p1
+%patch1 -p0
 
 %build
-make 
+make OPTS="$RPM_OPT_FLAGS" 
 
 %install
 rm -fr $RPM_BUILD_ROOT
@@ -66,11 +75,18 @@ rm -fr $RPM_BUILD_ROOT
 REL=`grep UTS_RELEASE /usr/src/linux/include/linux/version.h 2>/dev/null | cut -d\" -f2`
 
 make	install \
-	PREFIX=$RPM_BUILD_ROOT%{_prefix} \
-	ETCDIR=$RPM_BUILD_ROOT%{_sysconfdir} \
-	MODDIR=$RPM_BUILD_ROOT/lib/modules/$REL/misc
+	DESTDIR=$RPM_BUILD_ROOT \
+	PREFIX=%{_prefix} \
+	ETCDIR=%{_sysconfdir} \
+	MANDIR=%{_mandir} \
+	MODDIR=/lib/modules/$REL/misc
 
-gzip -9nf CHANGES README* doc/*
+strip $RPM_BUILD_ROOT%{_bindir}/*
+strip --strip-unneeded $RPM_BUILD_ROOT%{_libdir}/lib*.so.*.*
+
+gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man[135]/* \
+	CHANGES README* BUGS CONTRIBUTORS TODO BACKGROUND
+gzip -9nrf doc/*
 
 %post   -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -86,17 +102,22 @@ rm -fr $RPM_BUILD_ROOT
 
 %files 
 %defattr(644,root,root,755)
-%doc {CHANGES,README*}.gz doc
-%config /etc/sensors.conf
+%doc {CHANGES,README*,BUGS,CONTRIBUTORS,TODO,BACKGROUND}.gz 
+%doc doc/*.gz doc/busses doc/chips
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
+%config %{_sysconfdir}/sensors.conf
+%{_mandir}/man1/*
+%{_mandir}/man5/*
 
 %files devel
+%doc doc/developers doc/kernel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/lib*.so
 %attr(755,root,root) %{_libdir}/lib*.so.0
 %{_includedir}/sensors
 %{_includedir}/linux/*
+%{_mandir}/man3/*
 
 %files static
 %defattr(644,root,root,755)
