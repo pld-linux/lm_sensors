@@ -171,11 +171,29 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 	SMP=0
 
 %{__make} install-kernel \
-	MODDIR=kernel-up-modules
+	MODDIR=kernel-up-modules \
+	CC=%{kgcc} \
+	OPTS="%{rpmcflags}" \
+	LINUX=/dev/null \
+	LINUX_HEADERS=%{_kernelsrcdir}/include \
+	I2C_HEADERS=%{_kernelsrcdir}/include \
+	SMP=0
 %{__make} install-kernel-busses \
-	MODPREF=kernel-up-modules
+	MODPREF=kernel-up-modules \
+	CC=%{kgcc} \
+	OPTS="%{rpmcflags}" \
+	LINUX=/dev/null \
+	LINUX_HEADERS=%{_kernelsrcdir}/include \
+	I2C_HEADERS=%{_kernelsrcdir}/include \
+	SMP=0
 %{__make} install-kernel-chips \
-	MODPREF=kernel-up-modules
+	MODPREF=kernel-up-modules \
+	CC=%{kgcc} \
+	OPTS="%{rpmcflags}" \
+	LINUX=/dev/null \
+	LINUX_HEADERS=%{_kernelsrcdir}/include \
+	I2C_HEADERS=%{_kernelsrcdir}/include \
+	SMP=0
 
 %{__make} clean
 
@@ -204,7 +222,13 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	MANDIR=%{_mandir} \
 	PROG_EXTRA:="sensord dump" \
 	MODDIR=/lib/modules/%{_kernel_ver}smp/misc \
-	MODPREF=/lib/modules/%{_kernel_ver}smp
+	MODPREF=/lib/modules/%{_kernel_ver}smp \
+	CC=%{kgcc} \
+	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
+	LINUX=/dev/null \
+	LINUX_HEADERS=%{_kernelsrcdir}/include \
+	I2C_HEADERS=%{_kernelsrcdir}/include \
+	SMP=1
 
 install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
 install prog/dump/{i2c{dump,set},isadump} $RPM_BUILD_ROOT%{_sbindir}
