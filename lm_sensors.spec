@@ -1,3 +1,9 @@
+
+# conditional build
+# _without_dist_kernel		without kernel for distributions
+
+# TODO: init script for loading sensors modules and sensord
+
 %define		_kernel_ver	%(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
 %define		_kernel_ver_str	%(echo %{_kernel_ver} | sed s/-/_/g)
 %define		smpstr		%{?_with_smp:-smp}
@@ -75,8 +81,8 @@ Group(pl):	Aplikacje/System
 Release:	%{release}@%{_kernel_ver_str}
 Prereq:		/sbin/depmod
 Requires:	i2c >= 2.6.0
-Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
-Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
+%{?!_without_dist_kernel:Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}}
+%{?!_without_dist_kernel:Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}}
 Obsoletes:	lm_sensors-modules
 Provides:	lm_sensors-modules = %{version}
 
@@ -111,6 +117,11 @@ rm -rf $RPM_BUILD_ROOT
 	MANDIR=%{_mandir} \
 	MODDIR=/lib/modules/%{_kernel_ver}/misc
 
+install -d $RPM_BUILD_ROOT%{_sbindir}
+install -d $RPM_BUILD_ROOT%{_mandir}/man8
+install progs/sensord/sensord $RPM_BUILD_ROOT%{_sbindir}
+install progs/sensord/sensord.8 $RPM_BUILD_ROOT%{_mandir}/man8
+
 gzip -9nf BACKGROUND BUGS CHANGES README README.thinkpad TODO
 find doc -type f ! -name \*.\* -a ! -name \*ticket | xargs gzip -9nf
 
@@ -132,6 +143,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/*.gz doc/*.html doc/busses doc/chips
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
+%attr(755,root,root) %{_sbindir}/sensord
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/sensors.conf
 %{_mandir}/man1/*
