@@ -4,7 +4,11 @@
 %bcond_without	smp		# don't build SMP modules
 %bcond_without	kernel		# build kernel 2.4 modules
 %bcond_without	userspace	# don't build userspace utilities
-#
+
+%ifarch amd64
+%undefine kernel
+%endif
+
 %include	/usr/lib/rpm/macros.perl
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzЙtu
@@ -13,7 +17,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.8.7
-%define _rel	1
+%define _rel	2
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
