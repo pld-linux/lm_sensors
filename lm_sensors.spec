@@ -2,7 +2,7 @@
 # conditional build
 # _without_dist_kernel		without kernel for distributions
 %include        /usr/lib/rpm/macros.perl
-%define		_rel 11
+%define		_rel 12
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
