@@ -2,7 +2,7 @@
 #
 # sensors:	Hardware sensors monitoring daemon
 #
-# Version:      $Revision$
+# Version:	$Revision$
 #
 # chkconfig:	2345 32 68
 # description:	Starts and stops hardware sensors monitoring daemon.
@@ -13,20 +13,22 @@
 
 # Get service config
 if [ -f /etc/sysconfig/sensors ] ; then
-        . /etc/sysconfig/sensors
+	. /etc/sysconfig/sensors
 fi
+
 
 # See how we were called.
 case "$1" in
   start)
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/sensors ]; then
+		msg_starting "sensors daemon"
 		if [ -z "$BUS" ] || [ -z "$CHIP" ]; then 
-			msg_starting "sensors daemon"; fail
+			fail
 			nls "BUS or CHIP not configured in /etc/sysconfig/sensors"
 			exit 1
 		fi
-		
+
 		# insert modules
 		for i in $BUS; do
 			_modprobe single die "i2c-$i"
@@ -38,28 +40,27 @@ case "$1" in
 		if [ "$SENSORS_SET" = "1" ]; then
 			sensors -s
 		fi
-		
-		msg_starting "sensors daemon"
+
 		daemon sensord \
 			$([ -n "$INTERVAL" ] && echo "-i $INTERVAL") \
 			$([ -n "$LOG_INTERVAL" ] && echo "-l $LOG_INTERVAL") \
 			$([ -n "$RRD_LOGFILE" ] && echo "-r $RRD_LOGFILE") \
 			$([ -n "$RRD_INTERVAL" ] && echo "-t $RRD_INTERVAL") \
 			-f daemon
-		
-		RET=$?
-		[ $RET -eq 0 ] && touch /var/lock/subsys/sensors
+
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/sensors
+		touch /var/lock/subsys/sensors
 	else
 		msg_already_running "sensors daemon"
 		exit 1
 	fi
-	touch /var/lock/subsys/sensors
 	;;
   stop)
 	if [ -f /var/lock/subsys/sensors ]; then
 		msg_stopping "sensors daemon"
 		killproc sensord
-		
+
 		# remove kernel modules
 		for i in $CHIP; do
 			/sbin/rmmod $i >/dev/null 2>&1
@@ -67,7 +68,7 @@ case "$1" in
 		for i in $BUS; do
 			/sbin/rmmod i2c-$BUS >/dev/null 2>&1
 		done
-		
+
 		rm -f /var/lock/subsys/sensors
 	else
 		msg_not_running "sensors daemon"
@@ -78,13 +79,17 @@ case "$1" in
 	status sensors sensord
 	sensors
 	;;
-  restart)
+  restart|reload)
 	$0 stop
 	$0 start
 	;;
+  force-reload)
+	$0 stop && $0 start
+	exit $?
+	;;
   *)
-	msg_usage "$0 {start|stop|status|restart}"
+	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
 	exit 1
 esac
 
-exit $RET
+exit $RETVAL
