@@ -26,12 +26,14 @@ Patch1:		%{name}-ppc.patch
 Patch2:		%{name}-iconv-in-libc.patch
 Patch3:		%{name}-gcc34.patch
 URL:		http://www.lm-sensors.nu/
+BuildRequires:	rpmbuild(macros) >= 1.118
+%if %{with userspace}
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
-BuildRequires:	rpmbuild(macros) >= 1.118
 BuildRequires:	rrdtool-devel
+%endif
 %if %{with kernel} && %{with dist_kernel}
 BuildRequires:	kernel-i2c-devel >= 2.8.3
 BuildRequires:	kernel-headers >= 2.4.0
