@@ -1,5 +1,6 @@
 %define		_kernel_ver	%(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2)
-%define		smpstr		%{?_with_smp:smp}%{!?_with_smp:up}
+%define		_kernel_ver_str	%(echo %{_kernel_ver} | sed s/-/_/g)
+%define		smpstr		%{?_with_smp:-smp}
 %define		smp		%{?_with_smp:1}%{!?_with_smp:0}
 
 Summary:	Hardware health monitoring
@@ -65,22 +66,23 @@ Static libraries for lm_sensors.
 %description static -l pl
 Biblioteki statyczne dla lm_sensors.
 
-%package modules
+%package -n kernel%{smpstr}-misc-lm_sensors
 Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
-Release:	%{release}@%{_kernel_ver}%{smpstr}
+Release:	%{release}@%{_kernel_ver_str}
 Prereq:		/sbin/depmod
 Requires:	i2c >= 2.6.0
 Conflicts:	kernel < %{_kernel_ver}, kernel > %{_kernel_ver}
 Conflicts:	kernel-%{?_with_smp:up}%{!?_with_smp:smp}
+Obsoletes:	lm_sensors-modules
 
-%description modules
+%description -n kernel%{smpstr}-misc-lm_sensors
 Kernel modules for various buses and monitor chips.
 
-%description modules -l pl
+%description -n kernel%{smpstr}-misc-lm_sensors -l pl
 Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 
 %prep
@@ -114,10 +116,10 @@ find doc -type f ! -name \*.\* -a ! -name \*ticket | xargs gzip -9nf
 %post   -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
-%post modules
+%post -n kernel%{smpstr}-misc-lm_sensors
 /sbin/depmod -a
 
-%postun modules
+%postun -n kernel%{smpstr}-misc-lm_sensors
 /sbin/depmod -a
 
 %clean
@@ -147,6 +149,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libsensors.a
 
-%files modules
+%files -n kernel%{smpstr}-misc-lm_sensors
 %defattr(644,root,root,755)
 /lib/modules/*/misc/*
