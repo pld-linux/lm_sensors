@@ -11,7 +11,7 @@ Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
 Name:		lm_sensors
 Version:	2.6.2
-Release:	3
+Release:	4
 License:	GPL
 Group:		Applications/System
 Group(de):	Applikationen/System
@@ -34,8 +34,8 @@ Tools for monitoring the hardware health of Linux systems containing
 hardware health monitoring hardware such as the LM78 and LM75.
 
 %description -l pl
-Narzêdzie do monitorowania sprzêtu w systemach Linuxowych wyposa¿onych
-w sprzêt monitoruj±cy, taki jak LM78 lub LM75.
+Narzêdzie do monitorowania sprzêtu w systemach Linuksowych
+wyposa¿onych w sprzêt monitoruj±cy, taki jak LM78 lub LM75.
 
 %package devel
 Summary:	Header files for lm_sensors

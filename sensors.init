@@ -29,6 +29,10 @@ case "$1" in
 		# insert modules
 		_modprobe single die "i2c-$BUS"
 		_modprobe single die "$CHIP"
+
+		if [ "$SENSORS_SET" = "1" ]; then
+			sensors -s
+		fi
 		
 		msg_starting "sensors daemon"
 		daemon sensord \

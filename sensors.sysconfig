@@ -19,6 +19,9 @@ INTERVAL=1m
 # interval between logging
 LOG_INTERVAL=20m
 
+# configure sensors (i.e. call `sensors -s') before starting daemon?
+#SENSORS_SET=1
+
 # example for VIAKT* mainboards (bus is not (!) via)
 # BUS=isa
 # CHIP=via686a
