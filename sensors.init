@@ -12,11 +12,11 @@
 . /etc/rc.d/init.d/functions
 
 # Get service config
-if [ -f /etc/sysconfig/sensors ] ; then
+if [ -f /etc/sysconfig/sensors ]; then
 	. /etc/sysconfig/sensors
 fi
 
-
+RETVAL=0
 # See how we were called.
 case "$1" in
   start)
@@ -25,8 +25,8 @@ case "$1" in
 		msg_starting "sensors daemon"
 		if [ -z "$BUS" ] || [ -z "$CHIP" ]; then 
 			fail
-			nls "BUS or CHIP not configured in /etc/sysconfig/sensors"
-			exit 1
+			nls "BUS or CHIP not configured in /etc/sysconfig/sensors" >&2
+			exit 6
 		fi
 
 		# insert modules
@@ -53,7 +53,6 @@ case "$1" in
 		touch /var/lock/subsys/sensors
 	else
 		msg_already_running "sensors daemon"
-		exit 1
 	fi
 	;;
   stop)
@@ -72,24 +71,21 @@ case "$1" in
 		rm -f /var/lock/subsys/sensors
 	else
 		msg_not_running "sensors daemon"
-		exit 1
 	fi
 	;;
   status)
 	status sensors sensord
+	RETVAL=$?
 	sensors
 	;;
-  restart|reload)
+  restart|force-reload)
 	$0 stop
 	$0 start
-	;;
-  force-reload)
-	$0 stop && $0 start
 	exit $?
 	;;
   *)
-	msg_usage "$0 {start|stop|restart|reload|force-reload|status}"
-	exit 1
+	msg_usage "$0 {start|stop|restart|force-reload|status}"
+	exit 3
 esac
 
 exit $RETVAL
