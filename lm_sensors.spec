@@ -2,7 +2,7 @@
 # conditional build
 # _without_dist_kernel		without kernel for distributions
 %include        /usr/lib/rpm/macros.perl
-%define         _rel 3
+%define         _rel 0.1
 
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzЙtu
@@ -10,7 +10,7 @@ Summary(pt_BR):	Ferramentas para monitoraГЦo do hardware
 Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
-Version:	2.6.3
+Version:	2.6.4
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -142,7 +142,7 @@ ModuЁy j╠dra SMP dla rС©nego rodzaju sensorСw monitoruj╠cych.
 
 %prep
 %setup -q
-%patch0 -p1
+#%patch0 -p1
 
 %build
 #up
