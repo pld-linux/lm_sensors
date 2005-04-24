@@ -16,20 +16,19 @@ Summary(pt_BR):	Ferramentas para monitoração do hardware
 Summary(ru):	õÔÉÌÉÔÙ ÄÌÑ ÍÏÎÉÔÏÒÉÎÇÁ ÁÐÐÁÒÁÔÕÒÙ
 Summary(uk):	õÔÉÌ¦ÔÉ ÄÌÑ ÍÏÎ¦ÔÏÒÉÎÇÕ ÁÐÁÒÁÔÕÒÉ
 Name:		lm_sensors
-Version:	2.9.0
-%define _rel	5
+Version:	2.9.1
+%define _rel	1
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://secure.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	add1f403c619e84bec2fbdfa12eda56f
+# Source0-md5:	f5af615e39441d95471bdb72a3f01709
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
 Patch1:		%{name}-ppc.patch
 Patch2:		%{name}-iconv-in-libc.patch
-Patch3:		%{name}-gcc34.patch
-Patch4:		%{name}-sensors-detect-PATH.patch
+Patch3:		%{name}-sensors-detect-PATH.patch
 URL:		http://www.lm-sensors.nu/
 BuildRequires:	rpmbuild(macros) >= 1.118
 %if %{with userspace}
@@ -182,7 +181,6 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 %build
 %if %{with kernel} && %{with smp}
@@ -325,6 +323,7 @@ fi
 %doc BACKGROUND BUGS CHANGES README README.thinkpad TODO doc/{busses,chips}
 %doc doc/{FAQ,donations,fan-divisors,progs,temperature-sensors,*html,vid}
 %doc prog/{config,daemon,eepromer/README*,matorb,maxilife}
+%attr(755,root,root) %{_bindir}/ddcmon
 %attr(755,root,root) %{_bindir}/decode-*.pl
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
@@ -342,7 +341,9 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors.conf
 %{_mandir}/man1/sensors.1*
 %{_mandir}/man5/sensors.conf.5*
+%{_mandir}/man8/fancontrol.8*
 %{_mandir}/man8/i2c*.8*
+%{_mandir}/man8/pwmconfig.8*
 %{_mandir}/man8/sensors-detect.8*
 
 %files sensord
