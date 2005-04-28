@@ -17,7 +17,7 @@ Summary(ru):	õÔÉÌÉÔÙ ÄÌÑ ÍÏÎÉÔÏÒÉÎÇÁ ÁÐÐÁÒÁÔÕÒÙ
 Summary(uk):	õÔÉÌ¦ÔÉ ÄÌÑ ÍÏÎ¦ÔÏÒÉÎÇÕ ÁÐÁÒÁÔÕÒÉ
 Name:		lm_sensors
 Version:	2.9.1
-%define _rel	1
+%define _rel	2
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -29,6 +29,7 @@ Patch0:		%{name}-make.patch
 Patch1:		%{name}-ppc.patch
 Patch2:		%{name}-iconv-in-libc.patch
 Patch3:		%{name}-sensors-detect-PATH.patch
+Patch4:		%{name}-ipmi.patch
 URL:		http://www.lm-sensors.nu/
 BuildRequires:	rpmbuild(macros) >= 1.118
 %if %{with userspace}
@@ -181,6 +182,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 %if %{with kernel} && %{with smp}
@@ -189,6 +191,9 @@ install -d fakelinux
 :> fakelinux/.config
 %ifarch %{ix86}
 echo 'CONFIG_X86=y' >> fakelinux/.config
+%endif
+%ifarch %{ix86} amd64 alpha ppc
+echo 'CONFIG_IPMI_HANDLER=m' >> fakelinux/.config
 %endif
 
 # SMP
