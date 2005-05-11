@@ -5,7 +5,7 @@
 %bcond_without	kernel		# build kernel 2.4 modules
 %bcond_without	userspace	# don't build userspace utilities
 
-%ifarch amd64
+%ifarch %{x8664}
 %undefine with_kernel
 %endif
 
@@ -31,7 +31,7 @@ Patch2:		%{name}-iconv-in-libc.patch
 Patch3:		%{name}-sensors-detect-PATH.patch
 Patch4:		%{name}-ipmi.patch
 URL:		http://www.lm-sensors.nu/
-BuildRequires:	rpmbuild(macros) >= 1.118
+BuildRequires:	rpmbuild(macros) >= 1.213
 %if %{with userspace}
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
@@ -192,7 +192,7 @@ install -d fakelinux
 %ifarch %{ix86}
 echo 'CONFIG_X86=y' >> fakelinux/.config
 %endif
-%ifarch %{ix86} amd64 alpha ppc
+%ifarch %{ix86} %{x8664} alpha ppc
 echo 'CONFIG_IPMI_HANDLER=m' >> fakelinux/.config
 %endif
 
@@ -335,7 +335,7 @@ fi
 %attr(755,root,root) %{_sbindir}/eeprom*
 %attr(755,root,root) %{_sbindir}/fancontrol
 %attr(755,root,root) %{_sbindir}/i2c*
-%ifarch %{ix86} amd64
+%ifarch %{ix86} %{x8664}
 %attr(755,root,root) %{_sbindir}/isadump
 %attr(755,root,root) %{_sbindir}/isaset
 %{_mandir}/man8/isadump.8*
