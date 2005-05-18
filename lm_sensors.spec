@@ -185,7 +185,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %patch4 -p1
 
 %build
-%if %{with kernel} && %{with smp}
+%if %{with kernel}
 # workaround to avoid unresolved dmi* symbols in i2c-piix4.o
 install -d fakelinux
 :> fakelinux/.config
@@ -196,6 +196,7 @@ echo 'CONFIG_X86=y' >> fakelinux/.config
 echo 'CONFIG_IPMI_HANDLER=m' >> fakelinux/.config
 %endif
 
+%if %{with smp}
 # SMP
 %{__make} all-kernel-busses all-kernel-chips \
 	CC="%{kgcc}" \
@@ -215,7 +216,6 @@ echo 'CONFIG_IPMI_HANDLER=m' >> fakelinux/.config
 %{__make} clean
 %endif
 
-%if %{with kernel}
 # UP
 %{__make} all-kernel-busses all-kernel-chips \
 	CC="%{kgcc}" \
