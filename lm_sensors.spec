@@ -17,7 +17,7 @@ Summary(ru):	õÔÉÌÉÔÙ ÄÌÑ ÍÏÎÉÔÏÒÉÎÇÁ ÁÐÐÁÒÁÔÕÒÙ
 Summary(uk):	õÔÉÌ¦ÔÉ ÄÌÑ ÍÏÎ¦ÔÏÒÉÎÇÕ ÁÐÁÒÁÔÕÒÉ
 Name:		lm_sensors
 Version:	2.9.1
-%define _rel	2
+%define _rel	3
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -30,6 +30,7 @@ Patch1:		%{name}-ppc.patch
 Patch2:		%{name}-iconv-in-libc.patch
 Patch3:		%{name}-sensors-detect-PATH.patch
 Patch4:		%{name}-ipmi.patch
+Patch5:		%{name}-CAN-2005-2672.patch
 URL:		http://www.lm-sensors.nu/
 BuildRequires:	rpmbuild(macros) >= 1.213
 %if %{with userspace}
@@ -183,6 +184,7 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 %if %{with kernel}

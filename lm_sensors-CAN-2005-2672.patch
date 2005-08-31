@@ -1,0 +1,18 @@
+diff -burN lm_sensors-2.9.1.orig/prog/pwm/pwmconfig lm_sensors-2.9.1/prog/pwm/pwmconfig
+--- lm_sensors-2.9.1.orig/prog/pwm/pwmconfig	2005-08-31 09:38:08.272485088 +0200
++++ lm_sensors-2.9.1/prog/pwm/pwmconfig	2005-08-31 09:40:43.701856232 +0200
+@@ -465,9 +465,11 @@
+ function SaveConfig {
+ 	echo
+ 	echo "Saving configuration to $FCCONFIG..."
+-	egrep -v '(INTERVAL|FCTEMPS|FCFANS|MAXTEMP|MINTEMP|MINSTART|MINSTOP)' $FCCONFIG >/tmp/fancontrol
+-	echo -e "INTERVAL=$INTERVAL\nFCTEMPS=$FCTEMPS\nFCFANS=$FCFANS\nMINTEMP=$MINTEMP\nMAXTEMP=$MAXTEMP\nMINSTART=$MINSTART\nMINSTOP=$MINSTOP" >>/tmp/fancontrol
+-	mv /tmp/fancontrol $FCCONFIG
++	tmpfile=`mktemp pwmconfig.XXXXXX` || { echo "$0: Cannot create temporary file" >&2; exit 1;  }
++	trap " [ -f \"$tmpfile\" ] && /bin/rm -f -- \"$tmpfile\"" 0 1 2 3 13 15
++	egrep -v '(INTERVAL|FCTEMPS|FCFANS|MAXTEMP|MINTEMP|MINSTART|MINSTOP)' $FCCONFIG >$tmpfile
++	echo -e "INTERVAL=$INTERVAL\nFCTEMPS=$FCTEMPS\nFCFANS=$FCFANS\nMINTEMP=$MINTEMP\nMAXTEMP=$MAXTEMP\nMINSTART=$MINSTART\nMINSTOP=$MINSTOP" >>$tmpfile
++	mv $tmpfile $FCCONFIG
+ 	#check if file was written correctly
+ 	echo 'Configuration saved'
+ }
