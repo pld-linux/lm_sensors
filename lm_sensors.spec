@@ -17,7 +17,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.9.2
-%define _rel	1
+%define _rel	2
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -37,7 +37,7 @@ BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
-BuildRequires:	rrdtool-devel
+BuildRequires:	rrdtool-devel >= 1.2.10
 %endif
 %if %{with kernel} && %{with dist_kernel}
 BuildRequires:	kernel24-i2c-devel >= 2.9.0
