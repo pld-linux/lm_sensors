@@ -1,3 +1,6 @@
+# TODO
+# - unpackaged:
+#   /usr/sbin/fancontrol.pl
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without kernel for distributions
@@ -17,7 +20,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.9.2
-%define _rel	2
+%define _rel	2.1
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
@@ -74,6 +77,13 @@ SMBus и мониторинга. ВНИМАНИЕ: для этого необходима специальная
 SMBus та мон╕торингу. УВАГА: для цього потр╕бна спец╕альна п╕дтримка,
 яка в╕дсутня у стандартних старих ядрах 2.2.XX!
 
+%package libs
+Summary:	lm_sensors library
+Group:		Libraries
+
+%description libs
+lm_sensors library.
+
 %package sensord
 Summary:	Sensord daemon
 Summary(pl):	Demon sensord
@@ -95,7 +105,7 @@ Summary(pt_BR):	Arquivos necessАrios ao desenvolvimento de programas que usem o 
 Summary(ru):	Файлы разработчика для программ, использующих lm_sensors
 Summary(uk):	Файли програм╕ста для програм, як╕ використовують lm_sensors
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	liblm_sensors1-devel
 
 %description devel
@@ -289,8 +299,8 @@ install kernel-smp-modules/kernel/drivers/i2c/chips/*.o \
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-p /sbin/ldconfig
-%postun	-p /sbin/ldconfig
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
 
 %post sensord
 /sbin/chkconfig --add sensors
@@ -342,7 +352,6 @@ fi
 %{_mandir}/man8/isaset.8*
 %endif
 %attr(755,root,root) %{_sbindir}/pwmconfig
-%attr(755,root,root) %{_libdir}/lib*.so.*.*
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors.conf
 %{_mandir}/man1/sensors.1*
 %{_mandir}/man5/sensors.conf.5*
@@ -350,6 +359,10 @@ fi
 %{_mandir}/man8/i2c*.8*
 %{_mandir}/man8/pwmconfig.8*
 %{_mandir}/man8/sensors-detect.8*
+
+%files libs
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/lib*.so.*.*
 
 %files sensord
 %defattr(644,root,root,755)
