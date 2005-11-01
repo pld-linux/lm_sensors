@@ -88,20 +88,6 @@ lm_sensors library.
 %description libs -l pl
 Biblioteka lm_sensors.
 
-%package sensord
-Summary:	Sensord daemon
-Summary(pl):	Demon sensord
-Group:		Daemons
-PreReq:		rc-scripts
-Requires(post,preun):	/sbin/chkconfig
-Requires:	%{name} = %{version}-%{release}
-
-%description sensord
-Sensord daemon.
-
-%description sensord -l pl
-Demon sensord.
-
 %package devel
 Summary:	Header files for lm_sensors
 Summary(pl):	Pliki nagЁСwkowe dla lm_sensors
@@ -155,6 +141,20 @@ Bibliotecas estАticas para desenvolvimento com lm_sensors
 %description static -l uk
 Пакет lm_sensors-static м╕стить статичн╕ б╕бл╕отеки, необх╕дн╕ для
 побудови програм, як╕ використовують дан╕ сенсор╕в.
+
+%package sensord
+Summary:	Sensord daemon
+Summary(pl):	Demon sensord
+Group:		Daemons
+PreReq:		rc-scripts
+Requires(post,preun):	/sbin/chkconfig
+Requires:	%{name} = %{version}-%{release}
+
+%description sensord
+Sensord daemon.
+
+%description sensord -l pl
+Demon sensord.
 
 %package -n kernel24-i2c-%{name}
 Summary:	Kernel modules for various buses and monitor chips
@@ -368,13 +368,6 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/lib*.so.*.*
 
-%files sensord
-%defattr(644,root,root,755)
-%attr(754,root,root) %{_sbindir}/sensord
-%attr(754,root,root) /etc/rc.d/init.d/sensors
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors
-%{_mandir}/man8/sensord.8*
-
 %files devel
 %defattr(644,root,root,755)
 %doc doc/{developers,kernel}
@@ -386,6 +379,13 @@ fi
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libsensors.a
+
+%files sensord
+%defattr(644,root,root,755)
+%attr(754,root,root) %{_sbindir}/sensord
+%attr(754,root,root) /etc/rc.d/init.d/sensors
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors
+%{_mandir}/man8/sensord.8*
 %endif
 
 %if %{with kernel}
