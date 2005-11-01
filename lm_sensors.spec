@@ -79,10 +79,14 @@ SMBus та мон╕торингу. УВАГА: для цього потр╕бна спец╕альна п╕дтримка,
 
 %package libs
 Summary:	lm_sensors library
+Summary(pl):	Biblioteka lm_sensors
 Group:		Libraries
 
 %description libs
 lm_sensors library.
+
+%description libs -l pl
+Biblioteka lm_sensors.
 
 %package sensord
 Summary:	Sensord daemon
