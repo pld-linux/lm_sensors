@@ -12,6 +12,10 @@
 %undefine with_kernel
 %endif
 
+%ifarch sparc
+%undefine with_smp
+%endif
+
 %include	/usr/lib/rpm/macros.perl
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzЙtu
@@ -20,7 +24,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.9.2
-%define _rel	3
+%define _rel	4
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
