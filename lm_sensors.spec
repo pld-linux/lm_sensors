@@ -6,14 +6,11 @@
 %bcond_without	dist_kernel	# without kernel for distributions
 %bcond_without	smp		# don't build SMP modules
 %bcond_without	kernel		# build kernel 2.4 modules
+				# (NOTE: KERNEL 2.6 MODULES ARE NOT BUILD FROM FROM THIS SPEC)
 %bcond_without	userspace	# don't build userspace utilities
 
 %ifarch %{x8664}
 %undefine with_kernel
-%endif
-
-%ifarch sparc
-%undefine with_smp
 %endif
 
 %include	/usr/lib/rpm/macros.perl
@@ -24,7 +21,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.9.2
-%define _rel	4
+%define _rel	5
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
