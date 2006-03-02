@@ -1,0 +1,4 @@
+- removed definition of %{_kernel_ver_str} and %{_kernel_ver} macros -
+  it's defined in rpm's macros (/usr/lib/rpm/*/macros) and only makes
+  troubles with 2.4 pack's ;)
+- bumped release.
