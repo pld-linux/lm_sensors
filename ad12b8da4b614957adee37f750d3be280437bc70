@@ -1,0 +1,7 @@
+- use %_kernelsrcdir
+- conditional smp build
+- buildrequires flex >= 2.5.1 (according to the docs)
+- buildrequires kernel-headers >= 2.3.0 (on 2.2 doesn't compile)
+- modules subpackage conflicts wrong kernel
+- modules subpackage gets @... release suffix
+- don't use %_kernelsrcdir/.config
