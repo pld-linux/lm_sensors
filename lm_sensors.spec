@@ -249,7 +249,8 @@ echo 'CONFIG_IPMI_HANDLER=m' >> fakelinux/.config
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=/usr/include \
-	PROG_EXTRA:="sensord"
+	PROG_EXTRA:="sensord" \
+	SYSFS_SUPPORT:=1
 
 %{__make} -C prog/eepromer \
 	CC="%{__cc}" \
