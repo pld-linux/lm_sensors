@@ -2,17 +2,6 @@
 # - unpackaged:
 #   /usr/sbin/fancontrol.pl
 #
-# Conditional build:
-%bcond_without	dist_kernel	# without kernel for distributions
-%bcond_without	smp		# don't build SMP modules
-%bcond_without	kernel		# build kernel 2.4 modules
-				# (NOTE: KERNEL 2.6 MODULES ARE NOT BUILT FROM FROM THIS SPEC)
-%bcond_without	userspace	# don't build userspace utilities
-
-%ifarch %{x8664}
-%undefine with_kernel
-%endif
-
 %include	/usr/lib/rpm/macros.perl
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzêtu
@@ -36,24 +25,15 @@ Patch3:		%{name}-sensors-detect-PATH.patch
 Patch4:		%{name}-CAN-2005-2672.patch
 URL:		http://www.lm-sensors.nu/
 BuildRequires:	rpmbuild(macros) >= 1.268
-%if %{with userspace}
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rrdtool-devel >= 1.2.10
-%endif
-%if %{with kernel} && %{with dist_kernel}
-BuildRequires:	kernel24-headers < 2.5.0
-BuildRequires:	kernel24-headers >= 2.4.0
-BuildRequires:	kernel24-i2c-devel >= 2.9.0
-%endif
 Requires:	dev >= 2.9.0-13
 Requires:	dmidecode
 Obsoletes:	liblm_sensors1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define		_kernelsrcdir		/usr/src/linux-2.4
 
 %description
 Tools for monitoring the hardware health of Linux systems containing
@@ -157,40 +137,6 @@ Sensord daemon.
 %description sensord -l pl
 Demon sensord.
 
-%package -n kernel24-i2c-%{name}
-Summary:	Kernel modules for various buses and monitor chips
-Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
-Release:	%{_rel}@%{_kernel_ver_str}
-Group:		Applications/System
-Requires(post,postun):	/sbin/depmod
-%{?with_dist_kernel:%requires_releq_kernel_up}
-%{?with_dist_kernel:Requires:	i2c >= 2.9.0}
-Provides:	%{name}-modules = %{version}-%{release}
-Obsoletes:	kernel-misc-lm_sensors
-
-%description -n kernel24-i2c-%{name}
-Kernel modules for various buses and monitor chips.
-
-%description -n kernel24-i2c-%{name} -l pl
-Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
-
-%package -n kernel24-smp-i2c-%{name}
-Summary:	Kernel modules for various buses and monitor chips
-Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
-Release:	%{_rel}@%{_kernel_ver_str}
-Group:		Applications/System
-Requires(post,postun):	/sbin/depmod
-%{?with_dist_kernel:%requires_releq_kernel_smp}
-%{?with_dist_kernel:Requires:	i2c >= 2.9.0}
-Provides:	%{name}-modules = %{version}-%{release}
-Obsoletes:	kernel-smp-misc-lm_sensors
-
-%description -n kernel24-smp-i2c-%{name}
-Kernel SMP modules for various buses and monitor chips.
-
-%description -n kernel24-smp-i2c-%{name} -l pl
-Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
-
 %prep
 %setup -q
 %patch0 -p1
@@ -200,48 +146,6 @@ Modu³y j±dra SMP dla ró¿nego rodzaju sensorów monitoruj±cych.
 %patch4 -p1
 
 %build
-%if %{with kernel}
-# workaround to avoid unresolved dmi* symbols in i2c-piix4.o
-install -d fakelinux
-:> fakelinux/.config
-%ifarch %{ix86}
-echo 'CONFIG_X86=y' >> fakelinux/.config
-%endif
-%ifarch %{ix86} %{x8664} alpha ppc
-echo 'CONFIG_IPMI_HANDLER=m' >> fakelinux/.config
-%endif
-
-%if %{with smp}
-# SMP
-%{__make} all-kernel-busses all-kernel-chips \
-	CC="%{kgcc}" \
-	OPTS="%{rpmcflags} -D__KERNEL_SMP=1" \
-	LINUX=`pwd`/fakelinux \
-	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=1
-
-%{__make} install-kernel-busses install-kernel-chips \
-	MODPREF=kernel-smp-modules \
-	LINUX=`pwd`/fakelinux \
-	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=1
-
-%{__make} clean
-%endif
-
-# UP
-%{__make} all-kernel-busses all-kernel-chips \
-	CC="%{kgcc}" \
-	OPTS="%{rpmcflags}" \
-	LINUX=`pwd`/fakelinux \
-	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=0
-%endif
-
-%if %{with userspace}
 %{__make} user \
 	CC="%{__cc}" \
 	OPTS="%{rpmcflags}" \
@@ -255,22 +159,10 @@ echo 'CONFIG_IPMI_HANDLER=m' >> fakelinux/.config
 %{__make} -C prog/eepromer \
 	CC="%{__cc}" \
 	CFLAGS="%{rpmcflags} -I../../kernel/include"
-%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%if %{with kernel}
-%{__make} install-kernel-busses install-kernel-chips \
-	DESTDIR=$RPM_BUILD_ROOT \
-	MODPREF=/lib/modules/%{_kernel_ver} \
-	LINUX=`pwd`/fakelinux \
-	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_kernelsrcdir}/include \
-	SMP=0
-%endif
-
-%if %{with userspace}
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 
@@ -292,15 +184,6 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
 
 # i2c API for userspace - included in glibc-kernel-headers
 rm -f $RPM_BUILD_ROOT%{_includedir}/linux/i2c-dev.h
-%endif
-
-%if %{with kernel} && %{with smp}
-install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/{busses,chips}
-install kernel-smp-modules/kernel/drivers/i2c/busses/*.o \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/busses
-install kernel-smp-modules/kernel/drivers/i2c/chips/*.o \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/chips
-%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -321,19 +204,6 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del sensors
 fi
 
-%post	-n kernel24-i2c-%{name}
-%depmod %{_kernel_ver}
-
-%postun -n kernel24-i2c-%{name}
-%depmod %{_kernel_ver}
-
-%post	-n kernel24-smp-i2c-%{name}
-%depmod %{_kernel_ver}smp
-
-%postun -n kernel24-smp-i2c-%{name}
-%depmod %{_kernel_ver}smp
-
-%if %{with userspace}
 %files
 %defattr(644,root,root,755)
 %doc BACKGROUND BUGS CHANGES README README.thinkpad TODO doc/{busses,chips}
@@ -383,22 +253,3 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/sensors
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors
 %{_mandir}/man8/sensord.8*
-%endif
-
-%if %{with kernel}
-%files -n kernel24-i2c-%{name}
-%defattr(644,root,root,755)
-%dir /lib/modules/%{_kernel_ver}/kernel/drivers/i2c/busses
-/lib/modules/%{_kernel_ver}/kernel/drivers/i2c/busses/*.o*
-%dir /lib/modules/%{_kernel_ver}/kernel/drivers/i2c/chips
-/lib/modules/%{_kernel_ver}/kernel/drivers/i2c/chips/*.o*
-
-%if %{with smp}
-%files -n kernel24-smp-i2c-%{name}
-%defattr(644,root,root,755)
-%dir /lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/busses
-/lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/busses/*.o*
-%dir /lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/chips
-/lib/modules/%{_kernel_ver}smp/kernel/drivers/i2c/chips/*.o*
-%endif
-%endif
