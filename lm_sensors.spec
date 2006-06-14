@@ -29,6 +29,7 @@ BuildRequires:	flex >= 2.5.1
 BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rrdtool-devel >= 1.2.10
+BuildRequires:	sysfsutils-devel
 Requires:	dev >= 2.9.0-13
 Requires:	dmidecode
 Obsoletes:	liblm_sensors1
