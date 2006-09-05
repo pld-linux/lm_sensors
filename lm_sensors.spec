@@ -6,6 +6,7 @@
 %bcond_without	dist_kernel	# without kernel for distributions
 %bcond_without	smp		# don't build SMP modules
 %bcond_without	kernel		# build kernel 2.4 modules
+				# (NOTE: KERNEL 2.6 MODULES ARE NOT BUILT FROM FROM THIS SPEC)
 %bcond_without	userspace	# don't build userspace utilities
 
 %ifarch %{x8664}
@@ -19,13 +20,13 @@ Summary(pt_BR):	Ferramentas para monitoração do hardware
 Summary(ru):	õÔÉÌÉÔÙ ÄÌÑ ÍÏÎÉÔÏÒÉÎÇÁ ÁÐÐÁÒÁÔÕÒÙ
 Summary(uk):	õÔÉÌ¦ÔÉ ÄÌÑ ÍÏÎ¦ÔÏÒÉÎÇÕ ÁÐÁÒÁÔÕÒÉ
 Name:		lm_sensors
-Version:	2.9.2
-%define _rel	3
+Version:	2.10.0
+%define _rel	2
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://secure.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	229f83cfbd081d5e7bd46885efec1c72
+# Source0-md5:	6a5327c9e291c5e2bef62e2277bce962
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
@@ -34,7 +35,7 @@ Patch2:		%{name}-iconv-in-libc.patch
 Patch3:		%{name}-sensors-detect-PATH.patch
 Patch4:		%{name}-CAN-2005-2672.patch
 URL:		http://www.lm-sensors.nu/
-BuildRequires:	rpmbuild(macros) >= 1.213
+BuildRequires:	rpmbuild(macros) >= 1.268
 %if %{with userspace}
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
@@ -43,9 +44,9 @@ BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rrdtool-devel >= 1.2.10
 %endif
 %if %{with kernel} && %{with dist_kernel}
-BuildRequires:	kernel24-i2c-devel >= 2.9.0
-BuildRequires:	kernel24-headers >= 2.4.0
 BuildRequires:	kernel24-headers < 2.5.0
+BuildRequires:	kernel24-headers >= 2.4.0
+BuildRequires:	kernel24-i2c-devel >= 2.9.0
 %endif
 Requires:	dev >= 2.9.0-13
 Requires:	dmidecode
@@ -146,9 +147,9 @@ Bibliotecas estáticas para desenvolvimento com lm_sensors
 Summary:	Sensord daemon
 Summary(pl):	Demon sensord
 Group:		Daemons
-PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
+Requires:	rc-scripts
 
 %description sensord
 Sensord daemon.
@@ -159,8 +160,8 @@ Demon sensord.
 %package -n kernel24-i2c-%{name}
 Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
-Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
+Group:		Applications/System
 Requires(post,postun):	/sbin/depmod
 %{?with_dist_kernel:%requires_releq_kernel_up}
 %{?with_dist_kernel:Requires:	i2c >= 2.9.0}
@@ -176,8 +177,8 @@ Modu³y j±dra dla ró¿nego rodzaju sensorów monitoruj±cych.
 %package -n kernel24-smp-i2c-%{name}
 Summary:	Kernel modules for various buses and monitor chips
 Summary(pl):	Modu³y j±dra dla ró¿nego rodzaju sensorów
-Group:		Applications/System
 Release:	%{_rel}@%{_kernel_ver_str}
+Group:		Applications/System
 Requires(post,postun):	/sbin/depmod
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 %{?with_dist_kernel:Requires:	i2c >= 2.9.0}
@@ -248,7 +249,8 @@ echo 'CONFIG_IPMI_HANDLER=m' >> fakelinux/.config
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
 	I2C_HEADERS=/usr/include \
-	PROG_EXTRA:="sensord"
+	PROG_EXTRA:="sensord" \
+	SYSFS_SUPPORT:=1
 
 %{__make} -C prog/eepromer \
 	CC="%{__cc}" \
@@ -307,20 +309,15 @@ rm -rf $RPM_BUILD_ROOT
 %postun	libs -p /sbin/ldconfig
 
 %post sensord
-/sbin/chkconfig --add sensors
-if [ -f /var/lock/subsys/sensors ]; then
-	/etc/rc.d/init.d/sensors restart >&2
-else
+if [ "$1" = 1 ]; then
 	echo "You have to configure sensors modules in /etc/sysconfig/sensors"
-	echo
-	echo "Run \"/etc/rc.d/init.d/sensors start\" to start sensors daemon." >&2
 fi
+/sbin/chkconfig --add sensors
+%service sensors restart "sensors daemon"
 
 %preun sensord
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/sensors ]; then
-		/etc/rc.d/init.d/sensors stop >&2
-	fi
+	%service sensors stop
 	/sbin/chkconfig --del sensors
 fi
 
