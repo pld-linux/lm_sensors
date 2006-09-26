@@ -9,19 +9,18 @@ Summary(pt_BR):	Ferramentas para monitoraГЦo do hardware
 Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
-Version:	2.10.0
-Release:	2
+Version:	2.10.1
+Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	http://secure.netroedge.com/~lm78/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	6a5327c9e291c5e2bef62e2277bce962
+Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.gz
+# Source0-md5:	cdc857b78e813b88cbf8be92441aa299
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
 Patch1:		%{name}-ppc.patch
 Patch2:		%{name}-iconv-in-libc.patch
 Patch3:		%{name}-sensors-detect-PATH.patch
-Patch4:		%{name}-CAN-2005-2672.patch
 URL:		http://www.lm-sensors.nu/
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	bison
@@ -143,7 +142,6 @@ Demon sensord.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 %build
 %{__make} user \
