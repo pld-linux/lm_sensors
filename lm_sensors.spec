@@ -26,11 +26,11 @@ Patch1:		%{name}-ppc.patch
 Patch2:		%{name}-iconv-in-libc.patch
 Patch3:		%{name}-sensors-detect-PATH.patch
 URL:		http://www.lm-sensors.nu/
-BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
+BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	rrdtool-devel >= 1.2.10
 BuildRequires:	sysfsutils-devel
 Requires:	dev >= 2.9.0-13
@@ -163,8 +163,8 @@ Demon sensord.
 	CFLAGS="%{rpmcflags} -I../../kernel/include"
 
 # PLD-ize fancontrol
-%{__sed} -i -e "s@/etc/fancontrol@%{_sysconfdir}/sysconfig/fancontrol@g" prog/pwm/fancontrol
-%{__sed} -i -e "s@/etc/fancontrol@%{_sysconfdir}/sysconfig/fancontrol@g" prog/pwm/pwmconfig
+%{__sed} -i -e "s@/etc/fancontrol@/etc/sysconfig/fancontrol@g" prog/pwm/fancontrol
+%{__sed} -i -e "s@/etc/fancontrol@/etc/sysconfig/fancontrol@g" prog/pwm/pwmconfig
 
 %install
 rm -rf $RPM_BUILD_ROOT
