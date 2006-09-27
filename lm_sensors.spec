@@ -1,6 +1,9 @@
 # TODO
 # - unpackaged:
-#   /usr/sbin/fancontrol.pl
+#   /usr/sbin/fancontrol.pl (isn't that the same as sh fancontrol script?)
+# - add fancontrol(d) subpackage
+# - update and use fancontrol.init
+# - a big trigger warning how to use fancontrol and to init it first
 #
 %include	/usr/lib/rpm/macros.perl
 Summary:	Hardware health monitoring
@@ -17,6 +20,7 @@ Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.gz
 # Source0-md5:	cdc857b78e813b88cbf8be92441aa299
 Source1:	sensors.init
 Source2:	sensors.sysconfig
+Source3:	fancontrol.init
 Patch0:		%{name}-make.patch
 Patch1:		%{name}-ppc.patch
 Patch2:		%{name}-iconv-in-libc.patch
@@ -157,6 +161,10 @@ Demon sensord.
 %{__make} -C prog/eepromer \
 	CC="%{__cc}" \
 	CFLAGS="%{rpmcflags} -I../../kernel/include"
+
+# PLD-ize fancontrol
+%{__sed} -i -e "s@/etc/fancontrol@%{_sysconfdir}/sysconfig/fancontrol@g" prog/pwm/fancontrol
+%{__sed} -i -e "s@/etc/fancontrol@%{_sysconfdir}/sysconfig/fancontrol@g" prog/pwm/pwmconfig
 
 %install
 rm -rf $RPM_BUILD_ROOT
