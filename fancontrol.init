@@ -18,18 +18,19 @@
 # Source function library
 . /etc/rc.d/init.d/functions
 
-# Get service config - may override defaults
-# [ -f /etc/sysconfig/fancontrol ] && . /etc/sysconfig/fancontrol
+# Get service config
+ [ -f /etc/sysconfig/fancontrol ] && . /etc/sysconfig/fancontrol
 
 start() {
-  	# Fancontrol needs to check system for pwm control
-	if [ ! -f /etc/sysconfig/fancontrol ]; then
-		nls "Fancontrol not initialized."
-		nls "Try \`%s init' before start." "$0"
-		exit 6
-	fi
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/fancontrol ]; then
+		# Fancontrol needs to check system for pwm control
+		if [ ! -f /etc/sysconfig/fancontrol ]; then
+			nls "Fancontrol not initialized."
+			nls "Try \`%s init' before start." "$0"
+			exit 6
+		fi
+
 		msg_starting fancontrol
 		daemon fancontrol
 		RETVAL=$?
@@ -72,7 +73,7 @@ case "$1" in
 		killproc fancontrol -HUP
 		RETVAL=$?
 	else
-		msg_not_running fancontrol >&2
+		msg_not_running fancontrol
 		RETVAL=7
 	fi
 	;;
