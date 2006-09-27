@@ -21,9 +21,7 @@
 # Get service config - may override defaults
 # [ -f /etc/sysconfig/fancontrol ] && . /etc/sysconfig/fancontrol
 
-# See how we were called.
-case "$1" in
-  start)
+start() {
   	# Fancontrol needs to check system for pwm control
 	if [ ! -f /etc/sysconfig/fancontrol ]; then
 		nls "Fancontrol not initialized."
@@ -39,8 +37,9 @@ case "$1" in
 	else
 		msg_already_running fancontrol
 	fi
-	;;
-  stop)
+}
+
+stop() {
 	if [ -f /var/lock/subsys/fancontrol ]; then
 		# Stop daemons.
 		msg_stopping fancontrol
@@ -49,11 +48,23 @@ case "$1" in
 	else
 		msg_not_running fancontrol
 	fi
+}
+
+restart() {
+	stop
+	start
+}
+
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
 	;;
   restart)
-	$0 stop
-	$0 start
-	exit $?
+  	restart
 	;;
   reload)
 	if [ -f /var/lock/subsys/fancontrol ]; then
@@ -66,13 +77,7 @@ case "$1" in
 	fi
 	;;
   force-reload)
-	# if program allows reloading without stopping
-	$0 reload
-
-	# or if it doesn't
-	$0 restart
-
-	exit $?
+	restart
 	;;
   init)
   	pwmconfig
