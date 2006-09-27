@@ -1,0 +1,93 @@
+#!/bin/sh
+#
+# fancontrol	fancontrol short service description
+#
+# chkconfig:	345 <start_level> <stop_level>
+#
+# description:	fancontrol long service description
+#
+# $Id$
+#
+# TODO:
+# - find out, if it should be dependant of sensors deamon
+# - check this, case this is my first 'advanced' init script
+# - register proper start and stop levels
+# - describe that
+#
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get service config - may override defaults
+# [ -f /etc/sysconfig/fancontrol ] && . /etc/sysconfig/fancontrol
+
+# See how we were called.
+case "$1" in
+  start)
+  	# Fancontrol needs to check system for pwm control
+	if [ ! -f /etc/sysconfig/fancontrol ]; then
+		nls "Fancontrol not initialized."
+		nls "Try \`%s init' before start." "$0"
+		exit 6
+	fi
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/fancontrol ]; then
+		msg_starting fancontrol
+		daemon fancontrol
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/fancontrol
+	else
+		msg_already_running fancontrol
+	fi
+	;;
+  stop)
+	if [ -f /var/lock/subsys/fancontrol ]; then
+		# Stop daemons.
+		msg_stopping fancontrol
+		killproc fancontrol
+		rm -f /var/lock/subsys/fancontrol
+	else
+		msg_not_running fancontrol
+	fi
+	;;
+  restart)
+	$0 stop
+	$0 start
+	exit $?
+	;;
+  reload)
+	if [ -f /var/lock/subsys/fancontrol ]; then
+		msg_reloading fancontrol
+		killproc fancontrol -HUP
+		RETVAL=$?
+	else
+		msg_not_running fancontrol >&2
+		RETVAL=7
+	fi
+	;;
+  force-reload)
+	# if program allows reloading without stopping
+	$0 reload
+
+	# or if it doesn't
+	$0 restart
+
+	exit $?
+	;;
+  init)
+  	pwmconfig
+  	exit $?
+  	;;
+  status)
+	status fancontrol
+	RETVAL=$?
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|reload|force-reload|status|init}"
+	exit 3
+esac
+
+exit $RETVAL
+
+# This must be last line !
+# vi:syntax=sh
