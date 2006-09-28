@@ -1,18 +1,21 @@
 #!/bin/sh
 #
-# fancontrol	fancontrol short service description
+# fancontrol	Fans speed control according to temperature service
 #
-# chkconfig:	345 <start_level> <stop_level>
+# Starts after all hotplug-like things, which could load proper drivers
+# for fans and dies last possible
+# chkconfig:	345 09 99
 #
-# description:	fancontrol long service description
+# description:	It is crucial to proper configure this service, or severe
+#		damadge could occur. For this, be sure, to run init first
+#		and be sure the configuration is correct.
 #
 # $Id$
 #
 # TODO:
-# - find out, if it should be dependant of sensors deamon
 # - check this, case this is my first 'advanced' init script
-# - register proper start and stop levels
-# - describe that
+# - maby add some more stop control, like reruning fancontrol and killing
+#   it once more, if killproc fails
 #
 
 # Source function library
@@ -22,21 +25,29 @@
  [ -f /etc/sysconfig/fancontrol ] && . /etc/sysconfig/fancontrol
 
 start() {
-	# Check if the service is already running?
-	if [ ! -f /var/lock/subsys/fancontrol ]; then
-		# Fancontrol needs to check system for pwm control
-		if [ ! -f /etc/sysconfig/fancontrol ]; then
-			nls "Fancontrol not initialized."
-			nls "Try \`%s init' before start." "$0"
-			exit 6
-		fi
+	# Sensosd deamon needs to be started
+	# or at least proper modules loaded (provided by sensorsd deamon)
+	if [ -f /var/lock/subsys/sensors ]; then
+    		# Check if the service is already running?
+		if [ ! -f /var/lock/subsys/fancontrol ]; then
+			# Fancontrol needs to check system for pwm control
+			if [ ! -f /etc/sysconfig/fancontrol ]; then
+				    nls "Fancontrol not initialized."
+				    nls "Try \`%s init' before start." "$0"
+				    exit 6
+			fi
 
-		msg_starting fancontrol
-		daemon fancontrol
-		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/fancontrol
+			msg_starting fancontrol
+			# won't start without an output
+			daemon --fork 'fancontrol 1>/dev/null'
+			RETVAL=$?
+			[ $RETVAL -eq 0 ] && touch /var/lock/subsys/fancontrol
+		else
+			msg_already_running fancontrol
+		fi
 	else
-		msg_already_running fancontrol
+		echo "Start sensors daemon first"
+		exit 1;
 	fi
 }
 
@@ -44,7 +55,10 @@ stop() {
 	if [ -f /var/lock/subsys/fancontrol ]; then
 		# Stop daemons.
 		msg_stopping fancontrol
-		killproc fancontrol
+		# it's crucial to be sure it ended ok, otherwise we get
+		# the fans set and the computer working without any control
+		# and that could cause MASSIVE damadge
+		killproc --waitforname fancontrol --waitfortime 30 fancontrol -TERM
 		rm -f /var/lock/subsys/fancontrol
 	else
 		msg_not_running fancontrol
@@ -67,19 +81,6 @@ case "$1" in
   restart)
   	restart
 	;;
-  reload)
-	if [ -f /var/lock/subsys/fancontrol ]; then
-		msg_reloading fancontrol
-		killproc fancontrol -HUP
-		RETVAL=$?
-	else
-		msg_not_running fancontrol
-		RETVAL=7
-	fi
-	;;
-  force-reload)
-	restart
-	;;
   init)
   	pwmconfig
   	exit $?
@@ -89,7 +90,7 @@ case "$1" in
 	RETVAL=$?
 	;;
   *)
-	msg_usage "$0 {start|stop|restart|reload|force-reload|status|init}"
+	msg_usage "$0 {start|stop|restart|status|init}"
 	exit 3
 esac
 
