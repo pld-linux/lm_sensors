@@ -178,7 +178,7 @@ s± ustawione poprawnie, by nie spaliæ wnêtrza komputera!
 	LIBDIR=%{_libdir} \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_includedir} \
+	I2C_HEADERS=/usr/include \
 	PROG_EXTRA:="sensord" \
 	SYSFS_SUPPORT:=1
 
@@ -201,7 +201,7 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	PROG_EXTRA:="sensord" \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=%{_includedir}
+	I2C_HEADERS=/usr/include
 
 install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
 
