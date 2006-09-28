@@ -1,4 +1,4 @@
 # Customized settings for fancontrol
 
-# Define nice level for cron
+# Define nice level for fancontrol
 SERVICE_RUN_NICE_LEVEL="+0"
