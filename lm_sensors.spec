@@ -1,8 +1,6 @@
 # TODO
 # - unpackaged:
 #   /usr/sbin/fancontrol.pl (isn't that the same as sh fancontrol script?)
-# - add fancontrol(d) subpackage
-# - update and use fancontrol.init
 # - a big trigger warning how to use fancontrol and to init it first
 #
 %include	/usr/lib/rpm/macros.perl
@@ -21,6 +19,7 @@ Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.gz
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Source3:	fancontrol.init
+Source4:	fancontrol.sysconfig
 Patch0:		%{name}-make.patch
 Patch1:		%{name}-ppc.patch
 Patch2:		%{name}-iconv-in-libc.patch
@@ -140,6 +139,31 @@ Sensord daemon.
 %description sensord -l pl
 Demon sensord.
 
+%package fancontrol
+Summary:	Fancontrol daemon
+Summary(pl):	Demon kontroli wiatraka
+Group:		Daemons
+Requires(post,preun):	/sbin/chkconfig
+Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-sensord = %{version}-%{release}
+Requires:	rc-scripts
+
+%description fancontrol
+Fancontrol daemon monitors current temperature of the computer and
+adjusts fans speed acordingly.
+
+It is crucial to correctly configure this daemon (via running service
+fancontrol init) and ensuring, that the temperature levels are set not
+to burn the insides of the computer!
+
+%description fancontrol -l pl
+Demon fancontrol monitoruje obecn± temperaturê komputera i ustawia
+prêdko¶æ wiatraków odpowiednio.
+
+Kluczowym jest, aby poprawnie skonfigurowaæ tego demona (poprzez
+uruchomienie service fancontrol init) oraz upewniæ siê, ¿e progi temperatury
+s± ustawione poprawnie, by nie spaliæ wnêtrza komputera!
+
 %prep
 %setup -q
 %patch0 -p1
@@ -154,17 +178,13 @@ Demon sensord.
 	LIBDIR=%{_libdir} \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=/usr/include \
+	I2C_HEADERS=%{_includedir} \
 	PROG_EXTRA:="sensord" \
 	SYSFS_SUPPORT:=1
 
 %{__make} -C prog/eepromer \
 	CC="%{__cc}" \
 	CFLAGS="%{rpmcflags} -I../../kernel/include"
-
-# PLD-ize fancontrol
-%{__sed} -i -e "s@/etc/fancontrol@/etc/sysconfig/fancontrol@g" prog/pwm/fancontrol
-%{__sed} -i -e "s@/etc/fancontrol@/etc/sysconfig/fancontrol@g" prog/pwm/pwmconfig
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -181,12 +201,14 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	PROG_EXTRA:="sensord" \
 	LINUX=/dev/null \
 	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=/usr/include
+	I2C_HEADERS=%{_includedir}
 
 install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/fancontrol
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/fancontrol
 
 # i2c API for userspace - included in glibc-kernel-headers
 rm -f $RPM_BUILD_ROOT%{_includedir}/linux/i2c-dev.h
@@ -204,7 +226,20 @@ fi
 /sbin/chkconfig --add sensors
 %service sensors restart "sensors daemon"
 
+%post fancontrol
+if [ "$1" = 1 ]; then
+	echo "You have to configure facontrol by running service fancontrol init first."
+fi
+/sbin/chkconfig --add sensors
+%service fancontrol restart "sensors daemon"
+
 %preun sensord
+if [ "$1" = "0" ]; then
+	%service sensors stop
+	/sbin/chkconfig --del sensors
+fi
+
+%preun fancontrol
 if [ "$1" = "0" ]; then
 	%service sensors stop
 	/sbin/chkconfig --del sensors
@@ -220,7 +255,6 @@ fi
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_sbindir}/sensors-detect
 %attr(755,root,root) %{_sbindir}/eeprom*
-%attr(755,root,root) %{_sbindir}/fancontrol
 %attr(755,root,root) %{_sbindir}/i2c*
 %ifarch %{ix86} %{x8664}
 %attr(755,root,root) %{_sbindir}/isadump
@@ -228,13 +262,10 @@ fi
 %{_mandir}/man8/isadump.8*
 %{_mandir}/man8/isaset.8*
 %endif
-%attr(755,root,root) %{_sbindir}/pwmconfig
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors.conf
 %{_mandir}/man1/sensors.1*
 %{_mandir}/man5/sensors.conf.5*
-%{_mandir}/man8/fancontrol.8*
 %{_mandir}/man8/i2c*.8*
-%{_mandir}/man8/pwmconfig.8*
 %{_mandir}/man8/sensors-detect.8*
 
 %files libs
@@ -259,3 +290,12 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/sensors
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors
 %{_mandir}/man8/sensord.8*
+
+%files fancontrol
+%defattr(644,root,root,755)
+%attr(754,root,root) /etc/rc.d/init.d/fancontrol
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/fancontrol
+%attr(755,root,root) %{_sbindir}/fancontrol
+%attr(755,root,root) %{_sbindir}/pwmconfig
+%{_mandir}/man8/fancontrol.8*
+%{_mandir}/man8/pwmconfig.8*
