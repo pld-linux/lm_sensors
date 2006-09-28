@@ -14,7 +14,7 @@
 #
 # TODO:
 # - check this, case this is my first 'advanced' init script
-# - maby add some more stop control, like reruning fancontrol and killing
+# - maybe add some more stop control, like re-running fancontrol and killing
 #   it once more, if killproc fails
 #
 
@@ -25,21 +25,21 @@
  [ -f /etc/sysconfig/fancontrol ] && . /etc/sysconfig/fancontrol
 
 start() {
-	# Sensosd deamon needs to be started
+	# sensors deamon needs to be started
 	# or at least proper modules loaded (provided by sensorsd deamon)
 	if [ -f /var/lock/subsys/sensors ]; then
-    		# Check if the service is already running?
+		# Check if the service is already running?
 		if [ ! -f /var/lock/subsys/fancontrol ]; then
 			# Fancontrol needs to check system for pwm control
 			if [ ! -f /etc/sysconfig/fancontrol ]; then
-				    nls "Fancontrol not initialized."
-				    nls "Try \`%s init' before start." "$0"
-				    exit 6
+				nls "Fancontrol not initialized."
+				nls "Try \`%s init' before start." "$0"
+				exit 6
 			fi
 
 			msg_starting fancontrol
 			# won't start without an output
-			daemon --fork 'fancontrol 1>/dev/null'
+			daemon --fork 'fancontrol >/dev/null'
 			RETVAL=$?
 			[ $RETVAL -eq 0 ] && touch /var/lock/subsys/fancontrol
 		else
@@ -47,7 +47,7 @@ start() {
 		fi
 	else
 		echo "Start sensors daemon first"
-		exit 1;
+		exit 1
 	fi
 }
 
@@ -57,7 +57,7 @@ stop() {
 		msg_stopping fancontrol
 		# it's crucial to be sure it ended ok, otherwise we get
 		# the fans set and the computer working without any control
-		# and that could cause MASSIVE damadge
+		# and that could cause MASSIVE damage
 		killproc --waitforname fancontrol --waitfortime 30 fancontrol -TERM
 		rm -f /var/lock/subsys/fancontrol
 	else
