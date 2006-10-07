@@ -141,7 +141,7 @@ Demon sensord.
 
 %package fancontrol
 Summary:	Fancontrol daemon
-Summary(pl):	Demon kontroli wiatraka
+Summary(pl):	Demon sterowania wiatraczkami
 Group:		Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -158,11 +158,11 @@ to burn the insides of the computer!
 
 %description fancontrol -l pl
 Demon fancontrol monitoruje obecn± temperaturê komputera i ustawia
-prêdko¶æ wiatraków odpowiednio.
+odpowiednio prêdko¶æ wiatraków.
 
 Kluczowym jest, aby poprawnie skonfigurowaæ tego demona (poprzez
-uruchomienie service fancontrol init) oraz upewniæ siê, ¿e progi temperatury
-s± ustawione poprawnie, by nie spaliæ wnêtrza komputera!
+uruchomienie service fancontrol init) oraz upewniæ siê, ¿e progi
+temperatury s± ustawione poprawnie, by nie spaliæ wnêtrza komputera!
 
 %prep
 %setup -q
@@ -293,9 +293,9 @@ fi
 
 %files fancontrol
 %defattr(644,root,root,755)
-%attr(754,root,root) /etc/rc.d/init.d/fancontrol
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/fancontrol
 %attr(755,root,root) %{_sbindir}/fancontrol
 %attr(755,root,root) %{_sbindir}/pwmconfig
+%attr(754,root,root) /etc/rc.d/init.d/fancontrol
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/fancontrol
 %{_mandir}/man8/fancontrol.8*
 %{_mandir}/man8/pwmconfig.8*
