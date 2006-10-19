@@ -253,7 +253,6 @@ fi
 %attr(755,root,root) %{_bindir}/ddcmon
 %attr(755,root,root) %{_bindir}/decode-*.pl
 %attr(755,root,root) %{_bindir}/sensors
-%attr(755,root,root) %{_sbindir}/sensors-detect
 %attr(755,root,root) %{_sbindir}/eeprom*
 %attr(755,root,root) %{_sbindir}/i2c*
 %ifarch %{ix86} %{x8664}
@@ -266,7 +265,6 @@ fi
 %{_mandir}/man1/sensors.1*
 %{_mandir}/man5/sensors.conf.5*
 %{_mandir}/man8/i2c*.8*
-%{_mandir}/man8/sensors-detect.8*
 
 %files libs
 %defattr(644,root,root,755)
@@ -287,8 +285,10 @@ fi
 %files sensord
 %defattr(644,root,root,755)
 %attr(754,root,root) %{_sbindir}/sensord
+%attr(755,root,root) %{_sbindir}/sensors-detect
 %attr(754,root,root) /etc/rc.d/init.d/sensors
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors
+%{_mandir}/man8/sensors-detect.8*
 %{_mandir}/man8/sensord.8*
 
 %files fancontrol
