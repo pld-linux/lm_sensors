@@ -32,9 +32,9 @@ BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	rrdtool-devel >= 1.2.10
 BuildRequires:	sysfsutils-devel
+Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dev >= 2.9.0-13
 Requires:	dmidecode
-Obsoletes:	liblm_sensors1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -64,6 +64,7 @@ SMBus та мон╕торингу. УВАГА: для цього потр╕бна спец╕альна п╕дтримка,
 Summary:	lm_sensors library
 Summary(pl):	Biblioteka lm_sensors
 Group:		Libraries
+Obsoletes:	liblm_sensors1
 
 %description libs
 lm_sensors library.
