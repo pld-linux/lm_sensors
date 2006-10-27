@@ -65,6 +65,7 @@ Summary:	lm_sensors library
 Summary(pl):	Biblioteka lm_sensors
 Group:		Libraries
 Obsoletes:	liblm_sensors1
+Conflicts:	lm_sensors <= 2.9.2-2
 
 %description libs
 lm_sensors library.
