@@ -227,23 +227,23 @@ fi
 /sbin/chkconfig --add sensors
 %service sensors restart "sensors daemon"
 
-%post fancontrol
-if [ "$1" = 1 ]; then
-	echo "You have to configure facontrol by running service fancontrol init first."
-fi
-/sbin/chkconfig --add sensors
-%service fancontrol restart "sensors daemon"
-
 %preun sensord
 if [ "$1" = "0" ]; then
 	%service sensors stop
 	/sbin/chkconfig --del sensors
 fi
 
+%post fancontrol
+if [ "$1" = 1 ]; then
+	echo "You have to configure fancontrol by running service fancontrol init first."
+fi
+/sbin/chkconfig --add fancontrol
+%service fancontrol restart "fancontrol daemon"
+
 %preun fancontrol
 if [ "$1" = "0" ]; then
-	%service sensors stop
-	/sbin/chkconfig --del sensors
+	%service fancontrol stop
+	/sbin/chkconfig --del fancontrol
 fi
 
 %files
