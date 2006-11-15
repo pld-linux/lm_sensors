@@ -238,7 +238,7 @@ install %{SOURCE5} $RPM_BUILD_ROOT%{_bindir}
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors_modules
 install %{SOURCE7} $RPM_BUILD_ROOT/etc/sysconfig/sensors_modules
 
-# i2c API for userspace - included in glibc-kernel-headers
+# i2c API for userspace - included in linux-libc-headers
 rm -f $RPM_BUILD_ROOT%{_includedir}/linux/i2c-dev.h
 
 %clean
