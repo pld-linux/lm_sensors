@@ -6,7 +6,6 @@
 #
 # chkconfig:	2345 31 69
 # description:	Loads and removes hardware sensors modules
-# author:	Filip Kalinski <filon@pld.org.pl>
 
 # Source function library.
 . /etc/rc.d/init.d/functions
