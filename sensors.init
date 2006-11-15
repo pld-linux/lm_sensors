@@ -16,10 +16,7 @@ if [ -f /etc/sysconfig/sensors ]; then
 	. /etc/sysconfig/sensors
 fi
 
-RETVAL=0
-# See how we were called.
-case "$1" in
-  start)
+start() {
 	if [ ! -f /var/lock/subsys/sensors_modules ]; then
 		msg_starting "sensors daemon"; fail
 		nls "sensors_modules services not started" >&2
@@ -42,8 +39,9 @@ case "$1" in
 	else
 		msg_already_running "sensors daemon"
 	fi
-	;;
-  stop)
+}
+
+stop() {
 	if [ -f /var/lock/subsys/sensors ]; then
 		msg_stopping "sensors daemon"
 		killproc sensord
@@ -51,6 +49,16 @@ case "$1" in
 	else
 		msg_not_running "sensors daemon"
 	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
 	;;
   status)
 	status sensors sensord
@@ -58,9 +66,8 @@ case "$1" in
 	sensors
 	;;
   restart|force-reload)
-	$0 stop
-	$0 start
-	exit $?
+	stop
+	start
 	;;
   *)
 	msg_usage "$0 {start|stop|restart|force-reload|status}"
