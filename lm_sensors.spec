@@ -3,6 +3,11 @@
 #   /usr/sbin/fancontrol.pl (isn't that the same as sh fancontrol script?)
 # - a big trigger warning how to use fancontrol and to init it first
 #
+%define		cmodule		%{_sysconfdir}/sysconfig/sensors_modules
+%define		cdaemon		%{_sysconfdir}/sysconfig/sensors
+%define		smodule		%{_sysconfdir}/rc.d/init.d/sensors_modules
+%define		sdaemon		%{_sysconfdir}/rc.d/init.d/sensors
+
 %include	/usr/lib/rpm/macros.perl
 Summary:	Hardware health monitoring
 Summary(pl):	Monitor stanu sprzЙtu
@@ -11,7 +16,7 @@ Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
 Version:	2.10.1
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.gz
@@ -20,6 +25,9 @@ Source1:	sensors.init
 Source2:	sensors.sysconfig
 Source3:	fancontrol.init
 Source4:	fancontrol.sysconfig
+Source5:	sensors.sh
+Source6:	sensors_modules.init
+Source7:	sensors_modules.sysconfig
 Patch0:		%{name}-make.patch
 Patch1:		%{name}-ppc.patch
 Patch2:		%{name}-iconv-in-libc.patch
@@ -35,6 +43,7 @@ BuildRequires:	sysfsutils-devel
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dev >= 2.9.0-13
 Requires:	dmidecode
+Requires:	%{name}-config
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -127,12 +136,23 @@ Bibliotecas estАticas para desenvolvimento com lm_sensors
 Пакет lm_sensors-static м╕стить статичн╕ б╕бл╕отеки, необх╕дн╕ для
 побудови програм, як╕ використовують дан╕ сенсор╕в.
 
+%package config-default
+Summary:	Sensors configuration files
+Summary(pl):	Pliki konfiguracyjne lm_sensors
+Group:		Applications/System
+Requires:	%{name} = %{version}-%{release}
+Provides:	%{name}-config
+
+%description config-default
+Default configuration files for lm_sensors.
+
 %package sensord
 Summary:	Sensord daemon
 Summary(pl):	Demon sensord
 Group:		Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-config
 Requires:	rc-scripts
 
 %description sensord
@@ -192,7 +212,7 @@ temperatury s╠ ustawione poprawnie, by nie spaliФ wnЙtrza komputera!
 rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
-	$RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
+	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,sysconfig}
 
 %{__make} user_install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -207,10 +227,13 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 
 install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/fancontrol
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/fancontrol
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/sensors
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/sensors
+install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/fancontrol
+install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/fancontrol
+install %{SOURCE5} $RPM_BUILD_ROOT%{_bindir}
+install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/sensors_modules
+install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/sensors_modules
 
 # i2c API for userspace - included in glibc-kernel-headers
 rm -f $RPM_BUILD_ROOT%{_includedir}/linux/i2c-dev.h
@@ -221,12 +244,65 @@ rm -rf $RPM_BUILD_ROOT
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
 
-%post sensord
-if [ "$1" = 1 ]; then
-	echo "You have to configure sensors modules in /etc/sysconfig/sensors"
+%post
+if [ -f "%{cmodule}" ]; then
+	/sbin/chkconfig --add sensors_modules
+	%service sensors_modules restart "sensors modules"
+	if [ -f "%{sdaemon}" ]; then
+		/sbin/chkconfig --add sensors
+		%service sensors restart "sensors deamon"
+	fi
 fi
-/sbin/chkconfig --add sensors
-%service sensors restart "sensors daemon"
+
+%preun
+if [ "$1" = "0" ]; then
+	if [ -f "%{sdaemon}" ]; then
+		%service sensors stop
+		/sbin/chkconfig --del sensors
+	fi
+	%service sensors_modules stop
+	/sbin/chkconfig --del sensors_modules
+fi
+
+%post config-default
+if [ "$1" = 1 ]; then
+cat << EOF
+ *********************************************************************
+ *                                                                   *
+ *  NOTE:                                                            *
+ *  You have to configure sensors to match your motherboard sensors  *
+ *  in  /etc/sensors.conf  and  /etc/sysconfig/sensors_modules. Use  *
+ *  sensors-detect script which  can  help you find proper modules.  *
+ *                                                                   *
+ *********************************************************************
+EOF
+fi
+if [ -f "%{smodule}" ]; then
+	/sbin/chkconfig --add sensors_modules
+	%service sensors_modules restart "sensors modules"
+fi
+if [ -f "%{sdaemon}" ]; then
+	/sbin/chkconfig --add sensors
+	%service sensors restart "sensors daemon"
+fi
+
+%preun config-default
+if [ "$1" = "0" ]; then
+	if [ -f "%{sdaemon}" ]; then
+		%service sensors stop
+		/sbin/chkconfig --del sensors
+	fi
+	if [ -f "%{smodule}" ]; then
+		%service sensors_modules stop
+		/sbin/chkconfig --del sensors_modules
+	fi
+fi
+
+%post sensord
+if [ -f "%{cmodule}" ]; then
+	/sbin/chkconfig --add sensors
+	%service sensors restart "sensors daemon"
+fi
 
 %preun sensord
 if [ "$1" = "0" ]; then
@@ -255,18 +331,25 @@ fi
 %attr(755,root,root) %{_bindir}/ddcmon
 %attr(755,root,root) %{_bindir}/decode-*.pl
 %attr(755,root,root) %{_bindir}/sensors
+%attr(755,root,root) %{_bindir}/sensors.sh
 %attr(755,root,root) %{_sbindir}/eeprom*
 %attr(755,root,root) %{_sbindir}/i2c*
+%attr(755,root,root) %{_sbindir}/sensors-detect
 %ifarch %{ix86} %{x8664}
 %attr(755,root,root) %{_sbindir}/isadump
 %attr(755,root,root) %{_sbindir}/isaset
+%attr(754,root,root) %{_sysconfdir}/rc.d/init.d/sensors_modules
 %{_mandir}/man8/isadump.8*
 %{_mandir}/man8/isaset.8*
 %endif
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors.conf
 %{_mandir}/man1/sensors.1*
 %{_mandir}/man5/sensors.conf.5*
 %{_mandir}/man8/i2c*.8*
+
+%files config-default
+%defattr(644,root,root,755)
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sysconfig/sensors_modules
 
 %files libs
 %defattr(644,root,root,755)
@@ -287,9 +370,8 @@ fi
 %files sensord
 %defattr(644,root,root,755)
 %attr(754,root,root) %{_sbindir}/sensord
-%attr(755,root,root) %{_sbindir}/sensors-detect
-%attr(754,root,root) /etc/rc.d/init.d/sensors
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors
+%attr(754,root,root) %{_sysconfdir}/rc.d/init.d/sensors
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sysconfig/sensors
 %{_mandir}/man8/sensors-detect.8*
 %{_mandir}/man8/sensord.8*
 
@@ -297,7 +379,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/fancontrol
 %attr(755,root,root) %{_sbindir}/pwmconfig
-%attr(754,root,root) /etc/rc.d/init.d/fancontrol
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/fancontrol
+%attr(754,root,root) %{_sysconfdir}/rc.d/init.d/fancontrol
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sysconfig/fancontrol
 %{_mandir}/man8/fancontrol.8*
 %{_mandir}/man8/pwmconfig.8*
