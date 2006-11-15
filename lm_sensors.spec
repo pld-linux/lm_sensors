@@ -3,10 +3,10 @@
 #   /usr/sbin/fancontrol.pl (isn't that the same as sh fancontrol script?)
 # - a big trigger warning how to use fancontrol and to init it first
 #
-%define		cmodule		%{_sysconfdir}/sysconfig/sensors_modules
-%define		cdaemon		%{_sysconfdir}/sysconfig/sensors
-%define		smodule		%{_sysconfdir}/rc.d/init.d/sensors_modules
-%define		sdaemon		%{_sysconfdir}/rc.d/init.d/sensors
+%define		cmodule		/etc/sysconfig/sensors_modules
+%define		cdaemon		/etc/sysconfig/sensors
+%define		smodule		/etc/rc.d/init.d/sensors_modules
+%define		sdaemon		/etc/rc.d/init.d/sensors
 
 %include	/usr/lib/rpm/macros.perl
 Summary:	Hardware health monitoring
@@ -137,14 +137,17 @@ Bibliotecas est·ticas para desenvolvimento com lm_sensors
 –œ¬’ƒœ◊… –“œ«“¡Õ, —À¶ ◊…Àœ“…”‘œ◊’¿‘ÿ ƒ¡Œ¶ ”≈Œ”œ“¶◊.
 
 %package config-default
-Summary:	Sensors configuration files
-Summary(pl):	Pliki konfiguracyjne lm_sensors
+Summary:	Default sensors configuration files
+Summary(pl):	Domy∂lne pliki konfiguracyjne lm_sensors
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Provides:	%{name}-config
 
 %description config-default
 Default configuration files for lm_sensors.
+
+%description config-default -l pl
+Domy∂lne pliki konfiguracyjne lm_sensors.
 
 %package sensord
 Summary:	Sensord daemon
@@ -212,7 +215,7 @@ temperatury s± ustawione poprawnie, by nie spaliÊ wnÍtrza komputera!
 rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
-	$RPM_BUILD_ROOT%{_sysconfdir}/{rc.d/init.d,sysconfig}
+	$RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 
 %{__make} user_install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -227,13 +230,13 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 
 install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/sensors
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/sensors
-install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/fancontrol
-install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/fancontrol
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/fancontrol
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/fancontrol
 install %{SOURCE5} $RPM_BUILD_ROOT%{_bindir}
-install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/sensors_modules
-install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/sensors_modules
+install %{SOURCE6} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors_modules
+install %{SOURCE7} $RPM_BUILD_ROOT/etc/sysconfig/sensors_modules
 
 # i2c API for userspace - included in glibc-kernel-headers
 rm -f $RPM_BUILD_ROOT%{_includedir}/linux/i2c-dev.h
@@ -338,18 +341,18 @@ fi
 %ifarch %{ix86} %{x8664}
 %attr(755,root,root) %{_sbindir}/isadump
 %attr(755,root,root) %{_sbindir}/isaset
-%attr(754,root,root) %{_sysconfdir}/rc.d/init.d/sensors_modules
 %{_mandir}/man8/isadump.8*
 %{_mandir}/man8/isaset.8*
 %endif
 %{_mandir}/man1/sensors.1*
 %{_mandir}/man5/sensors.conf.5*
 %{_mandir}/man8/i2c*.8*
+%attr(754,root,root) /etc/rc.d/init.d/sensors_modules
 
 %files config-default
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sysconfig/sensors_modules
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors_modules
 
 %files libs
 %defattr(644,root,root,755)
@@ -370,8 +373,8 @@ fi
 %files sensord
 %defattr(644,root,root,755)
 %attr(754,root,root) %{_sbindir}/sensord
-%attr(754,root,root) %{_sysconfdir}/rc.d/init.d/sensors
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sysconfig/sensors
+%attr(754,root,root) /etc/rc.d/init.d/sensors
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors
 %{_mandir}/man8/sensors-detect.8*
 %{_mandir}/man8/sensord.8*
 
@@ -379,7 +382,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/fancontrol
 %attr(755,root,root) %{_sbindir}/pwmconfig
-%attr(754,root,root) %{_sysconfdir}/rc.d/init.d/fancontrol
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sysconfig/fancontrol
+%attr(754,root,root) /etc/rc.d/init.d/fancontrol
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/fancontrol
 %{_mandir}/man8/fancontrol.8*
 %{_mandir}/man8/pwmconfig.8*
