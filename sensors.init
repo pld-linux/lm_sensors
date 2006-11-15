@@ -18,8 +18,7 @@ fi
 
 start() {
 	if [ ! -f /var/lock/subsys/sensors_modules ]; then
-		msg_starting "sensors daemon"; fail
-		nls "sensors_modules services not started"
+		msg_not_running "sensors_modules"
 		exit 6
 	fi
 	
