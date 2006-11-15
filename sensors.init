@@ -19,7 +19,7 @@ fi
 start() {
 	if [ ! -f /var/lock/subsys/sensors_modules ]; then
 		msg_starting "sensors daemon"; fail
-		nls "sensors_modules services not started" >&2
+		nls "sensors_modules services not started"
 		exit 6
 	fi
 	
@@ -27,10 +27,10 @@ start() {
 	if [ ! -f /var/lock/subsys/sensors ]; then
 		msg_starting "sensors daemon"
 		daemon sensord \
-			$([ -n "$INTERVAL" ] && echo "-i $INTERVAL") \
-			$([ -n "$LOG_INTERVAL" ] && echo "-l $LOG_INTERVAL") \
-			$([ -n "$RRD_LOGFILE" ] && echo "-r $RRD_LOGFILE") \
-			$([ -n "$RRD_INTERVAL" ] && echo "-t $RRD_INTERVAL") \
+			${INTERVAL:+-i $INTERVAL} \
+			${LOG_INTERVAL:+-l $LOG_INTERVAL} \
+			${RRD_LOGFILE:+-r $RRD_LOGFILE} \
+			${RRD_INTERVAL:+-t $RRD_INTERVAL} \
 			-f daemon
 
 		RETVAL=$?
