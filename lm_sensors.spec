@@ -41,6 +41,7 @@ BuildRequires:	flex >= 2.5.1
 BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rrdtool-devel >= 1.2.10
+BuildRequires:	sysfsutils-devel
 %endif
 %if %{with kernel} && %{with dist_kernel}
 BuildRequires:	kernel24-headers < 2.5.0
