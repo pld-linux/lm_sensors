@@ -15,12 +15,12 @@ Summary(pt_BR):	Ferramentas para monitoraГЦo do hardware
 Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
-Version:	2.10.1
-Release:	2
+Version:	2.10.2
+Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	cdc857b78e813b88cbf8be92441aa299
+# Source0-md5:	a424c54006483e978cc3f885f50989a5
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Source3:	fancontrol.init
