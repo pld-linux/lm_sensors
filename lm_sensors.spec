@@ -10,10 +10,10 @@
 
 %include	/usr/lib/rpm/macros.perl
 Summary:	Hardware health monitoring
-Summary(pl):	Monitor stanu sprzЙtu
-Summary(pt_BR):	Ferramentas para monitoraГЦo do hardware
-Summary(ru):	Утилиты для мониторинга аппаратуры
-Summary(uk):	Утил╕ти для мон╕торингу апаратури
+Summary(pl.UTF-8):   Monitor stanu sprzд≥tu
+Summary(pt_BR.UTF-8):   Ferramentas para monitoraц╖цёo do hardware
+Summary(ru.UTF-8):   пёя┌п╦п╩п╦я┌я▀ п╢п╩я▐ п╪п╬п╫п╦я┌п╬я─п╦п╫пЁп╟ п╟п©п©п╟я─п╟я┌я┐я─я▀
+Summary(uk.UTF-8):   пёя┌п╦п╩я√я┌п╦ п╢п╩я▐ п╪п╬п╫я√я┌п╬я─п╦п╫пЁя┐ п╟п©п╟я─п╟я┌я┐я─п╦
 Name:		lm_sensors
 Version:	2.10.2
 Release:	1
@@ -50,28 +50,28 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Tools for monitoring the hardware health of Linux systems containing
 hardware health monitoring hardware such as the LM78 and LM75.
 
-%description -l pl
-NarzЙdzie do monitorowania sprzЙtu w systemach linuksowych
-wyposa©onych w sprzЙt monitoruj╠cy, taki jak LM78 lub LM75.
+%description -l pl.UTF-8
+Narzд≥dzie do monitorowania sprzд≥tu w systemach linuksowych
+wyposaе╪onych w sprzд≥t monitorujд┘cy, taki jak LM78 lub LM75.
 
-%description -l pt_BR
-Ferramentas para monitoraГЦo do hardware. ContИm uma coleГЦo de
-mСdulos para acesso genИrico ao barramento SMBus e monitoraГЦo de
+%description -l pt_BR.UTF-8
+Ferramentas para monitoraц╖цёo do hardware. Contц╘m uma coleц╖цёo de
+mцЁdulos para acesso genц╘rico ao barramento SMBus e monitoraц╖цёo de
 hardware.
 
-%description -l ru
-Пакет lm_sensors содержит набор модулей для стандартного доступа к
-SMBus и мониторинга. ВНИМАНИЕ: для этого необходима специальная
-поддержка, отсутствующая в стандартных старых ядрах 2.2.XX!
+%description -l ru.UTF-8
+п÷п╟п╨п╣я┌ lm_sensors я│п╬п╢п╣я─п╤п╦я┌ п╫п╟п╠п╬я─ п╪п╬п╢я┐п╩п╣п╧ п╢п╩я▐ я│я┌п╟п╫п╢п╟я─я┌п╫п╬пЁп╬ п╢п╬я│я┌я┐п©п╟ п╨
+SMBus п╦ п╪п╬п╫п╦я┌п╬я─п╦п╫пЁп╟. п▓п²п≤п°п░п²п≤п∙: п╢п╩я▐ я█я┌п╬пЁп╬ п╫п╣п╬п╠я┘п╬п╢п╦п╪п╟ я│п©п╣я├п╦п╟п╩я▄п╫п╟я▐
+п©п╬п╢п╢п╣я─п╤п╨п╟, п╬я┌я│я┐я┌я│я┌п╡я┐я▌я┴п╟я▐ п╡ я│я┌п╟п╫п╢п╟я─я┌п╫я▀я┘ я│я┌п╟я─я▀я┘ я▐п╢я─п╟я┘ 2.2.XX!
 
-%description -l uk
-Пакет lm_sensors м╕стить наб╕р модул╕в для стандартного доступу до
-SMBus та мон╕торингу. УВАГА: для цього потр╕бна спец╕альна п╕дтримка,
-яка в╕дсутня у стандартних старих ядрах 2.2.XX!
+%description -l uk.UTF-8
+п÷п╟п╨п╣я┌ lm_sensors п╪я√я│я┌п╦я┌я▄ п╫п╟п╠я√я─ п╪п╬п╢я┐п╩я√п╡ п╢п╩я▐ я│я┌п╟п╫п╢п╟я─я┌п╫п╬пЁп╬ п╢п╬я│я┌я┐п©я┐ п╢п╬
+SMBus я┌п╟ п╪п╬п╫я√я┌п╬я─п╦п╫пЁя┐. пёп▓п░п⌠п░: п╢п╩я▐ я├я▄п╬пЁп╬ п©п╬я┌я─я√п╠п╫п╟ я│п©п╣я├я√п╟п╩я▄п╫п╟ п©я√п╢я┌я─п╦п╪п╨п╟,
+я▐п╨п╟ п╡я√п╢я│я┐я┌п╫я▐ я┐ я│я┌п╟п╫п╢п╟я─я┌п╫п╦я┘ я│я┌п╟я─п╦я┘ я▐п╢я─п╟я┘ 2.2.XX!
 
 %package libs
 Summary:	lm_sensors library
-Summary(pl):	Biblioteka lm_sensors
+Summary(pl.UTF-8):   Biblioteka lm_sensors
 Group:		Libraries
 Obsoletes:	liblm_sensors1
 Conflicts:	lm_sensors <= 2.9.2-2
@@ -79,15 +79,15 @@ Conflicts:	lm_sensors <= 2.9.2-2
 %description libs
 lm_sensors library.
 
-%description libs -l pl
+%description libs -l pl.UTF-8
 Biblioteka lm_sensors.
 
 %package devel
 Summary:	Header files for lm_sensors
-Summary(pl):	Pliki nagЁСwkowe dla lm_sensors
-Summary(pt_BR):	Arquivos necessАrios ao desenvolvimento de programas que usem o lm_sensors
-Summary(ru):	Файлы разработчика для программ, использующих lm_sensors
-Summary(uk):	Файли програм╕ста для програм, як╕ використовують lm_sensors
+Summary(pl.UTF-8):   Pliki nagе┌цЁwkowe dla lm_sensors
+Summary(pt_BR.UTF-8):   Arquivos necessц║rios ao desenvolvimento de programas que usem o lm_sensors
+Summary(ru.UTF-8):   п╓п╟п╧п╩я▀ я─п╟п╥я─п╟п╠п╬я┌я┤п╦п╨п╟ п╢п╩я▐ п©я─п╬пЁя─п╟п╪п╪, п╦я│п©п╬п╩я▄п╥я┐я▌я┴п╦я┘ lm_sensors
+Summary(uk.UTF-8):   п╓п╟п╧п╩п╦ п©я─п╬пЁя─п╟п╪я√я│я┌п╟ п╢п╩я▐ п©я─п╬пЁя─п╟п╪, я▐п╨я√ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я▌я┌я▄ lm_sensors
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	liblm_sensors1-devel
@@ -95,50 +95,50 @@ Obsoletes:	liblm_sensors1-devel
 %description devel
 Header files for lm_sensors.
 
-%description devel -l pl
-Pliki nagЁСwkowe dla lm_sensors.
+%description devel -l pl.UTF-8
+Pliki nagе┌цЁwkowe dla lm_sensors.
 
-%description devel -l pt_BR
-Arquivos necessАrios ao desenvolvimento de programas que usem o
+%description devel -l pt_BR.UTF-8
+Arquivos necessц║rios ao desenvolvimento de programas que usem o
 lm_sensors.
 
-%description devel -l ru
-Пакет lm_sensors-devel включает хедеры и библиотеки, необходимые для
-построения программ, использующих данные сенсоров.
+%description devel -l ru.UTF-8
+п÷п╟п╨п╣я┌ lm_sensors-devel п╡п╨п╩я▌я┤п╟п╣я┌ я┘п╣п╢п╣я─я▀ п╦ п╠п╦п╠п╩п╦п╬я┌п╣п╨п╦, п╫п╣п╬п╠я┘п╬п╢п╦п╪я▀п╣ п╢п╩я▐
+п©п╬я│я┌я─п╬п╣п╫п╦я▐ п©я─п╬пЁя─п╟п╪п╪, п╦я│п©п╬п╩я▄п╥я┐я▌я┴п╦я┘ п╢п╟п╫п╫я▀п╣ я│п╣п╫я│п╬я─п╬п╡.
 
-%description devel -l uk
-Пакет lm_sensors-devel м╕стить хедери та б╕бл╕отеки, необх╕дн╕ для
-побудови програм, як╕ використовують дан╕ сенсор╕в.
+%description devel -l uk.UTF-8
+п÷п╟п╨п╣я┌ lm_sensors-devel п╪я√я│я┌п╦я┌я▄ я┘п╣п╢п╣я─п╦ я┌п╟ п╠я√п╠п╩я√п╬я┌п╣п╨п╦, п╫п╣п╬п╠я┘я√п╢п╫я√ п╢п╩я▐
+п©п╬п╠я┐п╢п╬п╡п╦ п©я─п╬пЁя─п╟п╪, я▐п╨я√ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я▌я┌я▄ п╢п╟п╫я√ я│п╣п╫я│п╬я─я√п╡.
 
 %package static
 Summary:	Static libraries for lm_sensors
-Summary(pl):	Biblioteki statyczne dla lm_sensors
-Summary(pt_BR):	Bibliotecas estАticas para desenvolvimento com lm_sensors
-Summary(ru):	Статическая библиотека для программ, использующих lm_sensors
-Summary(uk):	Статична б╕бл╕отека для програм, як╕ використовують lm_sensors
+Summary(pl.UTF-8):   Biblioteki statyczne dla lm_sensors
+Summary(pt_BR.UTF-8):   Bibliotecas estц║ticas para desenvolvimento com lm_sensors
+Summary(ru.UTF-8):   п║я┌п╟я┌п╦я┤п╣я│п╨п╟я▐ п╠п╦п╠п╩п╦п╬я┌п╣п╨п╟ п╢п╩я▐ п©я─п╬пЁя─п╟п╪п╪, п╦я│п©п╬п╩я▄п╥я┐я▌я┴п╦я┘ lm_sensors
+Summary(uk.UTF-8):   п║я┌п╟я┌п╦я┤п╫п╟ п╠я√п╠п╩я√п╬я┌п╣п╨п╟ п╢п╩я▐ п©я─п╬пЁя─п╟п╪, я▐п╨я√ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я▌я┌я▄ lm_sensors
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 Static libraries for lm_sensors.
 
-%description static -l pl
+%description static -l pl.UTF-8
 Biblioteki statyczne dla lm_sensors.
 
-%description static -l pt_BR
-Bibliotecas estАticas para desenvolvimento com lm_sensors
+%description static -l pt_BR.UTF-8
+Bibliotecas estц║ticas para desenvolvimento com lm_sensors
 
-%description static -l ru
-Пакет lm_sensors-static включает статические библиотеки, необходимые
-для построения программ, использующих данные сенсоров.
+%description static -l ru.UTF-8
+п÷п╟п╨п╣я┌ lm_sensors-static п╡п╨п╩я▌я┤п╟п╣я┌ я│я┌п╟я┌п╦я┤п╣я│п╨п╦п╣ п╠п╦п╠п╩п╦п╬я┌п╣п╨п╦, п╫п╣п╬п╠я┘п╬п╢п╦п╪я▀п╣
+п╢п╩я▐ п©п╬я│я┌я─п╬п╣п╫п╦я▐ п©я─п╬пЁя─п╟п╪п╪, п╦я│п©п╬п╩я▄п╥я┐я▌я┴п╦я┘ п╢п╟п╫п╫я▀п╣ я│п╣п╫я│п╬я─п╬п╡.
 
-%description static -l uk
-Пакет lm_sensors-static м╕стить статичн╕ б╕бл╕отеки, необх╕дн╕ для
-побудови програм, як╕ використовують дан╕ сенсор╕в.
+%description static -l uk.UTF-8
+п÷п╟п╨п╣я┌ lm_sensors-static п╪я√я│я┌п╦я┌я▄ я│я┌п╟я┌п╦я┤п╫я√ п╠я√п╠п╩я√п╬я┌п╣п╨п╦, п╫п╣п╬п╠я┘я√п╢п╫я√ п╢п╩я▐
+п©п╬п╠я┐п╢п╬п╡п╦ п©я─п╬пЁя─п╟п╪, я▐п╨я√ п╡п╦п╨п╬я─п╦я│я┌п╬п╡я┐я▌я┌я▄ п╢п╟п╫я√ я│п╣п╫я│п╬я─я√п╡.
 
 %package config-default
 Summary:	Default sensors configuration files
-Summary(pl):	Domy╤lne pliki konfiguracyjne lm_sensors
+Summary(pl.UTF-8):   Domyе⌡lne pliki konfiguracyjne lm_sensors
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Provides:	%{name}-config
@@ -146,12 +146,12 @@ Provides:	%{name}-config
 %description config-default
 Default configuration files for lm_sensors.
 
-%description config-default -l pl
-Domy╤lne pliki konfiguracyjne lm_sensors.
+%description config-default -l pl.UTF-8
+Domyе⌡lne pliki konfiguracyjne lm_sensors.
 
 %package sensord
 Summary:	Sensord daemon
-Summary(pl):	Demon sensord
+Summary(pl.UTF-8):   Demon sensord
 Group:		Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -161,12 +161,12 @@ Requires:	rc-scripts
 %description sensord
 Sensord daemon.
 
-%description sensord -l pl
+%description sensord -l pl.UTF-8
 Demon sensord.
 
 %package fancontrol
 Summary:	Fancontrol daemon
-Summary(pl):	Demon sterowania wiatraczkami
+Summary(pl.UTF-8):   Demon sterowania wiatraczkami
 Group:		Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -181,13 +181,13 @@ It is crucial to correctly configure this daemon (via running service
 fancontrol init) and ensuring, that the temperature levels are set not
 to burn the insides of the computer!
 
-%description fancontrol -l pl
-Demon fancontrol monitoruje obecn╠ temperaturЙ komputera i ustawia
-odpowiednio prЙdko╤Ф wiatrakСw.
+%description fancontrol -l pl.UTF-8
+Demon fancontrol monitoruje obecnд┘ temperaturд≥ komputera i ustawia
+odpowiednio prд≥dkoе⌡д┤ wiatrakцЁw.
 
-Kluczowym jest, aby poprawnie skonfigurowaФ tego demona (poprzez
-uruchomienie service fancontrol init) oraz upewniФ siЙ, ©e progi
-temperatury s╠ ustawione poprawnie, by nie spaliФ wnЙtrza komputera!
+Kluczowym jest, aby poprawnie skonfigurowaд┤ tego demona (poprzez
+uruchomienie service fancontrol init) oraz upewniд┤ siд≥, е╪e progi
+temperatury sд┘ ustawione poprawnie, by nie spaliд┤ wnд≥trza komputera!
 
 %prep
 %setup -q
