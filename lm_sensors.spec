@@ -10,10 +10,10 @@
 
 %include	/usr/lib/rpm/macros.perl
 Summary:	Hardware health monitoring
-Summary(pl.UTF-8):   Monitor stanu sprzętu
-Summary(pt_BR.UTF-8):   Ferramentas para monitoração do hardware
-Summary(ru.UTF-8):   Утилиты для мониторинга аппаратуры
-Summary(uk.UTF-8):   Утиліти для моніторингу апаратури
+Summary(pl.UTF-8):	Monitor stanu sprzętu
+Summary(pt_BR.UTF-8):	Ferramentas para monitoração do hardware
+Summary(ru.UTF-8):	Утилиты для мониторинга аппаратуры
+Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
 Version:	2.10.2
 Release:	1
@@ -71,7 +71,7 @@ SMBus та моніторингу. УВАГА: для цього потрібн�
 
 %package libs
 Summary:	lm_sensors library
-Summary(pl.UTF-8):   Biblioteka lm_sensors
+Summary(pl.UTF-8):	Biblioteka lm_sensors
 Group:		Libraries
 Obsoletes:	liblm_sensors1
 Conflicts:	lm_sensors <= 2.9.2-2
@@ -84,10 +84,10 @@ Biblioteka lm_sensors.
 
 %package devel
 Summary:	Header files for lm_sensors
-Summary(pl.UTF-8):   Pliki nagłówkowe dla lm_sensors
-Summary(pt_BR.UTF-8):   Arquivos necessários ao desenvolvimento de programas que usem o lm_sensors
-Summary(ru.UTF-8):   Файлы разработчика для программ, использующих lm_sensors
-Summary(uk.UTF-8):   Файли програміста для програм, які використовують lm_sensors
+Summary(pl.UTF-8):	Pliki nagłówkowe dla lm_sensors
+Summary(pt_BR.UTF-8):	Arquivos necessários ao desenvolvimento de programas que usem o lm_sensors
+Summary(ru.UTF-8):	Файлы разработчика для программ, использующих lm_sensors
+Summary(uk.UTF-8):	Файли програміста для програм, які використовують lm_sensors
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Obsoletes:	liblm_sensors1-devel
@@ -112,10 +112,10 @@ lm_sensors.
 
 %package static
 Summary:	Static libraries for lm_sensors
-Summary(pl.UTF-8):   Biblioteki statyczne dla lm_sensors
-Summary(pt_BR.UTF-8):   Bibliotecas estáticas para desenvolvimento com lm_sensors
-Summary(ru.UTF-8):   Статическая библиотека для программ, использующих lm_sensors
-Summary(uk.UTF-8):   Статична бібліотека для програм, які використовують lm_sensors
+Summary(pl.UTF-8):	Biblioteki statyczne dla lm_sensors
+Summary(pt_BR.UTF-8):	Bibliotecas estáticas para desenvolvimento com lm_sensors
+Summary(ru.UTF-8):	Статическая библиотека для программ, использующих lm_sensors
+Summary(uk.UTF-8):	Статична бібліотека для програм, які використовують lm_sensors
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
@@ -138,7 +138,7 @@ Bibliotecas estáticas para desenvolvimento com lm_sensors
 
 %package config-default
 Summary:	Default sensors configuration files
-Summary(pl.UTF-8):   Domyślne pliki konfiguracyjne lm_sensors
+Summary(pl.UTF-8):	Domyślne pliki konfiguracyjne lm_sensors
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Provides:	%{name}-config
@@ -151,7 +151,7 @@ Domyślne pliki konfiguracyjne lm_sensors.
 
 %package sensord
 Summary:	Sensord daemon
-Summary(pl.UTF-8):   Demon sensord
+Summary(pl.UTF-8):	Demon sensord
 Group:		Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -166,7 +166,7 @@ Demon sensord.
 
 %package fancontrol
 Summary:	Fancontrol daemon
-Summary(pl.UTF-8):   Demon sterowania wiatraczkami
+Summary(pl.UTF-8):	Demon sterowania wiatraczkami
 Group:		Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
