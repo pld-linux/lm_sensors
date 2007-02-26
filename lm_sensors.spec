@@ -16,7 +16,7 @@ Summary(ru.UTF-8):	Утилиты для мониторинга аппарату
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
 Version:	2.10.2
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.gz
@@ -356,7 +356,8 @@ fi
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*.*
+%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/lib*.so.[0-9]
 
 %files devel
 %defattr(644,root,root,755)
