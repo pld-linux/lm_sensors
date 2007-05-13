@@ -20,20 +20,20 @@ Summary(pt_BR):	Ferramentas para monitoraГЦo do hardware
 Summary(ru):	Утилиты для мониторинга аппаратуры
 Summary(uk):	Утил╕ти для мон╕торингу апаратури
 Name:		lm_sensors
-Version:	2.10.1
-%define _rel	2
+Version:	2.10.3
+%define _rel	1
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	cdc857b78e813b88cbf8be92441aa299
+# Source0-md5:	55d77146fbd56c205a9f81d262b9453c
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
 Patch1:		%{name}-ppc.patch
 Patch2:		%{name}-iconv-in-libc.patch
 Patch3:		%{name}-sensors-detect-PATH.patch
-URL:		http://www.lm-sensors.nu/
+URL:		http://www.lm-sensors.org/
 BuildRequires:	rpmbuild(macros) >= 1.268
 %if %{with userspace}
 BuildRequires:	bison
