@@ -15,12 +15,12 @@ Summary(pt_BR.UTF-8):	Ferramentas para monitoração do hardware
 Summary(ru.UTF-8):	Утилиты для мониторинга аппаратуры
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
-Version:	2.10.4
+Version:	2.10.5
 Release:	1
-License:	GPL
+License:	GPL v2+
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	96eb9ca1a1f1cb308757a7b8f0af93d6
+# Source0-md5:	77f96bc8a7773e95b2990d756e4925d6
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Source3:	fancontrol.init
@@ -356,16 +356,16 @@ fi
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/lib*.so.[0-9]
+%attr(755,root,root) %{_libdir}/libsensors.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libsensors.so.[0-9]
 
 %files devel
 %defattr(644,root,root,755)
 %doc doc/{developers,kernel}
-%attr(755,root,root) %{_libdir}/lib*.so
+%attr(755,root,root) %{_libdir}/libsensors.so
 %{_includedir}/sensors
 %{_includedir}/linux/sensors.h
-%{_mandir}/man3/*
+%{_mandir}/man3/libsensors.3*
 
 %files static
 %defattr(644,root,root,755)
