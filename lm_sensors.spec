@@ -13,7 +13,7 @@
 %undefine with_kernel
 %endif
 
-%define _rel	2
+%define _rel	3
 %include	/usr/lib/rpm/macros.perl
 Summary:	Hardware health monitoring
 Summary(pl.UTF-8):	Monitor stanu sprzętu
@@ -38,6 +38,7 @@ BuildRequires:	rpmbuild(macros) >= 1.268
 %if %{with userspace}
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
+BuildRequires:	iconv-devel
 BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rrdtool-devel >= 1.2.10
