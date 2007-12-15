@@ -13,7 +13,7 @@
 %undefine with_kernel
 %endif
 
-%define _rel	3
+%define _rel	1
 %include	/usr/lib/rpm/macros.perl
 Summary:	Hardware health monitoring
 Summary(pl.UTF-8):	Monitor stanu sprzętu
@@ -21,12 +21,12 @@ Summary(pt_BR.UTF-8):	Ferramentas para monitoração do hardware
 Summary(ru.UTF-8):	Утилиты для мониторинга аппаратуры
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
-Version:	2.10.3
+Version:	2.10.5
 Release:	%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	55d77146fbd56c205a9f81d262b9453c
+# Source0-md5:	77f96bc8a7773e95b2990d756e4925d6
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Patch0:		%{name}-make.patch
@@ -38,7 +38,6 @@ BuildRequires:	rpmbuild(macros) >= 1.268
 %if %{with userspace}
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
-BuildRequires:	iconv-devel
 BuildRequires:	perl-modules >= 5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rrdtool-devel >= 1.2.10
