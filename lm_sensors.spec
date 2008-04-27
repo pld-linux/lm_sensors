@@ -38,7 +38,7 @@ BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	rrdtool-devel >= 1.2.10
 BuildRequires:	sysfsutils-devel
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	kernel >= 2.6.5
+Requires:	uname(release) >= 2.6.5
 Requires:	dev >= 2.9.0-13
 Requires:	dmidecode
 Requires:	%{name}-config
