@@ -1,6 +1,4 @@
 # TODO
-# - unpackaged:
-#   /usr/sbin/fancontrol.pl (isn't that the same as sh fancontrol script?)
 # - a big trigger warning how to use fancontrol and to init it first
 #
 %define		cmodule		/etc/sysconfig/sensors_modules
@@ -15,12 +13,12 @@ Summary(pt_BR.UTF-8):	Ferramentas para monitoração do hardware
 Summary(ru.UTF-8):	Утилиты для мониторинга аппаратуры
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
-Version:	2.10.5
-Release:	3
+Version:	3.0.1
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
-Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	77f96bc8a7773e95b2990d756e4925d6
+Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
+# Source0-md5:	dace0c6bb031bd097a46a336de60587c
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Source3:	fancontrol.init
@@ -28,10 +26,9 @@ Source4:	fancontrol.sysconfig
 Source5:	sensors.sh
 Source6:	sensors_modules.init
 Source7:	sensors_modules.sysconfig
-Patch0:		%{name}-make.patch
-Patch1:		%{name}-ppc.patch
-Patch2:		%{name}-iconv-in-libc.patch
-Patch3:		%{name}-sensors-detect-PATH.patch
+Patch0:		%{name}-ppc.patch
+Patch1:		%{name}-iconv-in-libc.patch
+Patch2:		%{name}-sensors-detect-PATH.patch
 URL:		http://www.lm-sensors.org/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
@@ -41,6 +38,7 @@ BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	rrdtool-devel >= 1.2.10
 BuildRequires:	sysfsutils-devel
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	kernel >= 2.6.5
 Requires:	dev >= 2.9.0-13
 Requires:	dmidecode
 Requires:	%{name}-config
@@ -194,22 +192,16 @@ temperatury są ustawione poprawnie, by nie spalić wnętrza komputera!
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %build
 %{__make} user \
 	CC="%{__cc}" \
 	OPTS="%{rpmcflags}" \
-	LIBDIR=%{_libdir} \
-	LINUX=/dev/null \
-	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=/usr/include \
+	SYSFS_SUPPORT:=1 \
 	PROG_EXTRA:="sensord" \
 	SYSFS_SUPPORT:=1
 
-%{__make} -C prog/eepromer \
-	CC="%{__cc}" \
-	CFLAGS="%{rpmcflags} -I../../kernel/include"
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -224,11 +216,7 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	LIBDIR=%{_libdir} \
 	MANDIR=%{_mandir} \
 	PROG_EXTRA:="sensord" \
-	LINUX=/dev/null \
-	LINUX_HEADERS=%{_kernelsrcdir}/include \
-	I2C_HEADERS=/usr/include
-
-install prog/eepromer/{eeprom,eepromer}	$RPM_BUILD_ROOT%{_sbindir}
+	SYSFS_SUPPORT:=1
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
@@ -237,9 +225,6 @@ install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/fancontrol
 install %{SOURCE5} $RPM_BUILD_ROOT%{_bindir}
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors_modules
 install %{SOURCE7} $RPM_BUILD_ROOT/etc/sysconfig/sensors_modules
-
-# i2c API for userspace - included in linux-libc-headers
-rm -f $RPM_BUILD_ROOT%{_includedir}/linux/i2c-dev.h
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -328,15 +313,12 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc BACKGROUND BUGS CHANGES README README.thinkpad TODO doc/{busses,chips}
+%doc CHANGES README doc/chips
 %doc doc/{FAQ,donations,fan-divisors,progs,temperature-sensors,*html,vid}
-%doc prog/{config,daemon,eepromer/README*,matorb,maxilife}
-%attr(755,root,root) %{_bindir}/ddcmon
-%attr(755,root,root) %{_bindir}/decode-*.pl
+%doc prog/{daemon,maxilife}
+%attr(755,root,root) %{_bindir}/sensors-conf-convert
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_bindir}/sensors.sh
-%attr(755,root,root) %{_sbindir}/eeprom*
-%attr(755,root,root) %{_sbindir}/i2c*
 %attr(755,root,root) %{_sbindir}/sensors-detect
 %ifarch %{ix86} %{x8664}
 %attr(755,root,root) %{_sbindir}/isadump
@@ -346,12 +328,11 @@ fi
 %endif
 %{_mandir}/man1/sensors.1*
 %{_mandir}/man5/sensors.conf.5*
-%{_mandir}/man8/i2c*.8*
 %attr(754,root,root) /etc/rc.d/init.d/sensors_modules
 
 %files config-default
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors3.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors_modules
 
 %files libs
@@ -361,10 +342,9 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
-%doc doc/{developers,kernel}
+%doc doc/developers
 %attr(755,root,root) %{_libdir}/libsensors.so
 %{_includedir}/sensors
-%{_includedir}/linux/sensors.h
 %{_mandir}/man3/libsensors.3*
 
 %files static
