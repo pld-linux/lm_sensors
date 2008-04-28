@@ -1,4 +1,5 @@
 # TODO
+# - package eeprom* etc. tools (from lm_sensors 2.x or i2c-tools, if included there?)
 # - a big trigger warning how to use fancontrol and to init it first
 #
 %define		cmodule		/etc/sysconfig/sensors_modules
@@ -29,6 +30,7 @@ Source7:	sensors_modules.sysconfig
 Patch0:		%{name}-ppc.patch
 Patch1:		%{name}-iconv-in-libc.patch
 Patch2:		%{name}-sensors-detect-PATH.patch
+Patch3:		%{name}-make.patch
 URL:		http://www.lm-sensors.org/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
@@ -192,16 +194,14 @@ temperatury są ustawione poprawnie, by nie spalić wnętrza komputera!
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__make} user \
 	CC="%{__cc}" \
 	OPTS="%{rpmcflags}" \
 	SYSFS_SUPPORT:=1 \
-	PROG_EXTRA:="sensord" \
-	SYSFS_SUPPORT:=1
-
-
+	PROG_EXTRA:="sensord"
 
 %install
 rm -rf $RPM_BUILD_ROOT
