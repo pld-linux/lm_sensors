@@ -1,9 +1,18 @@
---- lm_sensors-2.8.2/Makefile.orig	2003-11-29 20:59:31.000000000 +0100
-+++ lm_sensors-2.8.2/Makefile	2003-12-13 23:24:48.024643304 +0100
-@@ -183,13 +183,11 @@
+--- lm_sensors-3.0.1/Makefile.orig	2008-01-19 11:20:45.000000000 +0100
++++ lm_sensors-3.0.1/Makefile	2008-04-28 19:31:14.999736011 +0200
+@@ -54,7 +54,7 @@
+ # library files (both static and shared) will be installed.
+ LIBDIR := $(PREFIX)/lib
+ 
+-EXLDFLAGS := -Wl,-rpath,$(LIBDIR)
++EXLDFLAGS :=
+ 
+ # You should not need to change this. It is the directory into which the
+ # executable program files will be installed. BINDIR for programs that are
+@@ -130,13 +130,12 @@
  # ARCPPFLAGS/ARCFLAGS are used to create archive object files (static libraries).
  # LIBCPPFLAGS/LIBCFLAGS are for shared library objects.
- ALL_CPPFLAGS := -I. -Ikernel/include -I$(I2C_HEADERS)
+ ALL_CPPFLAGS := -I.
 -ALL_CFLAGS := -Wall
 +OPTS = -O2
 +ALL_CFLAGS := -Wall $(OPTS)
@@ -13,39 +22,7 @@
 -ALL_CFLAGS += -O -g
 -else
 -ALL_CFLAGS += -O2
++ALL_CFLAGS += -g
  endif
  
  ifeq ($(WARN),1)
-@@ -328,10 +326,10 @@
- 
- # .o files are used for modules
- # depend on the kernel config file!
--%.o: %.c $(LINUX)/.config
-+%.o: %.c
- 	$(CC) $(MODCPPFLAGS) $(MODCFLAGS) -c $< -o $@
- 
--%.d: %.c $(LINUX)/.config
-+%.d: %.c
- 	$(CC) -M -MG $(MODCPPFLAGS) $(MODCFLAGS) $< | \
-        	$(SED) -e 's@^\(.*\)\.o:@$*.d $*.o: Makefile '`dirname $*.d`/Module.mk' @' > $@
- 
---- lm_sensors-2.8.5.orig/prog/rrd/Makefile	2002-01-05 16:39:17.000000000 +0100
-+++ lm_sensors-2.8.5/prog/rrd/Makefile	2003-07-25 23:17:50.000000000 +0200
-@@ -22,7 +22,7 @@
- 	sed -e "s#%%RRDPATH%%#$(RRDPATH)#g;s#%%APACHDIR%%#$(APACHDIR)#g;s#%%RRDDIR%%#$(RRDDIR)#g;s#%%MACH%%#$(MACH)#g" $< > $@
- 
- $(RRDDIR) :
--	install -d -o $(USER) $(RRDDIR)
-+	install -d $(RRDDIR)
- 
- $(RRDB) : $(RRDDIR)
- 	./sens_create_rrd $(RRDB)
-@@ -38,7 +38,7 @@
- 	$(error error - Web server directory $(APACHE) not present - check APACHE definition in Makefile)
- 
- $(APACHDIR)/pix : $(APACHE)
--	install -d -o $(USER) -m 777 $(APACHDIR)/pix
-+	install -d -m 777 $(APACHDIR)/pix
- 
- install: all $(RRDB) $(SENSDIR) $(CRONTAB) $(APACHDIR)/pix
- 	install -m 755 sens_update_rrd $(BINPATH)
