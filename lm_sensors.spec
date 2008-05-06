@@ -1,5 +1,5 @@
 # TODO
-# - package eeprom* etc. tools (from lm_sensors 2.x or i2c-tools, if included there?)
+# - package i2c-tools (eeprom*, i2c* etc.)
 # - a big trigger warning how to use fancontrol and to init it first
 #
 %define		cmodule		/etc/sysconfig/sensors_modules
@@ -39,11 +39,11 @@ BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	rrdtool-devel >= 1.2.10
 BuildRequires:	sysfsutils-devel
+Requires:	%{name}-config
 Requires:	%{name}-libs = %{version}-%{release}
-Requires:	uname(release) >= 2.6.5
 Requires:	dev >= 2.9.0-13
 Requires:	dmidecode
-Requires:	%{name}-config
+Requires:	uname(release) >= 2.6.5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
