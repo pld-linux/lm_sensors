@@ -14,12 +14,12 @@ Summary(pt_BR.UTF-8):	Ferramentas para monitoração do hardware
 Summary(ru.UTF-8):	Утилиты для мониторинга аппаратуры
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
-Version:	3.0.1
+Version:	3.0.2
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
-# Source0-md5:	dace0c6bb031bd097a46a336de60587c
+# Source0-md5:	5b210ba9cc01f00161c438fd618484e5
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Source3:	fancontrol.init
@@ -314,7 +314,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc CHANGES README doc/chips
-%doc doc/{FAQ,donations,fan-divisors,progs,temperature-sensors,*html,vid}
+%doc doc/{donations,fan-divisors,progs,temperature-sensors,vid}
 %doc prog/{daemon,maxilife}
 %attr(755,root,root) %{_bindir}/sensors-conf-convert
 %attr(755,root,root) %{_bindir}/sensors
@@ -338,11 +338,11 @@ fi
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libsensors.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libsensors.so.[0-9]
+%attr(755,root,root) %ghost %{_libdir}/libsensors.so.4
 
 %files devel
 %defattr(644,root,root,755)
-%doc doc/developers
+%doc doc/developers doc/libsensors-API.txt
 %attr(755,root,root) %{_libdir}/libsensors.so
 %{_includedir}/sensors
 %{_mandir}/man3/libsensors.3*
