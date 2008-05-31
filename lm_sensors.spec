@@ -40,7 +40,6 @@ BuildRequires:	rrdtool-devel >= 1.2.10
 Requires:	%{name}-config
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dev >= 2.9.0-13
-Requires:	dmidecode
 Requires:	uname(release) >= 2.6.5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
