@@ -38,7 +38,6 @@ BuildRequires:	perl-modules >= 1:5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	rrdtool-devel >= 1.2.10
-BuildRequires:	sysfsutils-devel
 Requires:	%{name}-config
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dev >= 2.9.0-13
