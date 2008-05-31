@@ -1,5 +1,4 @@
 # TODO
-# - package i2c-tools (eeprom*, i2c* etc.)
 # - a big trigger warning how to use fancontrol and to init it first
 #
 %define		cmodule		/etc/sysconfig/sensors_modules
