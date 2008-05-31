@@ -34,7 +34,7 @@ Patch3:		%{name}-make.patch
 URL:		http://www.lm-sensors.org/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
-BuildRequires:	perl-modules >= 5.6
+BuildRequires:	perl-modules >= 1:5.6
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	rrdtool-devel >= 1.2.10
