@@ -13,12 +13,12 @@ Summary(pt_BR.UTF-8):	Ferramentas para monitoração do hardware
 Summary(ru.UTF-8):	Утилиты для мониторинга аппаратуры
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
-Version:	3.0.3
-Release:	2
+Version:	3.1.0
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
-# Source0-md5:	e88b236228ac2a50821217015b8fd0fa
+# Source0-md5:	e23130eaa46c66b861729835e08bdccf
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Source3:	fancontrol.init
@@ -312,7 +312,7 @@ fi
 %defattr(644,root,root,755)
 %doc CHANGES README doc/chips
 %doc doc/{donations,fan-divisors,progs,temperature-sensors,vid}
-%doc prog/{daemon,maxilife}
+%doc prog/daemon
 %attr(755,root,root) %{_bindir}/sensors-conf-convert
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_bindir}/sensors.sh
