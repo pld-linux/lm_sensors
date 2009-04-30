@@ -325,6 +325,7 @@ fi
 %endif
 %{_mandir}/man1/sensors.1*
 %{_mandir}/man5/sensors.conf.5*
+%{_mandir}/man8/sensors-detect.8*
 %attr(754,root,root) /etc/rc.d/init.d/sensors_modules
 
 %files config-default
@@ -353,7 +354,6 @@ fi
 %attr(754,root,root) %{_sbindir}/sensord
 %attr(754,root,root) /etc/rc.d/init.d/sensors
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors
-%{_mandir}/man8/sensors-detect.8*
 %{_mandir}/man8/sensord.8*
 
 %files fancontrol
