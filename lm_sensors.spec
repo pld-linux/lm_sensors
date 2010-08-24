@@ -14,7 +14,7 @@ Summary(ru.UTF-8):	Утилиты для мониторинга аппарату
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
 Version:	3.1.2
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
@@ -221,6 +221,7 @@ install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/fancontrol
 install %{SOURCE5} $RPM_BUILD_ROOT%{_bindir}
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors_modules
 install %{SOURCE7} $RPM_BUILD_ROOT/etc/sysconfig/sensors_modules
+install -d $RPM_BUILD_ROOT/%{_sysconfdir}/sensors.d 
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -330,6 +331,7 @@ fi
 %files config-default
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors3.conf
+%dir %{_sysconfdir}/sensors.d
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors_modules
 
 %files libs
