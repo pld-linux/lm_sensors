@@ -13,12 +13,12 @@ Summary(pt_BR.UTF-8):	Ferramentas para monitoração do hardware
 Summary(ru.UTF-8):	Утилиты для мониторинга аппаратуры
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
-Version:	3.1.2
-Release:	2
+Version:	3.2.0
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
-# Source0-md5:	58a9a225808ac4587c4c8cbd12b40b5c
+# Source0-md5:	829d88fb09d67723fbf42853eb84d1fd
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Source3:	fancontrol.init
@@ -36,7 +36,7 @@ BuildRequires:	flex >= 2.5.1
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	rrdtool-devel >= 1.2.10
-Requires:	%{name}-config
+Requires:	%{name}-config >= 3
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dev >= 2.9.0-13
 Requires:	uname(release) >= 2.6.5
@@ -137,7 +137,7 @@ Summary:	Default sensors configuration files
 Summary(pl.UTF-8):	Domyślne pliki konfiguracyjne lm_sensors
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
-Provides:	%{name}-config
+Provides:	%{name}-config = %{version}
 
 %description config-default
 Default configuration files for lm_sensors.
@@ -310,7 +310,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGES README doc/chips
+%doc CHANGES CONTRIBUTORS README doc/chips
 %doc doc/{donations,fan-divisors,progs,temperature-sensors,vid}
 %doc prog/daemon
 %attr(755,root,root) %{_bindir}/sensors-conf-convert
@@ -325,6 +325,7 @@ fi
 %endif
 %{_mandir}/man1/sensors.1*
 %{_mandir}/man5/sensors.conf.5*
+%{_mandir}/man5/sensors3.conf.5*
 %{_mandir}/man8/sensors-detect.8*
 %attr(754,root,root) /etc/rc.d/init.d/sensors_modules
 
