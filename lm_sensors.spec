@@ -13,12 +13,12 @@ Summary(pt_BR.UTF-8):	Ferramentas para monitoração do hardware
 Summary(ru.UTF-8):	Утилиты для мониторинга аппаратуры
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
-Version:	3.3.0
+Version:	3.3.1
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
-# Source0-md5:	5eb18d7531ead4f54f28a1133a606535
+# Source0-md5:	8c0eebda8524fc87da1393b4564d279b
 Source1:	sensors.init
 Source2:	sensors.sysconfig
 Source3:	fancontrol.init
