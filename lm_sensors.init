@@ -1,0 +1,79 @@
+#!/bin/sh
+#
+# chkconfig:	2345 26 74
+# description:	sensors is used for monitoring motherboard sensor values.
+# config:	/etc/sysconfig/lm_sensors
+#
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Get service config
+if [ -f /etc/sysconfig/lm_sensors ]; then
+	. /etc/sysconfig/lm_sensors
+fi
+
+start() {
+	if [ -z "$HWMON_MODULES" ]; then
+		nls "lm_sensors: not configured, run sensors-detect"
+		exit 6
+	fi
+
+	# Check if the service is already running?
+	if [ -f /var/lock/subsys/lm_sensors ]; then
+		msg_already_running "lm_sensors"
+		return
+	fi
+	for module in $BUS_MODULES $HWMON_MODULES ; do
+		_modprobe single $module
+	done
+	sensors -s
+	touch /var/lock/subsys/lm_sensors
+}
+
+stop() {
+	if [ -z "$HWMON_MODULES" ]; then
+		nls "lm_sensors: not configured, run sensors-detect"
+		exit 6
+	fi
+
+	if [ ! -f /var/lock/subsys/lm_sensors ]; then
+		msg_not_running
+		return
+	fi
+	msg_stopping "lm_sensors"
+	for module in $HWMON_MODULES $BUS_MODULES ; do
+		/sbin/modprobe -r $module >/dev/null 2>&1
+	done
+	ok
+	rm -f /var/lock/subsys/lm_sensors
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+	sensors
+	;;
+  restart|reload)
+	stop
+	start
+	;;
+  condrestart)
+	if [ -f /var/lock/subsys/lm_sensors ]; then
+		stop
+		start
+	fi
+	;;
+  *)
+	msg_usage "$0 {start|stop|status|restart|reload|condrestart}"
+	exit 3
+esac
+
+exit $RETVAL
