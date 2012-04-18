@@ -1,11 +1,6 @@
 # TODO
 # - a big trigger warning how to use fancontrol and to init it first
 #
-%define		cmodule		/etc/sysconfig/sensors_modules
-%define		cdaemon		/etc/sysconfig/sensors
-%define		smodule		/etc/rc.d/init.d/sensors_modules
-%define		sdaemon		/etc/rc.d/init.d/sensors
-
 %include	/usr/lib/rpm/macros.perl
 Summary:	Hardware health monitoring
 Summary(pl.UTF-8):	Monitor stanu sprzętu
@@ -14,18 +9,18 @@ Summary(ru.UTF-8):	Утилиты для мониторинга аппарату
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
 Version:	3.3.2
-Release:	1
+Release:	1.1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
 # Source0-md5:	f357ba00b080ab102a170f7bf8bb2578
-Source1:	sensors.init
-Source2:	sensors.sysconfig
+Source1:	sensord.init
+Source2:	sensord.sysconfig
 Source3:	fancontrol.init
 Source4:	fancontrol.sysconfig
 Source5:	sensors.sh
-Source6:	sensors_modules.init
-Source7:	sensors_modules.sysconfig
+Source6:	lm_sensors.init
+Source7:	lm_sensors.sysconfig
 Patch0:		%{name}-ppc.patch
 Patch1:		%{name}-iconv-in-libc.patch
 Patch2:		%{name}-sensors-detect-PATH.patch
@@ -36,10 +31,10 @@ BuildRequires:	flex >= 2.5.1
 BuildRequires:	rpm-perlprov >= 3.0.3-16
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	rrdtool-devel >= 1.2.10
-Requires:	%{name}-config >= 3
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dev >= 2.9.0-13
 Requires:	uname(release) >= 2.6.5
+Obsoletes:	lm_sensors-config-default
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -132,26 +127,12 @@ Bibliotecas estáticas para desenvolvimento com lm_sensors
 Пакет lm_sensors-static містить статичні бібліотеки, необхідні для
 побудови програм, які використовують дані сенсорів.
 
-%package config-default
-Summary:	Default sensors configuration files
-Summary(pl.UTF-8):	Domyślne pliki konfiguracyjne lm_sensors
-Group:		Applications/System
-Requires:	%{name} = %{version}-%{release}
-Provides:	%{name}-config = %{version}
-
-%description config-default
-Default configuration files for lm_sensors.
-
-%description config-default -l pl.UTF-8
-Domyślne pliki konfiguracyjne lm_sensors.
-
 %package sensord
 Summary:	Sensord daemon
 Summary(pl.UTF-8):	Demon sensord
 Group:		Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
-Requires:	%{name}-config
 Requires:	rc-scripts
 
 %description sensord
@@ -214,13 +195,13 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
 	PROG_EXTRA:="sensord" \
 	SYSFS_SUPPORT:=1
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensors
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensord
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/sensord
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/fancontrol
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/fancontrol
 install %{SOURCE5} $RPM_BUILD_ROOT%{_bindir}
-install %{SOURCE6} $RPM_BUILD_ROOT/etc/rc.d/init.d/sensors_modules
-install %{SOURCE7} $RPM_BUILD_ROOT/etc/sysconfig/sensors_modules
+install %{SOURCE6} $RPM_BUILD_ROOT/etc/rc.d/init.d/lm_sensors
+install %{SOURCE7} $RPM_BUILD_ROOT/etc/sysconfig/lm_sensors
 install -d $RPM_BUILD_ROOT/%{_sysconfdir}/sensors.d 
 
 %clean
@@ -229,70 +210,61 @@ rm -rf $RPM_BUILD_ROOT
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
 
-%post
-if [ -f "%{cmodule}" ]; then
-	/sbin/chkconfig --add sensors_modules
-	%service sensors_modules restart "sensors modules"
-	if [ -f "%{sdaemon}" ]; then
-		/sbin/chkconfig --add sensors
-		%service sensors restart "sensors deamon"
-	fi
-fi
-
-%preun
-if [ "$1" = "0" ]; then
-	if [ -f "%{sdaemon}" ]; then
-		%service sensors stop
-		/sbin/chkconfig --del sensors
-	fi
-	%service sensors_modules stop
+%pre
+if [ -f /var/lock/subsys/sensors_modules ]; then
+	mv -f /var/lock/subsys/sensors_modules /var/lock/subsys/lm_sensors
 	/sbin/chkconfig --del sensors_modules
 fi
+if [ -f /etc/sysconfig/sensors_modules ]; then
+	. /etc/sysconfig/sensors_modules
+	[ -z "$BUS" ] || echo BUS_MODULES=\""$BUS"\" >>/etc/sysconfig/lm_sensors
+	[ -z "$CHIP" ] || echo HWMON_MODULES=\""$CHIP"\" >>/etc/sysconfig/lm_sensors
+fi
 
-%post config-default
+%if 0
+#"
+%endif
+
+%post
 if [ "$1" = 1 ]; then
 cat << EOF
  *********************************************************************
  *                                                                   *
  *  NOTE:                                                            *
  *  You have to configure sensors to match your motherboard sensors  *
- *  in  /etc/sensors.conf  and  /etc/sysconfig/sensors_modules. Use  *
- *  sensors-detect script which  can  help you find proper modules.  *
+ *  in /etc/sensors3.conf and /etc/sysconfig/lm_sensors.             *
+ *  Use sensors-detect script to find proper modules.                *
  *                                                                   *
  *********************************************************************
 EOF
 fi
-if [ -f "%{smodule}" ]; then
-	/sbin/chkconfig --add sensors_modules
-	%service sensors_modules restart "sensors modules"
-fi
-if [ -f "%{sdaemon}" ]; then
-	/sbin/chkconfig --add sensors
-	%service sensors restart "sensors daemon"
+/sbin/chkconfig --add lm_sensors
+
+%preun
+if [ "$1" = "0" ]; then
+	%service lm_sensors stop
+	/sbin/chkconfig --del lm_sensors
 fi
 
-%preun config-default
-if [ "$1" = "0" ]; then
-	if [ -f "%{sdaemon}" ]; then
-		%service sensors stop
-		/sbin/chkconfig --del sensors
-	fi
-	if [ -f "%{smodule}" ]; then
-		%service sensors_modules stop
-		/sbin/chkconfig --del sensors_modules
-	fi
+%pre sensord
+if [ -f /var/lock/subsys/sensors ]; then
+	mv -f /var/lock/subsys/sensors /var/lock/subsys/sensord
+fi
+if [ -f /etc/rc.d/init.d/sensors ]; then
+	/sbin/chkconfig --del sensors
+fi
+if [ -f /etc/sysconfig/sensors ]; then
+	cp -a /etc/sysconfig/sensors /etc/sysconfig/sensord
 fi
 
 %post sensord
-if [ -f "%{cmodule}" ]; then
-	/sbin/chkconfig --add sensors
-	%service sensors restart "sensors daemon"
-fi
+/sbin/chkconfig --add sensord
+%service sensord restart "sensors daemon"
 
 %preun sensord
 if [ "$1" = "0" ]; then
-	%service sensors stop
-	/sbin/chkconfig --del sensors
+	%service sensord stop
+	/sbin/chkconfig --del sensord
 fi
 
 %post fancontrol
@@ -327,13 +299,10 @@ fi
 %{_mandir}/man5/sensors.conf.5*
 %{_mandir}/man5/sensors3.conf.5*
 %{_mandir}/man8/sensors-detect.8*
-%attr(754,root,root) /etc/rc.d/init.d/sensors_modules
-
-%files config-default
-%defattr(644,root,root,755)
+%attr(754,root,root) /etc/rc.d/init.d/lm_sensors
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors3.conf
 %dir %{_sysconfdir}/sensors.d
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors_modules
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/lm_sensors
 
 %files libs
 %defattr(644,root,root,755)
@@ -354,8 +323,8 @@ fi
 %files sensord
 %defattr(644,root,root,755)
 %attr(754,root,root) %{_sbindir}/sensord
-%attr(754,root,root) /etc/rc.d/init.d/sensors
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensors
+%attr(754,root,root) /etc/rc.d/init.d/sensord
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensord
 %{_mandir}/man8/sensord.8*
 
 %files fancontrol
