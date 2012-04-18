@@ -9,7 +9,7 @@ Summary(ru.UTF-8):	Утилиты для мониторинга аппарату
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
 Version:	3.3.2
-Release:	1.1
+Release:	2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
@@ -21,6 +21,7 @@ Source4:	fancontrol.sysconfig
 Source5:	sensors.sh
 Source6:	lm_sensors.init
 Source7:	lm_sensors.sysconfig
+Source8:	sensord.service
 Patch0:		%{name}-ppc.patch
 Patch1:		%{name}-iconv-in-libc.patch
 Patch2:		%{name}-sensors-detect-PATH.patch
@@ -29,10 +30,14 @@ URL:		http://www.lm-sensors.org/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	rpm-perlprov >= 3.0.3-16
-BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	rpmbuild(macros) >= 1.647
 BuildRequires:	rrdtool-devel >= 1.2.10
+Requires(post,preun):	/sbin/chkconfig
+Requires(post,preun,postun):	systemd-units >= 38
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dev >= 2.9.0-13
+Requires:	rc-scripts
+Requires:	systemd-units >= 38
 Requires:	uname(release) >= 2.6.5
 Obsoletes:	lm_sensors-config-default
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -132,8 +137,10 @@ Summary:	Sensord daemon
 Summary(pl.UTF-8):	Demon sensord
 Group:		Daemons
 Requires(post,preun):	/sbin/chkconfig
+#Requires(post,preun,postun):	systemd-units >= 38
 Requires:	%{name} = %{version}-%{release}
 Requires:	rc-scripts
+#Requires:	systemd-units >= 38
 
 %description sensord
 Sensord daemon.
@@ -183,7 +190,7 @@ temperatury są ustawione poprawnie, by nie spalić wnętrza komputera!
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8} \
+install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8,%{systemdunitdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,sysconfig}
 
 %{__make} user_install \
@@ -203,6 +210,9 @@ install %{SOURCE5} $RPM_BUILD_ROOT%{_bindir}
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/rc.d/init.d/lm_sensors
 install %{SOURCE7} $RPM_BUILD_ROOT/etc/sysconfig/lm_sensors
 install -d $RPM_BUILD_ROOT/%{_sysconfdir}/sensors.d 
+
+install -p prog/init/lm_sensors.service $RPM_BUILD_ROOT%{systemdunitdir}
+install -p %{SOURCE8} $RPM_BUILD_ROOT%{systemdunitdir}/sensord.service
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -239,12 +249,21 @@ cat << EOF
 EOF
 fi
 /sbin/chkconfig --add lm_sensors
+NORESTART=1
+%systemd_post lm_sensors.service
 
 %preun
 if [ "$1" = "0" ]; then
 	%service lm_sensors stop
 	/sbin/chkconfig --del lm_sensors
 fi
+%systemd_preun lm_sensors.service
+
+%postun
+%systemd_reload
+
+%triggerpostun -- %{name} < 3.3.2-2
+%systemd_trigger lm_sensors.service
 
 %pre sensord
 if [ -f /var/lock/subsys/sensors ]; then
@@ -260,12 +279,20 @@ fi
 %post sensord
 /sbin/chkconfig --add sensord
 %service sensord restart "sensors daemon"
+%systemd_post sensord.service
 
 %preun sensord
 if [ "$1" = "0" ]; then
 	%service sensord stop
 	/sbin/chkconfig --del sensord
 fi
+%systemd_preun sensord.service
+
+%postun sensord
+%systemd_reload
+
+%triggerpostun sensord -- %{name}-sensord < 3.3.2-2
+%systemd_trigger sensord.service
 
 %post fancontrol
 if [ "$1" = 1 ]; then
@@ -303,6 +330,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors3.conf
 %dir %{_sysconfdir}/sensors.d
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/lm_sensors
+%{systemdunitdir}/lm_sensors.service
 
 %files libs
 %defattr(644,root,root,755)
@@ -326,6 +354,7 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/sensord
 %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/sensord
 %{_mandir}/man8/sensord.8*
+%{systemdunitdir}/sensord.service
 
 %files fancontrol
 %defattr(644,root,root,755)
