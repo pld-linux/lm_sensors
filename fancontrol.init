@@ -27,7 +27,7 @@
 start() {
 	# sensors deamon needs to be started
 	# or at least proper modules loaded (provided by sensorsd deamon)
-	if [ -f /var/lock/subsys/sensors ]; then
+	if [ -f /var/lock/subsys/sensord ]; then
 		# Check if the service is already running?
 		if [ ! -f /var/lock/subsys/fancontrol ]; then
 			# Fancontrol needs to check system for pwm control
