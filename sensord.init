@@ -21,7 +21,7 @@ start() {
 	fi
 	
 	# Check if the service is already running?
-	if [ ! -f /var/lock/subsys/sensord ]; then
+	if [ -f /var/lock/subsys/sensord ]; then
 		msg_already_running "sensors daemon"
 		return
 	fi
@@ -38,7 +38,7 @@ start() {
 }
 
 stop() {
-	if [ -f /var/lock/subsys/sensord ]; then
+	if [ ! -f /var/lock/subsys/sensord ]; then
 		msg_not_running "sensors daemon"
 		return
 	fi
