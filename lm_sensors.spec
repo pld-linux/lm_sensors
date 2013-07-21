@@ -8,12 +8,12 @@ Summary(pt_BR.UTF-8):	Ferramentas para monitoração do hardware
 Summary(ru.UTF-8):	Утилиты для мониторинга аппаратуры
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
-Version:	3.3.3
+Version:	3.3.4
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
-# Source0-md5:	73c2fcccdab6049d289c5e0c596192a1
+# Source0-md5:	60cfb98ab7a8915c3ac684af5459de2e
 Source1:	sensord.init
 Source2:	sensord.sysconfig
 Source3:	fancontrol.init
@@ -309,7 +309,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGES CONTRIBUTORS README doc/chips
+%doc CHANGES CONTRIBUTORS README
 %doc doc/{donations,fan-divisors,progs,temperature-sensors,vid}
 %doc prog/daemon
 %attr(755,root,root) %{_bindir}/sensors-conf-convert
