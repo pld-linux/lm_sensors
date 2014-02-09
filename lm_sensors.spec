@@ -8,12 +8,12 @@ Summary(pt_BR.UTF-8):	Ferramentas para monitoração do hardware
 Summary(ru.UTF-8):	Утилиты для мониторинга аппаратуры
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
-Version:	3.3.4
+Version:	3.3.5
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
-# Source0-md5:	60cfb98ab7a8915c3ac684af5459de2e
+# Source0-md5:	da506dedceb41822e64865f6ba34828a
 Source1:	sensord.init
 Source2:	sensord.sysconfig
 Source3:	fancontrol.init
@@ -325,6 +325,7 @@ fi
 %{_mandir}/man1/sensors.1*
 %{_mandir}/man5/sensors.conf.5*
 %{_mandir}/man5/sensors3.conf.5*
+%{_mandir}/man8/sensors-conf-convert.8*
 %{_mandir}/man8/sensors-detect.8*
 %attr(754,root,root) /etc/rc.d/init.d/lm_sensors
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sensors3.conf
