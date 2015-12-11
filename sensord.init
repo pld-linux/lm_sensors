@@ -25,6 +25,7 @@ start() {
 		msg_already_running "sensors daemon"
 		return
 	fi
+
 	msg_starting "sensors daemon"
 	daemon sensord \
 		${INTERVAL:+-i $INTERVAL} \
@@ -51,10 +52,10 @@ RETVAL=0
 # See how we were called.
 case "$1" in
   start)
-  	start
+	start
 	;;
   stop)
-  	stop
+	stop
 	;;
   status)
 	status sensord

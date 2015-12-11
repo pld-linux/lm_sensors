@@ -24,9 +24,11 @@ start() {
 		msg_already_running "lm_sensors"
 		return
 	fi
+
 	for module in $BUS_MODULES $HWMON_MODULES ; do
 		_modprobe single $module
 	done
+
 	sensors -s
 	touch /var/lock/subsys/lm_sensors
 }
@@ -41,6 +43,7 @@ stop() {
 		msg_not_running
 		return
 	fi
+
 	msg_stopping "lm_sensors"
 	for module in $HWMON_MODULES $BUS_MODULES ; do
 		/sbin/modprobe -r $module >/dev/null 2>&1
