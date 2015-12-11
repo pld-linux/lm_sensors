@@ -9,7 +9,7 @@ Summary(ru.UTF-8):	Утилиты для мониторинга аппарату
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
 Version:	3.4.0
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
@@ -36,7 +36,7 @@ Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units >= 38
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dev >= 2.9.0-13
-Requires:	rc-scripts
+Requires:	rc-scripts >= 0.4.2.8
 Requires:	systemd-units >= 38
 Requires:	uname(release) >= 2.6.5
 Obsoletes:	lm_sensors-config-default

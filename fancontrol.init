@@ -46,7 +46,7 @@ start() {
 
 	msg_starting fancontrol
 	# won't start without an output
-	daemon --fork 'fancontrol >/dev/null'
+	daemon --fork --redirfds /usr/sbin/fancontrol
 	RETVAL=$?
 	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/fancontrol
 }
