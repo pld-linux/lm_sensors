@@ -2,18 +2,19 @@
 # - a big trigger warning how to use fancontrol and to init it first
 #
 %include	/usr/lib/rpm/macros.perl
+%define		ver	%(echo '%version'|tr . -)
 Summary:	Hardware health monitoring
 Summary(pl.UTF-8):	Monitor stanu sprzętu
 Summary(pt_BR.UTF-8):	Ferramentas para monitoração do hardware
 Summary(ru.UTF-8):	Утилиты для мониторинга аппаратуры
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
-Version:	3.4.0
-Release:	3
+Version:	3.5.0
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
-Source0:	http://dl.lm-sensors.org/lm-sensors/releases/%{name}-%{version}.tar.bz2
-# Source0-md5:	c03675ae9d43d60322110c679416901a
+Source0:	https://github.com/lm-sensors/lm-sensors/archive/V%{ver}.tar.gz
+# Source0-md5:	37981f5d3a0f649381529cb41c0f1ff3
 Source1:	sensord.init
 Source2:	sensord.sysconfig
 Source3:	fancontrol.init
@@ -22,10 +23,9 @@ Source5:	sensors.sh
 Source6:	lm_sensors.init
 Source7:	lm_sensors.sysconfig
 Source8:	sensord.service
-Patch0:		%{name}-ppc.patch
-Patch1:		%{name}-iconv-in-libc.patch
-Patch2:		%{name}-sensors-detect-PATH.patch
-Patch3:		%{name}-make.patch
+Patch0:		%{name}-iconv-in-libc.patch
+Patch1:		%{name}-sensors-detect-PATH.patch
+Patch2:		%{name}-make.patch
 URL:		http://www.lm-sensors.org/
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
@@ -174,11 +174,10 @@ uruchomienie service fancontrol init) oraz upewnić się, że progi
 temperatury są ustawione poprawnie, by nie spalić wnętrza komputera!
 
 %prep
-%setup -q
+%setup -q -n lm-sensors-%{ver}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %build
 %{__make} user \
@@ -336,7 +335,7 @@ fi
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libsensors.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libsensors.so.4
+%attr(755,root,root) %ghost %{_libdir}/libsensors.so.5
 
 %files devel
 %defattr(644,root,root,755)
