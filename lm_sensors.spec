@@ -13,7 +13,7 @@ Version:	3.5.0
 Release:	2
 License:	GPL v2+
 Group:		Applications/System
-Source0:	https://github.com/lm-sensors/lm-sensors/archive/V%{ver}.tar.gz
+Source0:	https://github.com/lm-sensors/lm-sensors/archive/V%{ver}/%{name}-%{version}.tar.gz
 # Source0-md5:	37981f5d3a0f649381529cb41c0f1ff3
 Source1:	sensord.init
 Source2:	sensord.sysconfig
