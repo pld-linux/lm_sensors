@@ -1,7 +1,6 @@
 # TODO
 # - a big trigger warning how to use fancontrol and to init it first
 #
-%include	/usr/lib/rpm/macros.perl
 %define		ver	%(echo %{version} | tr . -)
 Summary:	Hardware health monitoring
 Summary(pl.UTF-8):	Monitor stanu sprzętu
