@@ -12,6 +12,7 @@ Version:	3.5.0
 Release:	2
 License:	GPL v2+
 Group:		Applications/System
+#Source0Download: https://github.com/lm-sensors/lm-sensors/releases
 Source0:	https://github.com/lm-sensors/lm-sensors/archive/V%{ver}/%{name}-%{version}.tar.gz
 # Source0-md5:	37981f5d3a0f649381529cb41c0f1ff3
 Source1:	sensord.init
@@ -25,11 +26,11 @@ Source8:	sensord.service
 Patch0:		%{name}-iconv-in-libc.patch
 Patch1:		%{name}-sensors-detect-PATH.patch
 Patch2:		%{name}-make.patch
-URL:		http://www.lm-sensors.org/
+URL:		https://hwmon.wiki.kernel.org/lm_sensors
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
 BuildRequires:	rpm-perlprov >= 3.0.3-16
-BuildRequires:	rpmbuild(macros) >= 1.647
+BuildRequires:	rpmbuild(macros) >= 1.745
 BuildRequires:	rrdtool-devel >= 1.2.10
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units >= 38
@@ -307,9 +308,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGES CONTRIBUTORS README
-%doc doc/{donations,fan-divisors,progs,temperature-sensors,vid}
-%doc prog/daemon
+%doc CHANGES CONTRIBUTORS README doc/{donations,fan-divisors,progs,temperature-sensors,vid} prog/daemon
 %attr(755,root,root) %{_bindir}/sensors-conf-convert
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_bindir}/sensors.sh
