@@ -311,7 +311,7 @@ fi
 %attr(755,root,root) %{_bindir}/sensors
 %attr(755,root,root) %{_bindir}/sensors.sh
 %attr(755,root,root) %{_sbindir}/sensors-detect
-%ifarch %{ix86} %{x8664}
+%ifarch %{ix86} %{x8664} x32
 %attr(755,root,root) %{_sbindir}/isadump
 %attr(755,root,root) %{_sbindir}/isaset
 %{_mandir}/man8/isadump.8*
