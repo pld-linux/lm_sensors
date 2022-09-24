@@ -8,13 +8,13 @@ Summary(pt_BR.UTF-8):	Ferramentas para monitoração do hardware
 Summary(ru.UTF-8):	Утилиты для мониторинга аппаратуры
 Summary(uk.UTF-8):	Утиліти для моніторингу апаратури
 Name:		lm_sensors
-Version:	3.5.0
-Release:	2
+Version:	3.6.0
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
-#Source0Download: https://github.com/lm-sensors/lm-sensors/releases
+#Source0Download: https://github.com/lm-sensors/lm-sensors/tags
 Source0:	https://github.com/lm-sensors/lm-sensors/archive/V%{ver}/%{name}-%{version}.tar.gz
-# Source0-md5:	37981f5d3a0f649381529cb41c0f1ff3
+# Source0-md5:	f60e47b5eb50bbeed48a9f43bb08dd5e
 Source1:	sensord.init
 Source2:	sensord.sysconfig
 Source3:	fancontrol.init
@@ -24,8 +24,7 @@ Source6:	lm_sensors.init
 Source7:	lm_sensors.sysconfig
 Source8:	sensord.service
 Patch0:		%{name}-iconv-in-libc.patch
-Patch1:		%{name}-sensors-detect-PATH.patch
-Patch2:		%{name}-make.patch
+Patch1:		%{name}-make.patch
 URL:		https://hwmon.wiki.kernel.org/lm_sensors
 BuildRequires:	bison
 BuildRequires:	flex >= 2.5.1
@@ -39,7 +38,7 @@ Requires:	dev >= 2.9.0-13
 Requires:	rc-scripts >= 0.4.2.8
 Requires:	systemd-units >= 38
 Requires:	uname(release) >= 2.6.5
-Obsoletes:	lm_sensors-config-default
+Obsoletes:	lm_sensors-config-default < 3.3.2-2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -69,7 +68,7 @@ SMBus та моніторингу. УВАГА: для цього потрібн�
 Summary:	lm_sensors library
 Summary(pl.UTF-8):	Biblioteka lm_sensors
 Group:		Libraries
-Obsoletes:	liblm_sensors1
+Obsoletes:	liblm_sensors1 < 3
 Conflicts:	lm_sensors <= 2.9.2-2
 
 %description libs
@@ -86,7 +85,7 @@ Summary(ru.UTF-8):	Файлы разработчика для программ, 
 Summary(uk.UTF-8):	Файли програміста для програм, які використовують lm_sensors
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
-Obsoletes:	liblm_sensors1-devel
+Obsoletes:	liblm_sensors1-devel < 3
 
 %description devel
 Header files for lm_sensors.
@@ -177,7 +176,6 @@ temperatury są ustawione poprawnie, by nie spalić wnętrza komputera!
 %setup -q -n lm-sensors-%{ver}
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %build
 %{__make} user \
